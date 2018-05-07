@@ -1,0 +1,8 @@
+---
+Name: partialformroutes
+After:
+  - '#rootroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'partialuserform//$Action/$ID/$OtherID': Firesphere\PartialUserForms\Controllers\PartialUserFormController

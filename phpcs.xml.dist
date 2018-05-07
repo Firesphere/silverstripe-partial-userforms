@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="RangeField">
+    <description>CodeSniffer ruleset for RangeField coding conventions.</description>
+
+    <!-- base rules are PSR-2 -->
+    <rule ref="PSR2" >
+        <!-- Current exclusions -->
+        <exclude name="Generic.Files.LineLength.TooLong" />
+    </rule>
+    <rule phpcbf-only="true" ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="ignoreNewlines" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- include php files only -->
+    <arg name="extensions" value="php"/>
+</ruleset>

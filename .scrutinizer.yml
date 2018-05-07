@@ -1,0 +1,10 @@
+inherit: true
+
+checks:
+  php:
+    code_rating: true
+    duplication: true
+  javascript: true
+
+filter:
+  paths: [src/*, tests/*, client/src/js/*]

@@ -1,0 +1,17 @@
+{
+  "name": "partialformsubmission",
+  "description": "Handle partial form submissions from userforms",
+  "version": "0.0.1",
+  "private": false,
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "cross-env": "^5.1.1",
+    "laravel-mix": "^2.0.0",
+    "webpack-bundle-analyzer": "^2.10.0"
+  },
+  "scripts": {
+    "build": "node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "yarn build --watch",
+    "package": "node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+  }
+}
