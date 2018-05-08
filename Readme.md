@@ -1,6 +1,6 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/Firesphere/silverstripe-partial-userforms.svg)](https://circleci.com/gh/Firesphere/silverstripe-partial-userforms)
 [![codecov](https://codecov.io/gh/Firesphere/silverstripe-partial-userforms/branch/master/graph/badge.svg)](https://codecov.io/gh/Firesphere/silverstripe-partial-userforms)
-
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Firesphere/silverstripe-partial-userforms/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Firesphere/silverstripe-partial-userforms/?branch=master)
 
 # Partial User Defined Form submissions
 

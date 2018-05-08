@@ -4,6 +4,7 @@ namespace Firesphere\PartialUserforms\Tests;
 
 use Firesphere\PartialUserforms\Extensions\SiteConfigExtension;
 use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CheckboxField;
@@ -107,6 +108,7 @@ class SiteConfigExtensionTest extends SapphireTest
     protected function setUp()
     {
         $this->usesDatabase = true;
+        Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
         /** @var SiteConfigExtension $extension */
         $extension = Injector::inst()->get(SiteConfigExtension::class);
         $extension->setOwner(SiteConfig::current_site_config());
