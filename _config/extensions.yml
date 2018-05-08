@@ -4,3 +4,6 @@ SilverStripe\UserForms\Model\Submission\SubmittedForm:
 SilverStripe\UserForms\Control\UserDefinedFormController:
   extensions:
     - Firesphere\PartialUserforms\Extensions\UserDefinedFormControllerExtension
+SilverStripe\UserForms\Model\UserDefinedForm:
+  extensions:
+    - Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension

@@ -8,7 +8,6 @@ use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataList;
 
@@ -156,7 +155,6 @@ class PartialUserFormControllerTest extends SapphireTest
         /** @var DataList|PartialFieldSubmission[] $fields */
         $partialForm = PartialFormSubmission::get()->byID($sessionKey);
 
-        Debug::dump($partialForm->ParentID);
         $this->assertEquals('SilverStripe\UserForms\Model\UserDefinedForm', $partialForm->ParentClass);
     }
 

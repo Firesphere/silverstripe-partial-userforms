@@ -3,7 +3,6 @@
 namespace Firesphere\PartialUserforms\Models;
 
 use SilverStripe\UserForms\Model\Submission\SubmittedForm;
-use SilverStripe\UserForms\Model\UserDefinedForm;
 
 /**
  * Class \Firesphere\PartialUserforms\Models\PartialFormSubmission

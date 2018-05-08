@@ -15,7 +15,7 @@ use SilverStripe\ORM\DataExtension;
 class SubmittedFormExtension extends DataExtension
 {
     private static $summary_fields = [
-        
+
     ];
 
     public function updateAfterProcess()

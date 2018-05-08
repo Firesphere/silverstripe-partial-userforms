@@ -7,6 +7,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\DataExtension;
 
 /**
@@ -27,9 +28,12 @@ class UserDefinedFormExtension extends DataExtension
         $gridfieldConfig = GridFieldConfig_RelationEditor::create();
         $gridfieldConfig->removeComponentsByType(GridFieldAddNewButton::class);
 
+        // We need to manually add the tab
+        $fields->addFieldToTab('Root', Tab::create('PartialSubmissions'), 'Submissions');
+
         $fields->addFieldToTab(
             'Root.PartialSubmissions',
-            GridField::create('PartialSubmissions', 'Partial submissions', $this->PartialSubmissions())
+            GridField::create('PartialSubmissions', 'Partial submissions', $this->owner->PartialSubmissions())
         );
     }
 }
