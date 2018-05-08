@@ -4,6 +4,12 @@ namespace Firesphere\PartialUserforms\Models;
 
 use SilverStripe\UserForms\Model\Submission\SubmittedFormField;
 
+/**
+ * Class \Firesphere\PartialUserforms\Models\PartialFieldSubmission
+ *
+ * @property int $SubmittedFormID
+ * @method \Firesphere\PartialUserforms\Models\PartialFormSubmission SubmittedForm()
+ */
 class PartialFieldSubmission extends SubmittedFormField
 {
     private static $table_name = 'PartialFieldSubmission';

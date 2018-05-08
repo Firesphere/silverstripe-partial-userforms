@@ -7,6 +7,11 @@ use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataExtension;
 
+/**
+ * Class \Firesphere\PartialUserforms\Extensions\SubmittedFormExtension
+ *
+ * @property \SilverStripe\UserForms\Model\Submission\SubmittedForm|\Firesphere\PartialUserforms\Extensions\SubmittedFormExtension $owner
+ */
 class SubmittedFormExtension extends DataExtension
 {
     public function updateAfterProcess()

@@ -6,7 +6,12 @@ use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\UserForms\Model\EditableFormField;
 
+/**
+ * Class \Firesphere\PartialUserforms\Controllers\PartialUserFormController
+ *
+ */
 class PartialUserFormController extends ContentController
 {
     const SESSION_KEY = 'PartialSubmissionID';
@@ -56,6 +61,10 @@ class PartialUserFormController extends ContentController
             'SubmittedFormID' => $formData['SubmittedFormID'],
         ];
         $exists = PartialFieldSubmission::get()->filter($filter)->first();
+        // Set the title
+        $editableField = EditableFormField::get()->filter(['Name' => $formData['Name']])->first();
+        $formData['Title'] = $editableField->Title;
+
         if (!$exists) {
             $field = PartialFieldSubmission::create($formData);
             $field->write();

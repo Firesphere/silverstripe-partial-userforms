@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\DataList;
 
 class PartialUserFormControllerTest extends SapphireTest
 {
@@ -115,5 +116,26 @@ class PartialUserFormControllerTest extends SapphireTest
             ])
             ->first();
         $this->assertEquals('Value3', $field3->Value);
+    }
+
+    public function testSubmittedFieldTitle()
+    {
+        $values = [
+            'Field1' => 'Value1',
+            'Field2' => 'Value2',
+            'Field3' => 'null'
+        ];
+        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
+        $session = new Session(['hi' => 'bye']);
+        $request->setSession($session);
+
+        $this->controller->savePartialSubmission($request);
+        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
+        /** @var DataList|PartialFieldSubmission[] $fields */
+        $fields = PartialFieldSubmission::get()->filter(['SubmittedFormID' => $sessionKey]);
+
+        foreach ($fields as $key => $field) {
+            $this->assertEquals('Field ' . ($key + 1), $field->Title, 'Test field ' . $key);
+        }
     }
 }

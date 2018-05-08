@@ -24,7 +24,8 @@ class SubmittedFormExtensionTest extends SapphireTest
     public function testUpdateAfterProcessForm()
     {
         $partialSubmission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
-        Controller::curr()->getRequest()->getSession()->set(PartialUserFormController::SESSION_KEY, $partialSubmission->ID);
+        Controller::curr()->getRequest()->getSession()->set(PartialUserFormController::SESSION_KEY,
+            $partialSubmission->ID);
 
         $extension = Injector::inst()->get(PartialFormSubmission::class);
 
@@ -38,7 +39,8 @@ class SubmittedFormExtensionTest extends SapphireTest
     public function testUpdateAfterProcessFields()
     {
         $partialSubmission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
-        Controller::curr()->getRequest()->getSession()->set(PartialUserFormController::SESSION_KEY, $partialSubmission->ID);
+        Controller::curr()->getRequest()->getSession()->set(PartialUserFormController::SESSION_KEY,
+            $partialSubmission->ID);
 
         $extension = Injector::inst()->get(PartialFormSubmission::class);
 
@@ -56,7 +58,8 @@ class SubmittedFormExtensionTest extends SapphireTest
     public function testUpdateAfterProcessSession()
     {
         $partialSubmission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
-        Controller::curr()->getRequest()->getSession()->set(PartialUserFormController::SESSION_KEY, $partialSubmission->ID);
+        Controller::curr()->getRequest()->getSession()->set(PartialUserFormController::SESSION_KEY,
+            $partialSubmission->ID);
 
         $extension = Injector::inst()->get(PartialFormSubmission::class);
 
