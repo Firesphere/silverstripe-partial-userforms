@@ -2,7 +2,6 @@
 
 namespace Firesphere\PartialUserforms\Tests;
 
-
 use Firesphere\PartialUserforms\Controllers\PartialUserFormController;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;

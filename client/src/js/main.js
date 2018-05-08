@@ -1,3 +1,5 @@
-import partialuserforms from './partialuserforms/partialuserforms';
+import partialsubmission from './partialuserforms/partialsubmission';
+import partialstorage from './partialuserforms/partialstorage';
 
-partialuserforms();
+partialsubmission();
+partialstorage();

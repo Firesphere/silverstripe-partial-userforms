@@ -9,7 +9,6 @@ use SilverStripe\Control\HTTPRequest;
 
 class PartialUserFormController extends ContentController
 {
-
     const SESSION_KEY = 'PartialSubmissionID';
 
     private static $url_handlers = [
