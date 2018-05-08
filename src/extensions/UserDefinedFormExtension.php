@@ -10,14 +10,15 @@ use SilverStripe\ORM\DataExtension;
 
 class UserDefinedFormExtension extends DataExtension
 {
-
     public function updateCMSFields(FieldList $fields)
     {
         /** @var GridFieldConfig_RelationEditor $gridfieldConfig */
         $gridfieldConfig = GridFieldConfig_RelationEditor::create();
         $gridfieldConfig->removeComponentsByType(GridFieldAddNewButton::class);
 
-        $fields->addFieldToTab('Root.PartialSubmissions',
-            GridField::create(''));
+        $fields->addFieldToTab(
+            'Root.PartialSubmissions',
+            GridField::create('')
+        );
     }
 }

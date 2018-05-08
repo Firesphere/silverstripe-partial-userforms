@@ -8,6 +8,7 @@ use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataList;
 
@@ -38,7 +39,7 @@ class PartialUserFormControllerTest extends SapphireTest
 
     public function testSavePartialSubmissionFormCreated()
     {
-        $request = new HTTPRequest('POST', '/partialuserform', [], []);
+        $request = new HTTPRequest('POST', '/partialuserform', [], ['Field1' => 'Value1']);
         $session = new Session(['hi' => 'bye']);
         $request->setSession($session);
 
@@ -155,17 +156,17 @@ class PartialUserFormControllerTest extends SapphireTest
         /** @var DataList|PartialFieldSubmission[] $fields */
         $partialForm = PartialFormSubmission::get()->byID($sessionKey);
 
-        $this->assertEquals(1, $partialForm->ParentID);
-        $this->assertEquals('Page', $partialForm->ParentClass);
+        Debug::dump($partialForm->ParentID);
+        $this->assertEquals('SilverStripe\UserForms\Model\UserDefinedForm', $partialForm->ParentClass);
     }
 
     public function testUnwantedFields()
     {
         $values = [
-            'Field1' => 'Value1',
-            'Field2' => 'Value2',
-            'Field3' => 'null',
-            'SecurityID' => '123456789aoeu',
+            'Field1'         => 'Value1',
+            'Field2'         => 'Value2',
+            'Field3'         => 'null',
+            'SecurityID'     => '123456789aoeu',
             'action_process' => 'Submit'
         ];
         $request = new HTTPRequest('POST', '/partialuserform', [], $values);

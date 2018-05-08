@@ -15,19 +15,22 @@ Firesphere\PartialUserforms\Models\PartialFormSubmission:
   submission1:
     ParentID: 1
     PartialFields: =>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field1,=>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field2,=>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field3
+SilverStripe\UserForms\Model\UserDefinedForm:
+  form1:
+    Title: Form 1
 SilverStripe\UserForms\Model\EditableFormField\EditableTextField:
   textfield1:
     Name: 'Field1'
     Title: 'Field 1'
-    ParentClass: Page
-    ParentID: 1
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
   textfield2:
     Name: 'Field2'
     Title: 'Field 2'
-    ParentClass: Page
-    ParentID: 1
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
   textfield3:
     Name: 'Field3'
     Title: 'Field 3'
-    ParentClass: Page
-    ParentID: 1
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
