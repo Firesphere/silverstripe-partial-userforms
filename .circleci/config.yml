@@ -53,6 +53,7 @@ jobs:
             - mysite
             - vendor
             - resource
+            - node_modules
 
       # run tests!
       - run: vendor/bin/sake dev/build
