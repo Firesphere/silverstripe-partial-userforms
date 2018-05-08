@@ -2,8 +2,6 @@
 
 namespace Firesphere\PartialUserforms\Extensions;
 
-use DateInterval;
-use DateTime;
 use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
@@ -87,8 +85,8 @@ class SiteConfigExtension extends DataExtension
      */
     protected function getTomorrow()
     {
-        $dateTime = new DateTime(DBDatetime::now());
-        $interval = new DateInterval('P1D');
+        $dateTime = new \DateTime(DBDatetime::now());
+        $interval = new \DateInterval('P1D');
         $tomorrow = $dateTime->add($interval);
         $dbDateTime = DBDatetime::create();
         $dbDateTime->setValue($tomorrow->format('Y-m-d 00:00:00'));
