@@ -29,7 +29,7 @@ class UserDefinedFormExtension extends DataExtension
         $gridfieldConfig->removeComponentsByType(GridFieldAddNewButton::class);
 
         // We need to manually add the tab
-        $fields->addFieldToTab('Root', Tab::create('PartialSubmissions'), 'Submissions');
+        $fields->addFieldToTab('Root', Tab::create('PartialSubmissions'));
 
         $fields->addFieldToTab(
             'Root.PartialSubmissions',
