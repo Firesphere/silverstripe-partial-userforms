@@ -36,13 +36,25 @@ class PartialUserFormController extends ContentController
         $request->getSession()->set(self::SESSION_KEY, $submissionID);
 
         foreach ($postVars as $field => $value) {
-            PartialFieldSubmission::create([
+            $this->createOrUpdateSubmission([
                 'Name'     => $field,
                 'Value'    => $value,
                 'ParentID' => $submissionID
-            ])->write();
+            ]);
         }
 
         return $submissionID;
+    }
+
+    protected function createOrUpdateSubmission($formData)
+    {
+        $filter = $formData;
+        unset($filter['Value']);
+        $exists = PartialFieldSubmission::get()->filter($filter)->first();
+        if (!$exists) {
+            PartialFieldSubmission::create($formData)->write();
+        } else {
+            $exists->update($formData)->write();
+        }
     }
 }

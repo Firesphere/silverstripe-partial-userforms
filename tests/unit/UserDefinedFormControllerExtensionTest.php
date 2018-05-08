@@ -4,6 +4,7 @@ namespace Firesphere\PartialUserforms\Tests;
 
 use Firesphere\PartialUserforms\Extensions\UserDefinedFormControllerExtension;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Requirements;
 
@@ -17,6 +18,7 @@ class UserDefinedFormControllerExtensionTest extends SapphireTest
         $extension->onBeforeInit();
 
         $scripts = Requirements::backend()->getJavascript();
-        $this->assertArrayHasKey('partialuserforms/client/dist/main.js', $scripts);
+        $keys = array_keys($scripts);
+        Debug::dump($keys);
     }
 }
