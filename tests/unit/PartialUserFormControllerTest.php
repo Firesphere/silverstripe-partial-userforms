@@ -138,4 +138,47 @@ class PartialUserFormControllerTest extends SapphireTest
             $this->assertEquals('Field ' . ($key + 1), $field->Title, 'Test field ' . $key);
         }
     }
+
+    public function testParent()
+    {
+        $values = [
+            'Field1' => 'Value1',
+            'Field2' => 'Value2',
+            'Field3' => 'null'
+        ];
+        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
+        $session = new Session(['hi' => 'bye']);
+        $request->setSession($session);
+
+        $this->controller->savePartialSubmission($request);
+        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
+        /** @var DataList|PartialFieldSubmission[] $fields */
+        $partialForm = PartialFormSubmission::get()->byID($sessionKey);
+
+        $this->assertEquals(1, $partialForm->ParentID);
+        $this->assertEquals('Page', $partialForm->ParentClass);
+    }
+
+    public function testUnwantedFields()
+    {
+        $values = [
+            'Field1' => 'Value1',
+            'Field2' => 'Value2',
+            'Field3' => 'null',
+            'SecurityID' => '123456789aoeu',
+            'action_process' => 'Submit'
+        ];
+        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
+        $session = new Session(['hi' => 'bye']);
+        $request->setSession($session);
+
+        $this->controller->savePartialSubmission($request);
+        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
+        /** @var DataList|PartialFieldSubmission[] $fields */
+        $fields = PartialFieldSubmission::get()->filter(['SubmittedFormID' => $sessionKey]);
+
+        $items = $fields->column('Name');
+        $this->assertFalse(in_array('SecurityID', $items, true));
+        $this->assertFalse(in_array('action_process', $items, true));
+    }
 }

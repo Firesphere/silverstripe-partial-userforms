@@ -6,6 +6,8 @@ use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\UserForms\Model\EditableFormField;
 
 /**
@@ -27,24 +29,38 @@ class PartialUserFormController extends ContentController
     /**
      * @param HTTPRequest $request
      * @return int
-     * @throws \SilverStripe\ORM\ValidationException
+     * @throws ValidationException
      */
     public function savePartialSubmission(HTTPRequest $request)
     {
         $postVars = $request->postVars();
 
+        // We don't want SecurityID and/or the process Action stored as a thing
+        unset($postVars['SecurityID'], $postVars['action_process']);
         $submissionID = $request->getSession()->get(self::SESSION_KEY);
-        if (!$submissionID) {
+
+        /** @var PartialFormSubmission $partialSubmission */
+        $partialSubmission = PartialFormSubmission::get()->byID($submissionID);
+
+        if (!$submissionID || !$partialSubmission) {
             $partialSubmission = PartialFormSubmission::create();
             $submissionID = $partialSubmission->write();
         }
         $request->getSession()->set(self::SESSION_KEY, $submissionID);
         foreach ($postVars as $field => $value) {
-            $this->createOrUpdateSubmission([
+            /** @var EditableFormField $editableField */
+            $editableField = $this->createOrUpdateSubmission([
                 'Name'            => $field,
                 'Value'           => $value,
                 'SubmittedFormID' => $submissionID
             ]);
+        }
+
+        if (!$partialSubmission->ParentID) {
+            $partialSubmission->update([
+                'ParentID' => $editableField->ParentID,
+                'ParentClass' => $editableField->ParentClass
+            ])->write();
         }
 
         return $submissionID;
@@ -52,7 +68,8 @@ class PartialUserFormController extends ContentController
 
     /**
      * @param $formData
-     * @throws \SilverStripe\ORM\ValidationException
+     * @return DataObject|EditableFormField
+     * @throws ValidationException
      */
     protected function createOrUpdateSubmission($formData)
     {
@@ -66,11 +83,14 @@ class PartialUserFormController extends ContentController
         $formData['Title'] = $editableField->Title;
 
         if (!$exists) {
-            $field = PartialFieldSubmission::create($formData);
-            $field->write();
+            $exists = PartialFieldSubmission::create($formData);
+            $exists->write();
         } else {
             $exists->update($formData);
             $exists->write();
         }
+
+        // Return the ParentID to link the PartialSubmission to it's proper thingy
+        return $editableField;
     }
 }
