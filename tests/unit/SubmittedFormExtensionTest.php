@@ -12,7 +12,7 @@ use SilverStripe\Dev\SapphireTest;
 
 class SubmittedFormExtensionTest extends SapphireTest
 {
-    protected static $fixture_file = '../fixtures/submittedformextensiontest.yml';
+    protected static $fixture_file = '../fixtures/partialformtest.yml';
 
     public function testClassExists()
     {

@@ -12,6 +12,8 @@ use SilverStripe\Dev\SapphireTest;
 
 class PartialUserFormControllerTest extends SapphireTest
 {
+    protected static $fixture_file = '../fixtures/partialformtest.yml';
+
     /**
      * @var PartialUserFormController
      */
@@ -35,7 +37,7 @@ class PartialUserFormControllerTest extends SapphireTest
 
     public function testSavePartialSubmissionFormCreated()
     {
-        $request = new HTTPRequest('GET', '/partialuserform', [], []);
+        $request = new HTTPRequest('POST', '/partialuserform', [], []);
         $session = new Session(['hi' => 'bye']);
         $request->setSession($session);
 
@@ -50,27 +52,27 @@ class PartialUserFormControllerTest extends SapphireTest
 
     public function testSavePartialSubmissionFieldCreated()
     {
-        $request = new HTTPRequest('GET', '/partialuserform', [], ['Field1' => 'Value1']);
+        $request = new HTTPRequest('POST', '/partialuserform', [], ['Field1' => 'Value1']);
         $session = new Session(['hi' => 'bye']);
         $request->setSession($session);
 
         $id = $this->controller->savePartialSubmission($request);
 
-        $fields = PartialFieldSubmission::get()->filter(['ParentID' => $id]);
+        $fields = PartialFieldSubmission::get()->filter(['SubmittedFormID' => $id]);
 
         $this->assertEquals(1, $fields->count());
     }
 
     public function testPartialFormSubmissionExists()
     {
-        $request = new HTTPRequest('GET', '/partialuserform', [], ['Field1' => 'Value1', 'Field2' => 'Value2']);
+        $request = new HTTPRequest('POST', '/partialuserform', [], ['Field1' => 'Value1', 'Field2' => 'Value2']);
         $session = new Session(['hi' => 'bye']);
         $request->setSession($session);
 
         $id = $this->controller->savePartialSubmission($request);
 
         $session = $request->getSession();
-        $request = new HTTPRequest('GET', '/partialuserform', [], ['Field2' => 'Value2']);
+        $request = new HTTPRequest('POST', '/partialuserform', [], ['Field2' => 'Value2']);
         $request->setSession($session);
 
         $secondId = $this->controller->savePartialSubmission($request);
@@ -80,21 +82,38 @@ class PartialUserFormControllerTest extends SapphireTest
 
     public function testPartialFormSubmissionExistingField()
     {
-        $request = new HTTPRequest('GET', '/partialuserform', [],
-            ['Field1' => 'Value1', 'Field2' => 'Value2', 'Field3' => 'null']);
+        $values = [
+            'Field1' => 'Value1',
+            'Field2' => 'Value2',
+            'Field3' => 'null'
+        ];
+        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
         $session = new Session(['hi' => 'bye']);
         $request->setSession($session);
 
-        $id = $this->controller->savePartialSubmission($request);
-        $field3 = PartialFormSubmission::get()->byID($id)->PartialFields()->filter(['Name' => 'Field3'])->first();
+        $this->controller->savePartialSubmission($request);
+        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
+        $field3 = PartialFieldSubmission::get()
+            ->filter([
+                'Name'            => 'Field3',
+                'SubmittedFormID' => $sessionKey
+            ])
+            ->first();
+
         $this->assertEquals('null', $field3->Value);
-        $session = $request->getSession();
-        $request = new HTTPRequest('GET', '/partialuserform', [],
-            ['Field1' => 'Value1', 'Field2' => 'Value2', 'Field3' => 'Value3']);
+        // Update the values
+        $values['Field3'] = 'Value3';
+        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
         $request->setSession($session);
         $this->controller->savePartialSubmission($request);
+        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
 
-        $field3 = PartialFieldSubmission::get()->byID($field3->ID);
+        $field3 = PartialFieldSubmission::get()
+            ->filter([
+                'Name'            => 'Field3',
+                'SubmittedFormID' => $sessionKey
+            ])
+            ->first();
         $this->assertEquals('Value3', $field3->Value);
     }
 }

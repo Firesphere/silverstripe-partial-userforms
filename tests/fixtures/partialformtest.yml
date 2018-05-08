@@ -1,0 +1,27 @@
+Firesphere\PartialUserForms\Models\PartialFieldSubmission:
+  field1:
+    Name: 'fullname'
+    Value: 'Test'
+    Title: 'Full name'
+  field2:
+    Name: 'email'
+    Value: 'test@test.com'
+    Title: 'Email address'
+  field3:
+    Name: 'question'
+    Value: 'I have a question, what''s the ultimate question of life, the universe, and everything'
+    Title: 'Question'
+Firesphere\PartialUserforms\Models\PartialFormSubmission:
+  submission1:
+    ParentID: 1
+    PartialFields: =>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field1,=>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field2,=>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field3
+SilverStripe\UserForms\Model\EditableFormField\EditableTextField:
+  textfield1:
+    Name: 'Field1'
+    Title: 'Field 1'
+  textfield2:
+    Name: 'Field2'
+    Title: 'Field 2'
+  textfield3:
+    Name: 'Field3'
+    Title: 'Field 3'
