@@ -482,6 +482,8 @@ Object(__WEBPACK_IMPORTED_MODULE_0__partialuserforms_partialuserforms__["a" /* d
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_array_from__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_array_from___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_array_from__);
 
+var baseDomain = document.baseURI;
+var submitURL = 'partialuserform';
 var buttons = function buttons() {
   return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_array_from___default()(document.body.querySelectorAll('form.userform ul li.step-button-wrapper button'));
 };
@@ -495,7 +497,7 @@ var submitPartial = function submitPartial() {
     data.append(element.getAttribute('name'), element.getAttribute('value'));
   });
   var httpRequest = new XMLHttpRequest();
-  httpRequest.open('POST', lookupAddress, true);
+  httpRequest.open('POST', '' + baseDomain + submitURL, true);
   httpRequest.send(data);
 };
 
