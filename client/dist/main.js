@@ -502,6 +502,7 @@ var submitPartial = function submitPartial() {
 };
 
 var attachSubmitPartial = function attachSubmitPartial(button) {
+  console.log(button);
   button.addEventListener('click', submitPartial());
 };
 

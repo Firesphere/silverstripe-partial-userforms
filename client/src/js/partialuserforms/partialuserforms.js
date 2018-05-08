@@ -14,7 +14,8 @@ const submitPartial = () => {
 };
 
 const attachSubmitPartial = (button) => {
-  button.addEventListener('click', submitPartial());
+  console.log(button);
+  button.addEventListener('click', submitPartial);
 };
 
 export default function () {
