@@ -2,6 +2,7 @@
 
 namespace Firesphere\PartialUserforms\Extensions;
 
+use Firesphere\PartialUserforms\Controllers\PartialUserFormController;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataExtension;

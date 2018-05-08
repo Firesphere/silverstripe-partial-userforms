@@ -14,7 +14,6 @@ const submitPartial = () => {
 };
 
 const attachSubmitPartial = (button) => {
-  console.log(button);
   button.addEventListener('click', submitPartial);
 };
 

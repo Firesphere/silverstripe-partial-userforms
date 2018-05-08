@@ -13,7 +13,11 @@ class PartialUserFormController extends ContentController
     const SESSION_KEY = 'PartialSubmissionID';
 
     private static $url_handlers = [
-        '*' => 'savePartialSubmission'
+        '' => 'savePartialSubmission'
+    ];
+
+    private static $allowed_actions = [
+        'savePartialSubmission'
     ];
 
     /**

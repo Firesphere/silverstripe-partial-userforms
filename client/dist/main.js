@@ -503,7 +503,7 @@ var submitPartial = function submitPartial() {
 
 var attachSubmitPartial = function attachSubmitPartial(button) {
   console.log(button);
-  button.addEventListener('click', submitPartial());
+  button.addEventListener('click', submitPartial);
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (function () {
