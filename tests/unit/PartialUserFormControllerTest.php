@@ -63,7 +63,7 @@ class PartialUserFormControllerTest extends SapphireTest
 
     public function testPartialFormSubmissionExists()
     {
-        $request = new HTTPRequest('GET', '/partialuserform', [], ['Field1' => 'Value1']);
+        $request = new HTTPRequest('GET', '/partialuserform', [], ['Field1' => 'Value1', 'Field2' => 'Value2']);
         $session = new Session(['hi' => 'bye']);
         $request->setSession($session);
 
@@ -76,5 +76,25 @@ class PartialUserFormControllerTest extends SapphireTest
         $secondId = $this->controller->savePartialSubmission($request);
 
         $this->assertEquals($id, $secondId);
+    }
+
+    public function testPartialFormSubmissionExistingField()
+    {
+        $request = new HTTPRequest('GET', '/partialuserform', [],
+            ['Field1' => 'Value1', 'Field2' => 'Value2', 'Field3' => 'null']);
+        $session = new Session(['hi' => 'bye']);
+        $request->setSession($session);
+
+        $id = $this->controller->savePartialSubmission($request);
+        $field3 = PartialFormSubmission::get()->byID($id)->PartialFields()->filter(['Name' => 'Field3'])->first();
+        $this->assertEquals('null', $field3->Value);
+        $session = $request->getSession();
+        $request = new HTTPRequest('GET', '/partialuserform', [],
+            ['Field1' => 'Value1', 'Field2' => 'Value2', 'Field3' => 'Value3']);
+        $request->setSession($session);
+        $this->controller->savePartialSubmission($request);
+
+        $field3 = PartialFieldSubmission::get()->byID($field3->ID);
+        $this->assertEquals('Value3', $field3->Value);
     }
 }
