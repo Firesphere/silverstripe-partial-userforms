@@ -1,3 +1,13 @@
+[![CircleCI](https://img.shields.io/circleci/project/github/Firesphere/silverstripe-partial-userforms.svg)](https://circleci.com/gh/Firesphere/silverstripe-partial-userforms)
+[![codecov](https://codecov.io/gh/Firesphere/silverstripe-partial-userforms/branch/master/graph/badge.svg)](https://codecov.io/gh/Firesphere/silverstripe-partial-userforms)
+
+
+# Partial User Defined Form submissions
+
+This module aims to store partial submissions of userforms, for where the User Defined Form has multiple "pages".
+
+The partials are stored and removed when the form is finished.
+
 # Actual license
 
 This module is published under BSD 3-clause license, although these are not in the actual classes, the license does apply:

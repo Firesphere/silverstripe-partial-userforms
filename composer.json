@@ -18,7 +18,8 @@
     ],
     "require": {
         "silverstripe/recipe-cms": "^1.0",
-        "silverstripe/userforms": "^5.1.1"
+        "silverstripe/userforms": "^5.1.1",
+        "symbiote/silverstripe-queuedjobs": "^4.2"
     },
     "require-dev": {
         "scriptfusion/phpunit-immediate-exception-printer": "^2.0",
