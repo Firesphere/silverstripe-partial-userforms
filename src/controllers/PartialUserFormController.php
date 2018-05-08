@@ -6,30 +6,39 @@ use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Dev\Debug;
 
 class PartialUserFormController extends ContentController
 {
+
+    const SESSION_KEY = 'PartialSubmissionID';
 
     private static $url_handlers = [
         '*' => 'savePartialSubmission'
     ];
 
+    /**
+     * @param HTTPRequest $request
+     * @return int
+     * @throws \SilverStripe\ORM\ValidationException
+     */
     public function savePartialSubmission(HTTPRequest $request)
     {
         $postVars = $request->postVars();
-        $partialSubmission = PartialFormSubmission::create();
-        $partialSubmission->write();
+        $submissionID = $request->getSession()->get(self::SESSION_KEY);
+        if (!$submissionID) {
+            $partialSubmission = PartialFormSubmission::create();
+            $submissionID = $partialSubmission->write();
+        }
+        $request->getSession()->set(self::SESSION_KEY, $submissionID);
 
-        Debug::dump($postVars);
         foreach ($postVars as $field => $value) {
             PartialFieldSubmission::create([
                 'Name'     => $field,
                 'Value'    => $value,
-                'ParentID' => $partialSubmission->ID
+                'ParentID' => $submissionID
             ])->write();
         }
 
-        return $partialSubmission->ID;
+        return $submissionID;
     }
 }

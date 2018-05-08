@@ -2,23 +2,18 @@
 
 namespace Firesphere\PartialUserforms\Tests;
 
+use Firesphere\PartialUserforms\Controllers\PartialUserFormController;
 use Firesphere\PartialUserforms\Extensions\SubmittedFormExtension;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 
 class SubmittedFormExtensionTest extends SapphireTest
 {
 
     protected static $fixture_file = '../fixtures/submittedformextensiontest.yml';
-
-    protected function setUp()
-    {
-        parent::setUp();
-    }
 
     public function testClassExists()
     {
@@ -57,5 +52,23 @@ class SubmittedFormExtensionTest extends SapphireTest
         $submissionFields = PartialFieldSubmission::get()->filter(['ParentID' => $partialSubmission->ID]);
 
         $this->assertEquals(0, $submissionFields->count());
+    }
+
+    public function testUpdateAfterProcessSession()
+    {
+        $partialSubmission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
+        Controller::curr()->getRequest()->getSession()->set('PartialSubmissionID', $partialSubmission->ID);
+
+        $extension = Injector::inst()->get(PartialFormSubmission::class);
+
+        $extension->updateAfterProcess();
+
+        $session = Controller::curr()->getRequest()->getSession()->get('PartialSubmissionID');
+        $this->assertNull($session);
+    }
+
+    protected function setUp()
+    {
+        parent::setUp();
     }
 }

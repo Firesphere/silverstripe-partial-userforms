@@ -7,6 +7,7 @@ use Firesphere\PartialUserforms\Controllers\PartialUserFormController;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 
@@ -36,6 +37,8 @@ class PartialUserFormControllerTest extends SapphireTest
     public function testSavePartialSubmissionFormCreated()
     {
         $request = new HTTPRequest('GET', '/partialuserform', [], []);
+        $session = new Session(['hi' => 'bye']);
+        $request->setSession($session);
 
         $id = $this->controller->savePartialSubmission($request);
 
@@ -49,11 +52,30 @@ class PartialUserFormControllerTest extends SapphireTest
     public function testSavePartialSubmissionFieldCreated()
     {
         $request = new HTTPRequest('GET', '/partialuserform', [], ['Field1' => 'Value1']);
+        $session = new Session(['hi' => 'bye']);
+        $request->setSession($session);
 
         $id = $this->controller->savePartialSubmission($request);
 
         $fields = PartialFieldSubmission::get()->filter(['ParentID' => $id]);
 
         $this->assertEquals(1, $fields->count());
+    }
+
+    public function testPartialFormSubmissionExists()
+    {
+        $request = new HTTPRequest('GET', '/partialuserform', [], ['Field1' => 'Value1']);
+        $session = new Session(['hi' => 'bye']);
+        $request->setSession($session);
+
+        $id = $this->controller->savePartialSubmission($request);
+
+        $session = $request->getSession();
+        $request = new HTTPRequest('GET', '/partialuserform', [], ['Field2' => 'Value2']);
+        $request->setSession($session);
+
+        $secondId = $this->controller->savePartialSubmission($request);
+
+        $this->assertEquals($id, $secondId);
     }
 }

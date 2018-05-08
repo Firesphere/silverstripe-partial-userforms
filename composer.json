@@ -17,8 +17,6 @@
     }
   ],
   "require": {
-    "silverstripe/framework": "^4.0",
-    "silverstripe/siteconfig": "^4.0",
     "silverstripe/userforms": "^5.1.1"
   },
   "require-dev": {

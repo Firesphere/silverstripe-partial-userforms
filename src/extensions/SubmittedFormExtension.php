@@ -8,11 +8,10 @@ use SilverStripe\ORM\DataExtension;
 
 class SubmittedFormExtension extends DataExtension
 {
-
     public function updateAfterProcess()
     {
         // cleanup partial submissions
-        $partialID = Controller::curr()->getRequest()->getSession()->get('PartialSubmissionID');
+        $partialID = Controller::curr()->getRequest()->getSession()->get(PartialUserFormController::SESSION_KEY);
         /** @var PartialFormSubmission $partialForm */
         $partialForm = PartialFormSubmission::get()->byID($partialID);
         foreach ($partialForm->PartialFields() as $field) {
@@ -21,5 +20,6 @@ class SubmittedFormExtension extends DataExtension
         }
         $partialForm->delete();
         $partialForm->destroy();
+        Controller::curr()->getRequest()->getSession()->clear(PartialUserFormController::SESSION_KEY);
     }
 }
