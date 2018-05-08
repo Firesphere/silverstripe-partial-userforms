@@ -17,7 +17,6 @@ class UserDefinedFormExtensionTest extends SapphireTest
 
         $fields = FieldList::create();
         $fields->add(Tab::create('Root'));
-        $fields->add(Tab::create('Root.PartialSubmissions'));
 
         $extension->setOwner(UserDefinedForm::create());
 

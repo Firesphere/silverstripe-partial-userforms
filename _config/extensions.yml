@@ -7,3 +7,6 @@ SilverStripe\UserForms\Control\UserDefinedFormController:
 SilverStripe\UserForms\Model\UserDefinedForm:
   extensions:
     - Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - Firesphere\PartialUserforms\Extensions\SiteConfigExtension

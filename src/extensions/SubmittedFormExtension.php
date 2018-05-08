@@ -14,10 +14,16 @@ use SilverStripe\ORM\DataExtension;
  */
 class SubmittedFormExtension extends DataExtension
 {
+    /**
+     * @var array
+     */
     private static $summary_fields = [
-
+        'IsPartial'
     ];
 
+    /**
+     *
+     */
     public function updateAfterProcess()
     {
         // cleanup partial submissions
@@ -31,5 +37,14 @@ class SubmittedFormExtension extends DataExtension
         $partialForm->delete();
         $partialForm->destroy();
         Controller::curr()->getRequest()->getSession()->clear(PartialUserFormController::SESSION_KEY);
+    }
+
+    public function getIsPartial()
+    {
+        if ($this->owner->ClassName === PartialFormSubmission::class) {
+            return _t(__CLASS__ . '.yes', 'Yes');
+        }
+
+        return _t(__CLASS__ . '.no', 'No');
     }
 }

@@ -9,6 +9,7 @@ use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\UserForms\Model\Submission\SubmittedForm;
 
 class SubmittedFormExtensionTest extends SapphireTest
 {
@@ -73,6 +74,26 @@ class SubmittedFormExtensionTest extends SapphireTest
 
         $session = Controller::curr()->getRequest()->getSession()->get(PartialUserFormController::SESSION_KEY);
         $this->assertNull($session);
+    }
+
+    public function testIsPartial()
+    {
+        /** @var SubmittedFormExtension $extension */
+        $extension = Injector::inst()->get(SubmittedFormExtension::class);
+        $submission = PartialFormSubmission::create();
+        $extension->setOwner($submission);
+
+        $this->assertEquals('Yes', $extension->getIsPartial());
+    }
+
+    public function testIsNotPartial()
+    {
+        /** @var SubmittedFormExtension $extension */
+        $extension = Injector::inst()->get(SubmittedFormExtension::class);
+        $submission = SubmittedForm::create();
+        $extension->setOwner($submission);
+
+        $this->assertEquals('No', $extension->getIsPartial());
     }
 
     protected function setUp()

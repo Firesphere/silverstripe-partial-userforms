@@ -16,12 +16,21 @@ use SilverStripe\UserForms\Model\EditableFormField;
  */
 class PartialUserFormController extends ContentController
 {
+    /**
+     * Session key name
+     */
     const SESSION_KEY = 'PartialSubmissionID';
 
+    /**
+     * @var array
+     */
     private static $url_handlers = [
         '' => 'savePartialSubmission'
     ];
 
+    /**
+     * @var array
+     */
     private static $allowed_actions = [
         'savePartialSubmission'
     ];

@@ -38,7 +38,8 @@
             "psr-4": {
                 "Firesphere\\PartialUserForms\\Controllers": "src/controllers",
                 "Firesphere\\PartialUserForms\\Extensions": "src/extensions",
-                "Firesphere\\PartialUserForms\\Models": "src/models"
+                "Firesphere\\PartialUserForms\\Models": "src/models",
+                "Firesphere\\PartialUserForms\\Jobs": "src/jobs"
             }
         }
     },

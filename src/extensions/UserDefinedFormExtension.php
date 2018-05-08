@@ -13,15 +13,21 @@ use SilverStripe\ORM\DataExtension;
 /**
  * Class \Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension
  *
- * @property \Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension $owner
+ * @property \SilverStripe\UserForms\Model\UserDefinedForm|\Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension $owner
  * @method \SilverStripe\ORM\DataList|\Firesphere\PartialUserforms\Models\PartialFormSubmission[] PartialSubmissions()
  */
 class UserDefinedFormExtension extends DataExtension
 {
+    /**
+     * @var array
+     */
     private static $has_many = [
         'PartialSubmissions' => PartialFormSubmission::class
     ];
 
+    /**
+     * @param FieldList $fields
+     */
     public function updateCMSFields(FieldList $fields)
     {
         /** @var GridFieldConfig_RelationEditor $gridfieldConfig */
@@ -29,11 +35,18 @@ class UserDefinedFormExtension extends DataExtension
         $gridfieldConfig->removeComponentsByType(GridFieldAddNewButton::class);
 
         // We need to manually add the tab
-        $fields->addFieldToTab('Root', Tab::create('PartialSubmissions'));
+        $fields->addFieldToTab(
+            'Root',
+            Tab::create('PartialSubmissions', _t(__CLASS__ . 'PartialSubmission', 'Partial submissions'))
+        );
 
         $fields->addFieldToTab(
             'Root.PartialSubmissions',
-            GridField::create('PartialSubmissions', 'Partial submissions', $this->owner->PartialSubmissions())
+            GridField::create(
+                'PartialSubmissions',
+                _t(__CLASS__ . 'PartialSubmission', 'Partial submissions'),
+                $this->owner->PartialSubmissions()
+            )
         );
     }
 }
