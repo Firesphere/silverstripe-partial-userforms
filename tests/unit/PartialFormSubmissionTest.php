@@ -13,12 +13,6 @@ class PartialFormSubmissionTest extends SapphireTest
      */
     protected $submission;
 
-    protected function setUp()
-    {
-        $this->submission = Injector::inst()->get(PartialFormSubmission::class);
-        return parent::setUp();
-    }
-
     public function testCanEdit()
     {
         $this->assertFalse($this->submission->canEdit());
@@ -27,5 +21,12 @@ class PartialFormSubmissionTest extends SapphireTest
     public function testCanDelete()
     {
         $this->assertFalse($this->submission->canDelete());
+    }
+
+    protected function setUp()
+    {
+        $this->submission = Injector::inst()->get(PartialFormSubmission::class);
+
+        return parent::setUp();
     }
 }

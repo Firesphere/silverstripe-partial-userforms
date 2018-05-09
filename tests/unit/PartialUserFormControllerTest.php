@@ -186,7 +186,7 @@ class PartialUserFormControllerTest extends SapphireTest
         $values = [
             'Field1' => 'Value1',
             'Field2' => 'Value2',
-            'Field3' => ['Value1','Value2']
+            'Field3' => ['Value1', 'Value2']
         ];
         $request = new HTTPRequest('POST', '/partialuserform', [], $values);
         $session = new Session(['hi' => 'bye']);
