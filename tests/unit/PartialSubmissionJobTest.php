@@ -10,12 +10,11 @@ use Symbiote\QueuedJobs\Services\QueuedJobService;
 
 class PartialSubmissionJobTest extends SapphireTest
 {
+    protected static $fixture_file = '../fixtures/partialsubmissions.yml';
     /**
      * @var PartialSubmissionJob
      */
     protected $job;
-
-    protected static $fixture_file = '../partialsubmissions.yml';
 
     public function testGetTitle()
     {
@@ -33,6 +32,7 @@ class PartialSubmissionJobTest extends SapphireTest
         Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
         /** @var PartialSubmissionJob $job */
         $this->job = Injector::inst()->get(PartialSubmissionJob::class);
+
         return parent::setUp();
     }
 }

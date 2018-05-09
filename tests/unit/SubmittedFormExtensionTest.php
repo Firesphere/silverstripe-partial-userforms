@@ -83,7 +83,7 @@ class SubmittedFormExtensionTest extends SapphireTest
         $submission = PartialFormSubmission::create();
         $extension->setOwner($submission);
 
-        $this->assertEquals('Yes', $extension->getIsPartial());
+        $this->assertEquals('Partial submission', $extension->getIsPartial());
     }
 
     public function testIsNotPartial()
@@ -93,7 +93,7 @@ class SubmittedFormExtensionTest extends SapphireTest
         $submission = SubmittedForm::create();
         $extension->setOwner($submission);
 
-        $this->assertEquals('No', $extension->getIsPartial());
+        $this->assertEquals('Completed submission', $extension->getIsPartial());
     }
 
     protected function setUp()

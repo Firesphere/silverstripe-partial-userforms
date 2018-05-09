@@ -469,10 +469,13 @@ module.exports = __webpack_require__(28);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__partialuserforms_partialuserforms__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__partialuserforms_partialsubmission__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partialuserforms_partialstorage__ = __webpack_require__(56);
 
 
-Object(__WEBPACK_IMPORTED_MODULE_0__partialuserforms_partialuserforms__["a" /* default */])();
+
+Object(__WEBPACK_IMPORTED_MODULE_0__partialuserforms_partialsubmission__["a" /* default */])();
+Object(__WEBPACK_IMPORTED_MODULE_1__partialuserforms_partialstorage__["a" /* default */])();
 
 /***/ }),
 /* 29 */
@@ -494,7 +497,8 @@ var formElements = function formElements() {
 var submitPartial = function submitPartial() {
   var data = new FormData();
   formElements().forEach(function (element) {
-    data.append(element.getAttribute('name'), element.getAttribute('value'));
+    console.log(element);
+    data.append(element.getAttribute('name'), element.value);
   });
   var httpRequest = new XMLHttpRequest();
   httpRequest.open('POST', '' + baseDomain + submitURL, true);
@@ -502,7 +506,6 @@ var submitPartial = function submitPartial() {
 };
 
 var attachSubmitPartial = function attachSubmitPartial(button) {
-  console.log(button);
   button.addEventListener('click', submitPartial);
 };
 
@@ -1056,6 +1059,15 @@ module.exports = function (exec, skipClosing) {
   return safe;
 };
 
+
+/***/ }),
+/* 56 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = (function () {
+  // @todo, add the option to prefill
+});
 
 /***/ })
 /******/ ]);

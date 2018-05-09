@@ -6,7 +6,8 @@ const formElements = () => Array.from(document.body.querySelectorAll('form.userf
 const submitPartial = () => {
   const data = new FormData();
   formElements().forEach((element) => {
-    data.append(element.getAttribute('name'), element.getAttribute('value'));
+    console.log(element);
+    data.append(element.getAttribute('name'), element.value);
   });
   const httpRequest = new XMLHttpRequest();
   httpRequest.open('POST', `${baseDomain}${submitURL}`, true);
