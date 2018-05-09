@@ -23,4 +23,14 @@ class PartialFormSubmission extends SubmittedForm
     private static $has_many = [
         'PartialFields' => PartialFieldSubmission::class
     ];
+
+    public function canEdit($member = null)
+    {
+        return false;
+    }
+
+    public function canDelete($member = null)
+    {
+        return false;
+    }
 }

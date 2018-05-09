@@ -180,4 +180,26 @@ class PartialUserFormControllerTest extends SapphireTest
         $this->assertFalse(in_array('SecurityID', $items, true));
         $this->assertFalse(in_array('action_process', $items, true));
     }
+
+    public function testArrayData()
+    {
+        $values = [
+            'Field1' => 'Value1',
+            'Field2' => 'Value2',
+            'Field3' => ['Value1','Value2']
+        ];
+        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
+        $session = new Session(['hi' => 'bye']);
+        $request->setSession($session);
+
+        $this->controller->savePartialSubmission($request);
+        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
+        $field3 = PartialFieldSubmission::get()
+            ->filter([
+                'Name'            => 'Field3',
+                'SubmittedFormID' => $sessionKey
+            ])
+            ->first();
+        $this->assertEquals('Value1, Value2', $field3->Value);
+    }
 }

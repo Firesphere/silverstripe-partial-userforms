@@ -4,15 +4,15 @@ const buttons = () => Array.from(document.body.querySelectorAll('form.userform u
 const formElements = () => Array.from(document.body.querySelectorAll('form.userform [name]'));
 
 const getElementValue = (element, fieldName) => {
-  let value = element.value;
+  const value = element.value;
   if (element.getAttribute('type') === 'select') {
-    value = element[element.selectedIndex].value;
+    return element[element.selectedIndex].value;
   }
   if (element.getAttribute('type') === 'radio') {
     const name = `[name=${fieldName}]:checked`;
     const checkedElement = document.body.querySelector(name);
     if (checkedElement !== null) {
-      value = checkedElement.value;
+      return checkedElement.value;
     }
   }
   if (element.getAttribute('type') === 'checkbox') {
@@ -23,7 +23,7 @@ const getElementValue = (element, fieldName) => {
       checkedElements.forEach((element) => {
         valueArray.push(element.value);
       });
-      value = valueArray;
+      return valueArray;
     }
   }
   return value;
@@ -33,8 +33,18 @@ const submitPartial = () => {
   const data = new FormData();
   formElements().forEach((element) => {
     const fieldName = element.getAttribute('name');
-    console.log(data);
-    data.append(fieldName, getElementValue(element, fieldName));
+    const value = getElementValue(element, fieldName);
+    if (!data.has(fieldName)) {
+      if (typeof value === 'object') {
+        value.forEach((arrayValue) => {
+          data.append(fieldName, arrayValue);
+        })
+      } else {
+        if (value) {
+          data.append(fieldName, value);
+        }
+      }
+    }
   });
   const httpRequest = new XMLHttpRequest();
   httpRequest.open('POST', `${baseDomain}${submitURL}`, true);

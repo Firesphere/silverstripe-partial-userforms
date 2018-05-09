@@ -43,6 +43,7 @@ class PartialUserFormController extends ContentController
     public function savePartialSubmission(HTTPRequest $request)
     {
         $postVars = $request->postVars();
+        $editableField = null;
 
         // We don't want SecurityID and/or the process Action stored as a thing
         unset($postVars['SecurityID'], $postVars['action_process']);
@@ -65,7 +66,7 @@ class PartialUserFormController extends ContentController
             ]);
         }
 
-        if (!$partialSubmission->ParentID) {
+        if ($editableField instanceof EditableFormField && !$partialSubmission->ParentID) {
             $partialSubmission->update([
                 'ParentID'    => $editableField->Parent()->ParentID,
                 'ParentClass' => $editableField->Parent()->ClassName
@@ -82,10 +83,15 @@ class PartialUserFormController extends ContentController
      */
     protected function createOrUpdateSubmission($formData)
     {
+        if (is_array($formData['Value'])) {
+            $formData['Value'] = implode(', ', $formData['Value']);
+        }
+
         $filter = [
             'Name'            => $formData['Name'],
             'SubmittedFormID' => $formData['SubmittedFormID'],
         ];
+
         $exists = PartialFieldSubmission::get()->filter($filter)->first();
         // Set the title
         $editableField = EditableFormField::get()->filter(['Name' => $formData['Name']])->first();
