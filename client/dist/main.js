@@ -491,14 +491,40 @@ var buttons = function buttons() {
   return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_array_from___default()(document.body.querySelectorAll('form.userform ul li.step-button-wrapper button'));
 };
 var formElements = function formElements() {
-  return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_array_from___default()(document.body.querySelectorAll('form.userform input, form.userform select, form.userform textarea'));
+  return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_array_from___default()(document.body.querySelectorAll('form.userform [name]'));
+};
+
+var getElementValue = function getElementValue(element, fieldName) {
+  var value = element.value;
+  if (element.getAttribute('type') === 'select') {
+    value = element[element.selectedIndex].value;
+  }
+  if (element.getAttribute('type') === 'radio') {
+    var name = '[name=' + fieldName + ']:checked';
+    var checkedElement = document.body.querySelector(name);
+    if (checkedElement !== null) {
+      value = checkedElement.value;
+    }
+  }
+  if (element.getAttribute('type') === 'checkbox') {
+    var _name = '[name="' + fieldName + '"]:checked';
+    var checkedElements = __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_array_from___default()(document.body.querySelectorAll(_name));
+    var valueArray = [];
+    if (checkedElements.length > 0) {
+      checkedElements.forEach(function (element) {
+        valueArray.push(element.value);
+      });
+      value = valueArray.join(',');
+    }
+  }
+  return value;
 };
 
 var submitPartial = function submitPartial() {
   var data = new FormData();
   formElements().forEach(function (element) {
-    console.log(element);
-    data.append(element.getAttribute('name'), element.value);
+    var fieldName = element.getAttribute('name');
+    data.append(fieldName, getElementValue(element, fieldName));
   });
   var httpRequest = new XMLHttpRequest();
   httpRequest.open('POST', '' + baseDomain + submitURL, true);

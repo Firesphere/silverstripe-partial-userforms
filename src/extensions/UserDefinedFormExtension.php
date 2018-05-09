@@ -20,7 +20,6 @@ use SilverStripe\ORM\DataExtension;
  */
 class UserDefinedFormExtension extends DataExtension
 {
-
     private static $db = [
         'ExportPartialSubmissions' => 'Boolean(true)',
     ];
@@ -60,12 +59,17 @@ class UserDefinedFormExtension extends DataExtension
             )
         );
 
-        $fields->insertAfter('DisableSaveSubmissions',
-            $partialCheckbox = CheckboxField::create('ExportPartialSubmissions',
-                _t(__CLASS__ . '.partialCheckboxLabel', 'Send partial submissions'))
+        $fields->insertAfter(
+            'DisableSaveSubmissions',
+            $partialCheckbox = CheckboxField::create(
+                'ExportPartialSubmissions',
+                _t(__CLASS__ . '.partialCheckboxLabel', 'Send partial submissions')
+            )
         );
-        $description = _t(__CLASS__ . '.partialCheckboxDescription',
-            'The configuration and global export configuration can be set in the site Settings');
+        $description = _t(
+            __CLASS__ . '.partialCheckboxDescription',
+            'The configuration and global export configuration can be set in the site Settings'
+        );
         $partialCheckbox->setDescription($description);
     }
 }
