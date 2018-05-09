@@ -58,7 +58,7 @@ jobs:
       # run tests!
       - run: vendor/bin/sake dev/build
       - run: vendor/bin/phpunit --coverage-clover=coverage.xml --log-junit=junit.xml -d memory_limit=512M tests/unit
-      - run: vendor/bin/phpcs --standard=phpcs.xml.dist src tests/unit
       - run: bash <(curl -s https://codecov.io/bash) -f coverage.xml
+      - run: vendor/bin/phpcs --standard=phpcs.xml.dist src tests/unit
       - store_test_results:
-          path: ~/var/www/html/coverage
+          path: ~/var/www/html
