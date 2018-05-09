@@ -23,5 +23,6 @@ class UserDefinedFormExtensionTest extends SapphireTest
         $extension->updateCMSFields($fields);
 
         $this->assertNotNull($fields->dataFieldByName('PartialSubmissions'));
+        $this->assertNotNull($fields->dataFieldByName('ExportPartialSubmissions'));
     }
 }

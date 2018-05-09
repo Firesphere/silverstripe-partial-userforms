@@ -10,19 +10,29 @@ use Symbiote\QueuedJobs\Services\QueuedJobService;
 
 class PartialSubmissionJobTest extends SapphireTest
 {
+    /**
+     * @var PartialSubmissionJob
+     */
+    protected $job;
+
+    protected static $fixture_file = '../partialsubmissions.yml';
 
     public function testGetTitle()
     {
-        /** @var PartialSubmissionJob $job */
-        $job = Injector::inst()->get(PartialSubmissionJob::class);
+        $this->assertEquals('Export partial submissions to Email', $this->job->getTitle());
+    }
 
-        $this->assertEquals('Export partial submissions to Email', $job->getTitle());
+    public function testProcess()
+    {
+        $this->assertTrue(method_exists($this->job, 'process'));
     }
 
     protected function setUp()
     {
         $this->usesDatabase = true;
         Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
+        /** @var PartialSubmissionJob $job */
+        $this->job = Injector::inst()->get(PartialSubmissionJob::class);
         return parent::setUp();
     }
 }

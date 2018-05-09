@@ -18,11 +18,11 @@ class SubmittedFormExtension extends DataExtension
      * @var array
      */
     private static $summary_fields = [
-        'IsPartial'
+        'IsPartial' => 'IsPartial'
     ];
 
     /**
-     *
+     * Remove the partial submissions after completion
      */
     public function updateAfterProcess()
     {
@@ -39,12 +39,17 @@ class SubmittedFormExtension extends DataExtension
         Controller::curr()->getRequest()->getSession()->clear(PartialUserFormController::SESSION_KEY);
     }
 
+    /**
+     * Is it a partial submission or not
+     *
+     * @return string
+     */
     public function getIsPartial()
     {
         if ($this->owner->ClassName === PartialFormSubmission::class) {
-            return _t(__CLASS__ . '.yes', 'Yes');
+            return _t(__CLASS__ . '.partial', 'Partial submission');
         }
 
-        return _t(__CLASS__ . '.no', 'No');
+        return _t(__CLASS__ . '.notPartial', 'Completed submission');
     }
 }

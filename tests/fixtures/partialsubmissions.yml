@@ -1,0 +1,108 @@
+SilverStripe\UserForms\Model\UserDefinedForm:
+  form1:
+    Title: Base form
+SilverStripe\UserForms\Model\EditableFormField\EditableFormStep:
+  formStep1:
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Title: Page 1
+    Sort: 1
+  formStep2:
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Title: Page 2
+    Sort: 10
+SilverStripe\UserForms\Model\EditableFormField\EditableTextField:
+  textfield1:
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Title: Fill me in
+    ContextualHelp: Enter some text
+    Placeholder: Text text text
+    Required: true
+    CustomErrorMessage: Error - textfield1
+    Sort: 2
+SilverStripe\UserForms\Model\EditableFormField\EditableNumericField:
+  numericfield1:
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Title: Count me in
+    ContextualHelp: Enter a valid number
+    Required: true
+    CustomErrorMessage: Error - numericfield1
+    Sort: 3
+SilverStripe\UserForms\Model\EditableFormField\EditableEmailField:
+  emailfield1:
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Title: Mail me via the internets
+    ContextualHelp: Enter a valid email address
+    Placeholder: very@excellent.com
+    Required: true
+    CustomErrorMessage: Error - emailfield1
+    Sort: 4
+SilverStripe\UserForms\Model\EditableFormField\EditableDropdown:
+  dropdownfield1:
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Title: Drop on in
+    ContextualHelp: Pick One
+    Placeholder: Placeholder text
+    Required: true
+    CustomErrorMessage: Error - dropdownfield1
+    Sort: 5
+SilverStripe\UserForms\Model\EditableFormField\EditableCheckbox:
+  checkbox1:
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Title: Check me out
+    ContextualHelp: Sign your soul away
+    Required: true
+    CustomErrorMessage: Error - checkbox1
+    SortOrder: 11
+SilverStripe\UserForms\Model\EditableFormField\EditableCheckboxGroupField:
+  checkboxGroup1:
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Title: Check us out
+    ContextualHelp: Check some options
+    Required: true
+    CustomErrorMessage: Error - checkboxGroup1
+    Sort: 12
+SilverStripe\UserForms\Model\EditableFormField\EditableRadioField:
+  radioGroup1:
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Title: Pick one
+    ContextualHelp: Pick an option
+    Required: true
+    CustomErrorMessage: Error - radioGroup1
+    Sort: 13
+SilverStripe\UserForms\Model\EditableFormField\EditableOption:
+  checkboxOption1:
+    Parent: =>SilverStripe\UserForms\Model\EditableFormField\EditableCheckboxGroupField.checkboxGroup1
+    Title: One
+    Value: 1
+  checkboxOption2:
+    Parent: =>SilverStripe\UserForms\Model\EditableFormField\EditableCheckboxGroupField.checkboxGroup1
+    Title: Two
+    Value: 2
+  checkboxOption3:
+    Parent: =>SilverStripe\UserForms\Model\EditableFormField\EditableCheckboxGroupField.checkboxGroup1
+    Title: Three
+    Value: 3
+  radioOption1:
+    Parent: =>SilverStripe\UserForms\Model\EditableFormField\EditableRadioField.radioGroup1
+    Title: Aye
+    Value: A
+  radioOption2:
+    Parent: =>SilverStripe\UserForms\Model\EditableFormField\EditableRadioField.radioGroup1
+    Title: Bee
+    Value: B
+  radioOption3:
+    Parent: =>SilverStripe\UserForms\Model\EditableFormField\EditableRadioField.radioGroup1
+    Title: Sea
+    Value: C
+  dropdownOption1:
+    Parent: =>SilverStripe\UserForms\Model\EditableFormField\EditableDropdown.dropdownfield1
+    Title: Yes
+    Value: Y
+  dropdownOption2:
+    Parent: =>SilverStripe\UserForms\Model\EditableFormField\EditableDropdown.dropdownfield1
+    Title: No
+    Value: N
+  dropdownOption3:
+    Parent: =>SilverStripe\UserForms\Model\EditableFormField\EditableDropdown.dropdownfield1
+    Title: Maybe
+    Value: M

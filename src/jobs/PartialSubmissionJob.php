@@ -2,6 +2,8 @@
 
 namespace Firesphere\PartialUserforms\Jobs;
 
+use SilverStripe\ORM\DataList;
+use SilverStripe\UserForms\Model\UserDefinedForm;
 use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
 
 class PartialSubmissionJob extends AbstractQueuedJob
@@ -20,5 +22,10 @@ class PartialSubmissionJob extends AbstractQueuedJob
      */
     public function process()
     {
+        /** @var DataList|UserDefinedForm[] $exportForms */
+        $exportForms = UserDefinedForm::get()->filter(['ExportPartialSubmissions' => true]);
+        foreach ($exportForms as $form) {
+            // @todo generate a CSV for each form that should be exported;
+        }
     }
 }
