@@ -8,6 +8,39 @@ This module aims to store partial submissions of userforms, for where the User D
 
 The partials are stored and removed when the form is finished.
 
+# Installation
+
+`composer require firesphere/partialuserforms`
+
+# Usage
+
+Partial form submissions are stored in the database and visible on the forms in the CMS.
+
+A daily export of the partial submissions can be acquired by checking the checkbox on the form
+and setting the configuration in the Settings
+
+# Requirements
+
+- UserDefinedForms 5+
+- SilverStripe Recipe CMS 1+
+- QueuedJobs 4+
+
+## Dev requirements
+
+- PHPUnit
+- Immediate exception printer
+- PHP CodeSniffer
+
+# Benefits
+
+With Partial forms, partial submissions are available to CMS users, to see how far a visitor got through the form
+and optionally make a call to the user, asking why they gave up.
+
+# Further improvements
+
+- Save the partial form to LocalStorage, to enable pre-filling of forms
+- JS test coverage
+
 # Actual license
 
 This module is published under BSD 3-clause license, although these are not in the actual classes, the license does apply:
