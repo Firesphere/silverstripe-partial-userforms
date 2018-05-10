@@ -7,6 +7,7 @@ use DateTime;
 use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;
@@ -32,7 +33,8 @@ class SiteConfigExtension extends DataExtension
     private static $db = [
         'SendDailyEmail'   => 'Boolean(false)',
         'CleanupAfterSend' => 'Boolean(false)',
-        'SendMailTo'       => 'Varchar(2550'
+        'SendMailTo'       => 'Varchar(255)',
+        'SendMailFrom'     => 'Varchar(255)',
     ];
 
     /**
@@ -54,6 +56,10 @@ class SiteConfigExtension extends DataExtension
             $emailField = TextField::create(
                 'SendMailTo',
                 _t(__CLASS__ . 'SendMailTo', 'Email address the partial submissions should be send to')
+            ),
+            EmailField::create(
+                'SendMailFrom',
+                _t(__CLASS__ . 'SendMailFrom', 'Email address from which the partial submissions should be send')
             )
         ]);
 

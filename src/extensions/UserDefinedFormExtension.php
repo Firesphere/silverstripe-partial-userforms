@@ -14,7 +14,7 @@ use SilverStripe\ORM\DataExtension;
 /**
  * Class \Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension
  *
- * @property \DNADesign\ElementalUserForms\Model\ElementForm|\SilverStripe\UserForms\Model\UserDefinedForm|\Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension $owner
+ * @property \Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension $owner
  * @property boolean $ExportPartialSubmissions
  * @method \SilverStripe\ORM\DataList|\Firesphere\PartialUserforms\Models\PartialFormSubmission[] PartialSubmissions()
  */

@@ -4,8 +4,10 @@ namespace Firesphere\PartialUserforms\Tests;
 
 use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Security;
@@ -130,12 +132,12 @@ class PartialSubmissionJobTest extends SapphireTest
         $job->process();
 
         $emails = $job->getAddresses();
-        \SilverStripe\Dev\Debug::dump($emails);
-        $this->assertArrayNotHasKey('error', $emails);
-        $this->assertArrayNotHasKey('non-existing', $emails);
-        $this->assertArrayNotHasKey(' test@example.com', $emails);
-        $this->assertArrayHasKey('test@example.com', $emails);
-        $this->assertArrayHasKey('tester@example.com', $emails);
+
+        $expected = [
+            'test@example.com',
+            'tester@example.com'
+        ];
+        $this->assertEquals($expected, $emails);
     }
 
     public function testCommaSeparatedUsers()
@@ -149,6 +151,29 @@ class PartialSubmissionJobTest extends SapphireTest
         $this->assertEmailSent('test@example.com');
         $this->assertEmailSent('tester@example.com');
         $this->assertEmailSent('another@example.com');
+    }
+
+    public function testFromAddressSet()
+    {
+        $config = SiteConfig::current_site_config();
+        $config->SendDailyEmail = true;
+        $config->SendMailTo = 'test@example.com';
+        $config->SendMailFrom = 'site@example.com';
+        $config->write();
+
+        $this->job->process();
+        $this->assertEmailSent('test@example.com', 'site@example.com');
+    }
+
+    public function testFromAddressNotSet()
+    {
+        $config = SiteConfig::current_site_config();
+        $config->SendDailyEmail = true;
+        $config->SendMailTo = 'test@example.com';
+        $config->write();
+
+        $this->job->process();
+        $this->assertEmailSent('test@example.com', 'site@' . Director::host());
     }
 
     protected function setUp()

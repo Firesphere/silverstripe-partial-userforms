@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 
 class PartialSubmissionTask extends BuildTask
@@ -30,6 +31,8 @@ class PartialSubmissionTask extends BuildTask
      */
     public function run($request)
     {
+        $user = Member::get()->filter(['Email' => 'simonerkelens@silverstripe.com'])->first();
+        Security::setCurrentUser($user);
         $currentUser = Security::getCurrentUser();
         $job = Injector::inst()->get(PartialSubmissionJob::class);
         if ($currentUser && Email::is_valid_address($currentUser->Email)) {

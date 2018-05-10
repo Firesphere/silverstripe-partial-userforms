@@ -11,6 +11,7 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\SiteConfig\SiteConfig;
 use Symbiote\QueuedJobs\DataObjects\QueuedJobDescriptor;
@@ -34,6 +35,7 @@ class SiteConfigExtensionTest extends SapphireTest
         $this->assertInstanceOf(CheckboxField::class, $fieldList->dataFieldByName('SendDailyEmail'));
         $this->assertInstanceOf(CheckboxField::class, $fieldList->dataFieldByName('CleanupAfterSend'));
         $this->assertInstanceOf(TextField::class, $fieldList->dataFieldByName('SendMailTo'));
+        $this->assertInstanceOf(EmailField::class, $fieldList->dataFieldByName('SendMailFrom'));
     }
 
     public function testOnAfterWriteNoSetting()

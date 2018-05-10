@@ -7,6 +7,7 @@ use DateTime;
 use DNADesign\ElementalUserForms\Model\ElementForm;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
+use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
@@ -56,12 +57,15 @@ class PartialSubmissionJob extends AbstractQueuedJob
     public function process()
     {
         $this->config = SiteConfig::current_site_config();
-        Debug::dump($this->config);
         $this->validateEmails();
 
-        if (!$this->config->SendDailyEmail ||
-            !count($this->addresses)
-        ) {
+        if (!$this->config->SendDailyEmail) {
+            $this->addMessage(_t(__CLASS__ . '.NotActive', 'Daily exports are not enabled'));
+            $this->isComplete = true;
+
+            return;
+        }
+        if (!count($this->addresses)) {
             $this->addMessage(_t(__CLASS__ . '.EmailError', 'Can not process without valid email'));
             $this->isComplete = true;
 
@@ -81,7 +85,6 @@ class PartialSubmissionJob extends AbstractQueuedJob
         }
 
         $this->sendEmail();
-
 
         $this->isComplete = true;
     }
@@ -279,8 +282,11 @@ class PartialSubmissionJob extends AbstractQueuedJob
             $mail->addAttachment($file);
         }
 
-        $mail->setFrom('test@example.com');
+
+        $from = $this->config->SendMailFrom ?: 'site@' . Director::host();
+        $mail->setFrom($from);
         $mail->setTo($this->addresses);
         $mail->setBody('Please see attached CSV files');
+        $mail->send();
     }
 }
