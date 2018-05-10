@@ -11,7 +11,7 @@ class DateService
 {
 
     /**
-     * @return DBDatetime|static
+     * @return DBDatetime
      * @throws \Exception
      */
     public static function getTomorrow()
