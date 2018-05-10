@@ -1,0 +1,275 @@
+SilverStripe\UserForms\Model\UserDefinedForm:
+  form1:
+    Title: 'TestForm'
+Firesphere\PartialUserforms\Models\PartialFormSubmission:
+  submission1:
+    UserDefinedForm: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+SilverStripe\UserForms\Model\EditableFormField:
+  - Name: EditableFormStep_2127d
+    Title: Before we start
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_53add
+    Title: Intro
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableFormStep_57398
+    Title: 'Let''s get started: which offer would you like?'
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_dc9ab
+    Title: "[Offers placeholder]"
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableFormStep_4fa04
+    Title: Great, let's get your details...
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: First_name
+    Title: First name (full legal version)
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_18f42
+    Title: Middle names (optional)
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_19c1d
+    Title: Family / Last name
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_9ec0d
+    Title: Date of birth
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: email_address
+    Title: Email address
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_0c189
+    Title: Phone number
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_6e4e8
+    Title: Is anyone in your household vulnerable?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_776ab
+    Title: vulnerable explanation
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_7cfb6
+    Title: More about vulnerable customers
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableFormStep_9c5b3
+    Title: Your property
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_225c3
+    Title: "[Address placeholder]"
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_1d5d8
+    Title: Have you lived at that address for longer than 1 year?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_2f833
+    Title: "[Previous Address placeholder]"
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_dfdb3
+    Title: Is this your main home (where you live most of the time)?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_4358d
+    Title: Are you moving house while switching to Meridian?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_75d24
+    Title: When do you want us to start electricity at your new address?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_87662
+    Title: Is this the first time electricity is being connected at this property (for
+      example, because the building is new)?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableFormStep_3d8bb
+    Title: Pricing
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_b91a0
+    Title: Which type of electricity user are you?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_64ebe
+    Title: Help me choose
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_4be4c
+    Title: Which type of rates would you like?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_ea26c
+    Title: Help me choose
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableFormStep_780d1
+    Title: Finishing up
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_d660c
+    Title: Receiving your bill
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_dac87
+    Title: Paying your bill
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_f7e4f
+    Title: Anything else you'd like to tell us?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_3aa1b
+    Title: Good to go?
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_d287c
+    Title: I'm happy for Meridian to use the details I've provided to run a credit check
+      through a credit reporting agency
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  - Name: EditableTextField_e38ac
+    Title: I have read and agree to Meridian's terms and conditions
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+Firesphere\PartialUserforms\Models\PartialFieldSubmission:
+  field1:
+    Name: EditableFormStep_57398
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field2:
+    Name: EditableTextField_dc9ab
+    Value: o1
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field3:
+    Name: EditableFormStep_4fa04
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field4:
+    Name: First_name
+    Value: Samantha
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field5:
+    Name: EditableTextField_18f42
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field6:
+    Name: EditableTextField_19c1d
+    Value: Smith
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field7:
+    Name: EditableTextField_9ec0d
+    Value: '1970-01-01'
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field8:
+    Name: email_address
+    Value: samantha@joe.com
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field9:
+    Name: EditableTextField_0c189
+    Value: '0211234567'
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field10:
+    Name: EditableTextField_6e4e8
+    Value: 'No'
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field11:
+    Name: EditableTextField_776ab
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field12:
+    Name: EditableTextField_7cfb6
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field13:
+    Name: EditableFormStep_9c5b3
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field14:
+    Name: EditableTextField_225c3
+    Value: 101 Courtenay Place
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field15:
+    Name: EditableTextField_1d5d8
+    Value: 'Yes'
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field16:
+    Name: EditableTextField_2f833
+    Value: 85 Wallace Street, Mt. Cook, Wellington
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field17:
+    Name: EditableTextField_dfdb3
+    Value: 'Yes'
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field18:
+    Name: EditableTextField_4358d
+    Value: No, I'm just switching electricity provider
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field19:
+    Name: EditableTextField_75d24
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field20:
+    Name: EditableTextField_87662
+    Value: 'Yes'
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field21:
+    Name: EditableFormStep_3d8bb
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field22:
+    Name: EditableTextField_b91a0
+    Value: Standard user
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field23:
+    Name: EditableTextField_64ebe
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field24:
+    Name: EditableTextField_4be4c
+    Value: Fixed 3 years
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field25:
+    Name: EditableTextField_ea26c
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field26:
+    Name: EditableFormStep_780d1
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field27:
+    Name: EditableTextField_d660c
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field28:
+    Name: EditableTextField_dac87
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field29:
+    Name: EditableTextField_f7e4f
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field30:
+    Name: EditableTextField_3aa1b
+    Value: ''
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field31:
+    Name: EditableTextField_d287c
+    Value:   Value1
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+  field32:
+    Name: EditableTextField_e38ac
+    Value: '1'
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1

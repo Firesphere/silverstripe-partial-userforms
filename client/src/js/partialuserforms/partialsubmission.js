@@ -40,9 +40,7 @@ const submitPartial = () => {
           data.append(fieldName, arrayValue);
         })
       } else {
-        if (value) {
-          data.append(fieldName, value);
-        }
+        data.append(fieldName, value);
       }
     }
   });
