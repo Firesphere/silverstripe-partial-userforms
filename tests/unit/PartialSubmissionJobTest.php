@@ -8,6 +8,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
 use Symbiote\QueuedJobs\DataObjects\QueuedJobDescriptor;
 use Symbiote\QueuedJobs\Services\QueuedJobService;
@@ -44,6 +45,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $config = SiteConfig::current_site_config();
         $config->SendDailyEmail = true;
         $config->SendMailTo = '';
+        Security::setCurrentUser(null);
         $config->write();
         $this->job->process();
 
@@ -126,8 +128,9 @@ class PartialSubmissionJobTest extends SapphireTest
         $job = Injector::inst()->get(PartialSubmissionJob::class);
 
         $job->process();
-        $emails = $job->getAddresses();
 
+        $emails = $job->getAddresses();
+        \SilverStripe\Dev\Debug::dump($emails);
         $this->assertArrayNotHasKey('error', $emails);
         $this->assertArrayNotHasKey('non-existing', $emails);
         $this->assertArrayNotHasKey(' test@example.com', $emails);

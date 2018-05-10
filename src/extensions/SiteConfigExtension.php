@@ -7,7 +7,6 @@ use DateTime;
 use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TextField;

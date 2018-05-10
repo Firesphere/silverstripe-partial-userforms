@@ -56,7 +56,7 @@ class PartialSubmissionTaskTest extends SapphireTest
 
         $task->run($request);
 
-        $this->assertEmailSent( 'userextrauser@example.com');
+        $this->assertEmailSent('userextrauser@example.com');
         $this->assertEmailSent('test@example.com');
     }
 

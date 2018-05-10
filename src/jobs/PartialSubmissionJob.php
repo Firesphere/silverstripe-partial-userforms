@@ -56,6 +56,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
     public function process()
     {
         $this->config = SiteConfig::current_site_config();
+        Debug::dump($this->config);
         $this->validateEmails();
 
         if (!$this->config->SendDailyEmail ||
@@ -95,7 +96,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
         if ($result) {
             $this->addresses[] = $email;
         }
-        if (strpos(',', $email) !== false) {
+        if (strpos($email, ',') !== false) {
             $emails = explode(',', $email);
             foreach ($emails as $address) {
                 $result = Email::is_valid_address(trim($address));
@@ -119,6 +120,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
         $userDefinedForms = ArrayList::create();
 
         /** @var PartialFormSubmission $submission */
+        /** @noinspection ForeachSourceInspection */
         foreach ($allSubmissions as $submission) {
             // Due to having to support Elemental ElementForm, we need to manually get the parent
             // It's a bit a pickle, but it works
@@ -270,18 +272,15 @@ class PartialSubmissionJob extends AbstractQueuedJob
 
     protected function sendEmail()
     {
-        foreach ($this->addresses as $address) {
-            /** @var Email $mail */
-            $mail = Email::create();
-            $mail->setSubject('Partial form submissions of ' . DBDatetime::now()->Format(DBDatetime::ISO_DATETIME));
-            foreach ($this->files as $file) {
-                $mail->addAttachment($file);
-            }
-
-            $mail->setFrom('test@example.com');
-            $mail->setTo($address);
-            $mail->setBody('Please see attached CSV files');
-            Debug::dump($mail->send());
+        /** @var Email $mail */
+        $mail = Email::create();
+        $mail->setSubject('Partial form submissions of ' . DBDatetime::now()->Format(DBDatetime::ISO_DATETIME));
+        foreach ($this->files as $file) {
+            $mail->addAttachment($file);
         }
+
+        $mail->setFrom('test@example.com');
+        $mail->setTo($this->addresses);
+        $mail->setBody('Please see attached CSV files');
     }
 }
