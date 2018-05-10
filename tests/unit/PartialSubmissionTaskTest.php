@@ -9,7 +9,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\SiteConfig\SiteConfig;
 use Symbiote\QueuedJobs\Services\QueuedJobService;
 
 class PartialSubmissionTaskTest extends SapphireTest

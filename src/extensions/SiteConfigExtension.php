@@ -2,8 +2,6 @@
 
 namespace Firesphere\PartialUserforms\Extensions;
 
-use DateInterval;
-use DateTime;
 use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
 use Firesphere\PartialUserforms\Services\DateService;
 use SilverStripe\Core\Injector\Injector;

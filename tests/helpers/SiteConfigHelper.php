@@ -11,7 +11,7 @@ use SilverStripe\SiteConfig\SiteConfig;
  */
 class SiteConfigHelper
 {
-    public static function createSiteConfig($addresses = null, $from = null, $send = true, $cleanup = true)
+    public static function setupSiteConfig($addresses = null, $from = null, $send = true, $cleanup = true)
     {
         $config = SiteConfig::current_site_config();
         $config->SendMailTo = $addresses;

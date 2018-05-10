@@ -2,8 +2,6 @@
 
 namespace Firesphere\PartialUserforms\Jobs;
 
-use DateInterval;
-use DateTime;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use Firesphere\PartialUserforms\Services\DateService;
@@ -148,8 +146,8 @@ class PartialSubmissionJob extends AbstractQueuedJob
     }
 
     /**
-     * @param $file
-     * @param $form
+     * @param string $file
+     * @param UserDefinedForm $form
      */
     protected function buildCSV($file, $form)
     {
@@ -169,9 +167,9 @@ class PartialSubmissionJob extends AbstractQueuedJob
     }
 
     /**
-     * @param $form
-     * @param $submissions
-     * @param $resource
+     * @param UserDefinedForm $form
+     * @param PartialFormSubmission $submissions
+     * @param resource $resource
      */
     protected function processSubmissions($form, $submissions, $resource)
     {
@@ -193,6 +191,9 @@ class PartialSubmissionJob extends AbstractQueuedJob
         }
     }
 
+    /**
+     * Send out the email(s)
+     */
     protected function sendEmail()
     {
         /** @var Email $mail */
@@ -285,6 +286,9 @@ class PartialSubmissionJob extends AbstractQueuedJob
         }
     }
 
+    /**
+     * @return SiteConfig
+     */
     public function getConfig()
     {
         return $this->config;
