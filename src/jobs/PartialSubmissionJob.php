@@ -299,8 +299,10 @@ class PartialSubmissionJob extends AbstractQueuedJob
         $from = $this->config->SendMailFrom ?: 'site@' . Director::host();
 
         $mail->setFrom($from);
-        $mail->setTo($this->addresses);
-        $mail->setBody('Please see attached CSV files');
-        $mail->send();
+        foreach ($this->addresses as $address) {
+            $mail->setTo($address);
+            $mail->setBody('Please see attached CSV files');
+            $mail->send();
+        }
     }
 }
