@@ -47,8 +47,7 @@ class PartialSubmissionTaskTest extends SapphireTest
         $config->SendDailyEmail = true;
         $config->SendMailTo = 'test@example.com';
         $config->write();
-        $rand = uniqid('', false);
-        $user = Member::create(['FirstName' => 'Test', 'Email' => $rand . '@example.com']);
+        $user = Member::create(['FirstName' => 'Test', 'Email' => 'user1@example.com']);
         $user->write();
         Security::setCurrentUser($user);
         $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
@@ -57,14 +56,13 @@ class PartialSubmissionTaskTest extends SapphireTest
 
         $task->run($request);
 
-        $this->assertEmailSent($rand . '@example.com');
+        $this->assertEmailSent( 'user1@example.com');
         $this->assertEmailSent('test@example.com');
     }
 
     public function testNoConfigButUser()
     {
-        $rand = uniqid('', false);
-        $user = Member::create(['FirstName' => 'Test', 'Email' => $rand . '@example.com']);
+        $user = Member::create(['FirstName' => 'Test', 'Email' => 'user1@example.com']);
         $user->write();
         Security::setCurrentUser($user);
         $config = SiteConfig::current_site_config();
@@ -76,7 +74,7 @@ class PartialSubmissionTaskTest extends SapphireTest
 
         $task->run($request);
 
-        $this->assertEmailSent($rand . '@example.com');
+        $this->assertEmailSent('user1@example.com');
     }
 
     protected function setUp()

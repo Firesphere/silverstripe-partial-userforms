@@ -33,7 +33,7 @@ class SiteConfigExtensionTest extends SapphireTest
 
         $this->assertInstanceOf(CheckboxField::class, $fieldList->dataFieldByName('SendDailyEmail'));
         $this->assertInstanceOf(CheckboxField::class, $fieldList->dataFieldByName('CleanupAfterSend'));
-        $this->assertInstanceOf(EmailField::class, $fieldList->dataFieldByName('SendMailTo'));
+        $this->assertInstanceOf(TextField::class, $fieldList->dataFieldByName('SendMailTo'));
     }
 
     public function testOnAfterWriteNoSetting()

@@ -7,6 +7,7 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Security\Security;
 
 class PartialSubmissionTask extends BuildTask

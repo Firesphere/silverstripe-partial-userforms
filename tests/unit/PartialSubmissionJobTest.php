@@ -125,6 +125,7 @@ class PartialSubmissionJobTest extends SapphireTest
         /** @var PartialSubmissionJob $job */
         $job = Injector::inst()->get(PartialSubmissionJob::class);
 
+        $job->process();
         $emails = $job->getAddresses();
 
         $this->assertArrayNotHasKey('error', $emails);

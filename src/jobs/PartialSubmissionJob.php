@@ -97,7 +97,6 @@ class PartialSubmissionJob extends AbstractQueuedJob
         }
         if (strpos(',', $email) !== false) {
             $emails = explode(',', $email);
-            Debug::dump($emails);
             foreach ($emails as $address) {
                 $result = Email::is_valid_address(trim($address));
                 if ($result) {
@@ -271,18 +270,18 @@ class PartialSubmissionJob extends AbstractQueuedJob
 
     protected function sendEmail()
     {
-        /** @var Email $mail */
-        $mail = Email::create();
+        foreach ($this->addresses as $address) {
+            /** @var Email $mail */
+            $mail = Email::create();
+            $mail->setSubject('Partial form submissions of ' . DBDatetime::now()->Format(DBDatetime::ISO_DATETIME));
+            foreach ($this->files as $file) {
+                $mail->addAttachment($file);
+            }
 
-        $mail->setSubject('Partial form submissions of ' . DBDatetime::now()->Format(DBDatetime::ISO_DATETIME));
-        foreach ($this->files as $file) {
-            $mail->addAttachment($file);
+            $mail->setFrom('test@example.com');
+            $mail->setTo($address);
+            $mail->setBody('Please see attached CSV files');
+            Debug::dump($mail->send());
         }
-
-        Debug::dump($this->addresses);
-        // @todo make the from correct
-        $mail->setFrom('test@example.com');
-        $mail->setTo($this->addresses);
-        $mail->send();
     }
 }
