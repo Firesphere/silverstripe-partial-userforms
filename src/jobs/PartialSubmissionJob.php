@@ -148,6 +148,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
     /**
      * @param string $file
      * @param UserDefinedForm $form
+     * @throws \SilverStripe\ORM\ValidationException
      */
     protected function buildCSV($file, $form)
     {
@@ -168,8 +169,9 @@ class PartialSubmissionJob extends AbstractQueuedJob
 
     /**
      * @param UserDefinedForm $form
-     * @param PartialFormSubmission $submissions
+     * @param DataList|PartialFormSubmission[] $submissions
      * @param resource $resource
+     * @throws \SilverStripe\ORM\ValidationException
      */
     protected function processSubmissions($form, $submissions, $resource)
     {
