@@ -44,6 +44,7 @@ const submitPartial = () => {
       }
     }
   });
+  /** global: XMLHttpRequest */
   const httpRequest = new XMLHttpRequest();
   httpRequest.open('POST', `${baseDomain}${submitURL}`, true);
   httpRequest.send(data);

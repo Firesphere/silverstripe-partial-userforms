@@ -5,6 +5,7 @@ namespace Firesphere\PartialUserforms\Extensions;
 use DateInterval;
 use DateTime;
 use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
+use Firesphere\PartialUserforms\Services\DateService;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\EmailField;
@@ -84,24 +85,10 @@ class SiteConfigExtension extends DataExtension
                 $job = Injector::inst()->get(PartialSubmissionJob::class);
                 /** @var QueuedJobService $queuedJob */
                 $queuedJob = Injector::inst()->get(QueuedJobService::class);
-                $dbDateTime = $this->getTomorrow();
+                $dbDateTime = DateService::getTomorrow();
                 $queuedJob->queueJob($job, $dbDateTime->Format(DBDatetime::ISO_DATETIME));
             }
         }
     }
 
-    /**
-     * @return DBDatetime|static
-     * @throws \Exception
-     */
-    protected function getTomorrow()
-    {
-        $dateTime = new DateTime(DBDatetime::now());
-        $interval = new DateInterval('P1D');
-        $tomorrow = $dateTime->add($interval);
-        $dbDateTime = DBDatetime::create();
-        $dbDateTime->setValue($tomorrow->format('Y-m-d 00:00:00'));
-
-        return $dbDateTime;
-    }
 }

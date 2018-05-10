@@ -6,6 +6,7 @@ use DateInterval;
 use DateTime;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
+use Firesphere\PartialUserforms\Services\DateService;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Injector\Injector;
@@ -254,23 +255,8 @@ class PartialSubmissionJob extends AbstractQueuedJob
         $job = new self();
         /** @var QueuedJobService $queuedJob */
         $queuedJob = Injector::inst()->get(QueuedJobService::class);
-        $tomorrow = $this->getTomorrow();
-        $queuedJob->queueJob($job, $tomorrow);
-    }
-
-    /**
-     * @return DBDatetime|static
-     * @throws \Exception
-     */
-    protected function getTomorrow()
-    {
-        $dateTime = new DateTime(DBDatetime::now());
-        $interval = new DateInterval('P1D');
-        $tomorrow = $dateTime->add($interval);
-        $dbDateTime = DBDatetime::create();
-        $dbDateTime->setValue($tomorrow->format('Y-m-d 00:00:00'));
-
-        return $dbDateTime;
+        $tomorrow = DateService::getTomorrow();
+        $queuedJob->queueJob($job, $tomorrow->Format(DBDatetime::ISO_DATETIME));
     }
 
     /**
