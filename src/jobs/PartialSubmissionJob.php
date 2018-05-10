@@ -44,6 +44,16 @@ class PartialSubmissionJob extends AbstractQueuedJob
 
 
     /**
+     * Prepare the data
+     */
+    public function setup()
+    {
+        parent::setup();
+        $this->config = SiteConfig::current_site_config();
+        $this->validateEmails();
+    }
+
+    /**
      * @return string
      */
     public function getTitle()
@@ -56,9 +66,6 @@ class PartialSubmissionJob extends AbstractQueuedJob
      */
     public function process()
     {
-        $this->config = SiteConfig::current_site_config();
-        $this->validateEmails();
-
         if (!$this->config->SendDailyEmail) {
             $this->addMessage(_t(__CLASS__ . '.NotActive', 'Daily exports are not enabled'));
             $this->isComplete = true;
@@ -266,11 +273,19 @@ class PartialSubmissionJob extends AbstractQueuedJob
         return $this->addresses;
     }
 
+    /**
+     * @param string $address
+     */
     public function addAddress($address)
     {
         if (Email::is_valid_address($address)) {
             $this->addresses[] = $address;
         }
+    }
+
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     protected function sendEmail()
@@ -281,9 +296,8 @@ class PartialSubmissionJob extends AbstractQueuedJob
         foreach ($this->files as $file) {
             $mail->addAttachment($file);
         }
-
-
         $from = $this->config->SendMailFrom ?: 'site@' . Director::host();
+
         $mail->setFrom($from);
         $mail->setTo($this->addresses);
         $mail->setBody('Please see attached CSV files');

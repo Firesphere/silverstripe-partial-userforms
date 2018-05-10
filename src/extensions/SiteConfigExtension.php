@@ -24,6 +24,7 @@ use Symbiote\QueuedJobs\Services\QueuedJobService;
  * @property boolean $SendDailyEmail
  * @property boolean $CleanupAfterSend
  * @property string $SendMailTo
+ * @property string $SendMailFrom
  */
 class SiteConfigExtension extends DataExtension
 {

@@ -28,6 +28,13 @@ class PartialSubmissionJobTest extends SapphireTest
         $this->assertEquals('Export partial submissions to Email', $this->job->getTitle());
     }
 
+    public function testSetup()
+    {
+        $this->job->setup();
+
+        $this->assertInstanceOf(SiteConfig::class, $this->job->getConfig());
+    }
+
     public function testProcess()
     {
         $this->assertTrue(method_exists($this->job, 'process'));
@@ -35,6 +42,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->SendDailyEmail = true;
         $config->SendMailTo = 'test@example.com';
         $config->write();
+        $this->job->setup();
         $this->job->process();
 
         $this->assertEmailSent('test@example.com');
@@ -49,6 +57,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->SendMailTo = '';
         Security::setCurrentUser(null);
         $config->write();
+        $this->job->setup();
         $this->job->process();
 
         $messages = $this->job->getMessages();
@@ -64,6 +73,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->SendDailyEmail = true;
         $config->SendMailTo = 'test@example.com';
         $config->write();
+        $this->job->setup();
         $this->job->process();
 
         $processedSubmission = $submission->get()->byID($submission->ID);
@@ -80,6 +90,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->CleanupAfterSend = true;
         $config->SendMailTo = 'test@example.com';
         $config->write();
+        $this->job->setup();
         $this->job->process();
         $this->job->afterComplete();
 
@@ -94,6 +105,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->SendDailyEmail = true;
         $config->SendMailTo = 'test@example.com';
         $config->write();
+        $this->job->setup();
         $this->job->process();
         $this->job->afterComplete();
 
@@ -106,7 +118,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->SendDailyEmail = true;
         $config->SendMailTo = 'test@example.com';
         $config->write();
-
+        $this->job->setup();
         $this->job->process();
         $this->job->afterComplete();
 
@@ -127,10 +139,8 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->write();
 
         /** @var PartialSubmissionJob $job */
-        $job = Injector::inst()->get(PartialSubmissionJob::class);
-
-        $job->process();
-
+        $job = new PartialSubmissionJob();
+        $job->setup();
         $emails = $job->getAddresses();
 
         $expected = [
@@ -147,7 +157,9 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->SendMailTo = 'test@example.com, tester@example.com , another@example.com';
         $config->write();
 
+        $this->job->setup();
         $this->job->process();
+
         $this->assertEmailSent('test@example.com');
         $this->assertEmailSent('tester@example.com');
         $this->assertEmailSent('another@example.com');
@@ -161,6 +173,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->SendMailFrom = 'site@example.com';
         $config->write();
 
+        $this->job->setup();
         $this->job->process();
         $this->assertEmailSent('test@example.com', 'site@example.com');
     }
@@ -172,6 +185,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->SendMailTo = 'test@example.com';
         $config->write();
 
+        $this->job->setup();
         $this->job->process();
         $this->assertEmailSent('test@example.com', 'site@' . Director::host());
     }
@@ -182,7 +196,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $this->usesDatabase = true;
         DBDatetime::set_mock_now('2018-01-01 12:00:00');
         /** @var PartialSubmissionJob $job */
-        $this->job = Injector::inst()->get(PartialSubmissionJob::class);
+        $this->job = new PartialSubmissionJob();
         Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
     }
 

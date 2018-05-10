@@ -12,7 +12,9 @@ use Firesphere\PartialUserforms\Tasks\PartialSubmissionTask;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
@@ -34,6 +36,7 @@ class PartialSubmissionTaskTest extends SapphireTest
         $config->write();
         $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
 
+        /** @var PartialSubmissionTask $task */
         $task = Injector::inst()->get(PartialSubmissionTask::class);
 
         $task->run($request);
@@ -52,7 +55,7 @@ class PartialSubmissionTaskTest extends SapphireTest
         Security::setCurrentUser($user);
         $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
 
-        $task = Injector::inst()->get(PartialSubmissionTask::class);
+        $task = new PartialSubmissionTask();
 
         $task->run($request);
 
@@ -70,7 +73,7 @@ class PartialSubmissionTaskTest extends SapphireTest
         $config->write();
         $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
 
-        $task = Injector::inst()->get(PartialSubmissionTask::class);
+        $task = new PartialSubmissionTask();
 
         $task->run($request);
 

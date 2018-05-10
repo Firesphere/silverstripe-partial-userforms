@@ -27,14 +27,13 @@ class PartialSubmissionTask extends BuildTask
      *
      * @param HTTPRequest $request
      * @return void
-     * @throws \SilverStripe\ORM\ValidationException
      */
     public function run($request)
     {
-        $user = Member::get()->filter(['Email' => 'simonerkelens@silverstripe.com'])->first();
-        Security::setCurrentUser($user);
         $currentUser = Security::getCurrentUser();
-        $job = Injector::inst()->get(PartialSubmissionJob::class);
+        /** @var PartialSubmissionJob $job */
+        $job = new PartialSubmissionJob();
+        $job->setup();
         if ($currentUser && Email::is_valid_address($currentUser->Email)) {
             $job->addAddress($currentUser->Email);
         }
