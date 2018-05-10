@@ -38,13 +38,19 @@ class PartialSubmissionJob extends AbstractQueuedJob
     public function process()
     {
         $this->config = SiteConfig::current_site_config();
+
+        if (!$this->config->SendDailyEmail || !Email::is_valid_address($this->config->SendEmailTo)) {
+            $this->addMessage('Can not process without valid email');
+            return;
+        }
+
         /** @var DataList|PartialFormSubmission[] $exportForms */
         $allSubmissions = PartialFormSubmission::get()->filter(['IsSend' => false]);
         /** @var ArrayList|UserDefinedForm[]|ElementForm[] $parents */
         $userDefinedForms = ArrayList::create();
         $this->getParents($allSubmissions, $userDefinedForms);
 
-
+        /** @var PartialFormSubmission $form */
         foreach ($userDefinedForms as $form) {
             $fileName = _t(__CLASS__ . '.Export', 'Export of ') .
                 $form->Title . ' - ' .
@@ -119,7 +125,29 @@ class PartialSubmissionJob extends AbstractQueuedJob
             $submission->write();
         }
     }
-    
+
+    /**
+     * @param $allSubmissions
+     * @param $userDefinedForms
+     */
+    protected function getParents($allSubmissions, &$userDefinedForms)
+    {
+        /** @var PartialFormSubmission $submission */
+        foreach ($allSubmissions as $submission) {
+            // Due to having to support Elemental ElementForm, we need to manually get the parent
+            // It's a bit a pickle, but it works
+            $parentClass = $submission->ParentClass;
+            $parent = $parentClass::get()->byID($submission->UserDefinedFormID);
+            if ($parent &&
+                $parent->ExportPartialSubmissions &&
+                !$userDefinedForms->find('ID', $parent->ID)
+            ) {
+                $userDefinedForms->push($parent);
+            }
+            $submission->destroy();
+        }
+    }
+
     public function afterComplete()
     {
         parent::afterComplete();
@@ -134,24 +162,11 @@ class PartialSubmissionJob extends AbstractQueuedJob
                 $form->destroy();
             }
         }
-    }/**
- * @param $allSubmissions
- * @param $userDefinedForms
- */protected function getParents($allSubmissions, &$userDefinedForms)
-{
-    /** @var PartialFormSubmission $submission */
-    foreach ($allSubmissions as $submission) {
-        // Due to having to support Elemental ElementForm, we need to manually get the parent
-        // It's a bit a pickle, but it works
-        $parentClass = $submission->ParentClass;
-        $parent = $parentClass::get()->byID($submission->UserDefinedFormID);
-        if ($parent &&
-            $parent->ExportPartialSubmissions &&
-            !$userDefinedForms->find('ID', $parent->ID)
-        ) {
-            $userDefinedForms->push($parent);
-        }
-        $submission->destroy();
+//        if ($this->config->)
     }
-}
+
+    public function getMessages()
+    {
+        return $this->messages;
+    }
 }

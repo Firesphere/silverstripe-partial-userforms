@@ -12,6 +12,7 @@ use Firesphere\PartialUserforms\Tasks\PartialSubmissionTask;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\SiteConfig\SiteConfig;
 
 class PartialSubmissionTaskTest extends SapphireTest
 {
