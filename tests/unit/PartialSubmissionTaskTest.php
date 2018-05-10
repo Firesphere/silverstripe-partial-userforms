@@ -10,9 +10,11 @@ namespace Firesphere\PartialUserforms\Tests;
 
 use Firesphere\PartialUserforms\Tasks\PartialSubmissionTask;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\SiteConfig\SiteConfig;
+use Symbiote\QueuedJobs\Services\QueuedJobService;
 
 class PartialSubmissionTaskTest extends SapphireTest
 {
@@ -36,4 +38,11 @@ class PartialSubmissionTaskTest extends SapphireTest
 
         $this->assertEmailSent('test@example.com');
     }
+
+    protected function setUp()
+    {
+        parent::setUp();
+        Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
+    }
+
 }

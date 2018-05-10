@@ -6,6 +6,7 @@ use DNADesign\ElementalUserForms\Model\ElementForm;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -39,7 +40,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
     {
         $this->config = SiteConfig::current_site_config();
 
-        if (!$this->config->SendDailyEmail || !Email::is_valid_address($this->config->SendEmailTo)) {
+        if (!$this->config->SendDailyEmail || !Email::is_valid_address($this->config->SendMailTo)) {
             $this->addMessage('Can not process without valid email');
             return;
         }
@@ -50,7 +51,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
         $userDefinedForms = ArrayList::create();
         $this->getParents($allSubmissions, $userDefinedForms);
 
-        /** @var PartialFormSubmission $form */
+        /** @var UserDefinedForm $form */
         foreach ($userDefinedForms as $form) {
             $fileName = _t(__CLASS__ . '.Export', 'Export of ') .
                 $form->Title . ' - ' .
@@ -67,6 +68,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
         foreach ($this->files as $file) {
             $mail->addAttachment($file);
         }
+
         $mail->setTo($this->config->SendMailTo);
         $mail->setFrom('test@example.com');
         $mail->send();
@@ -105,16 +107,11 @@ class PartialSubmissionJob extends AbstractQueuedJob
     {
         $editableFields = $form->Fields()->map('Name', 'Title')->toArray();
         $submitted = [];
-        $fieldMap = [];
         foreach ($submissions as $submission) {
             $values = $submission->PartialFields()->map('Name', 'Value')->toArray();
             $i = 0;
             foreach ($editableFields as $field => $title) {
                 $submitted[] = '';
-                $fieldMap[$i]['Name'] = $field;
-                $fieldMap[$i]['Title'] = $title;
-                $fieldMap[$i]['ParentClass'] = UserDefinedForm::class;
-                $fieldMap[$i]['Parent'] = '=>' . UserDefinedForm::class . '.form1';
                 if (isset($values[$field])) {
                     $submitted[] = $values[$field];
                 }
@@ -130,7 +127,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
      * @param $allSubmissions
      * @param $userDefinedForms
      */
-    protected function getParents($allSubmissions, &$userDefinedForms)
+    protected function getParents($allSubmissions, $userDefinedForms)
     {
         /** @var PartialFormSubmission $submission */
         foreach ($allSubmissions as $submission) {

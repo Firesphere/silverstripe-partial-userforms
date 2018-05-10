@@ -69,7 +69,9 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testIsDeleted()
     {
+//        Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
         $submission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
+        $id = $submission->write();
         $config = SiteConfig::current_site_config();
         $config->SendDailyEmail = true;
         $config->CleanupAfterSend = true;
@@ -78,13 +80,14 @@ class PartialSubmissionJobTest extends SapphireTest
         $this->job->process();
         $this->job->afterComplete();
 
-        $processedSubmission = $submission->get()->byID($submission->ID);
+        $processedSubmission = $submission->get()->byID($id);
 
         $this->assertNull($processedSubmission);
     }
 //
 //    public function testNewJobCreated()
 //    {
+//        Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
 //        $config = SiteConfig::current_site_config();
 //        $config->SendDailyEmail = true;
 //        $config->CleanupAfterSend = true;
@@ -96,13 +99,12 @@ class PartialSubmissionJobTest extends SapphireTest
 
     protected function setUp()
     {
+        parent::setUp();
         $this->usesDatabase = true;
-        Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
         DBDatetime::set_mock_now('2018-01-01 12:00:00');
         /** @var PartialSubmissionJob $job */
         $this->job = Injector::inst()->get(PartialSubmissionJob::class);
-
-        return parent::setUp();
+        Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
     }
 
     protected function tearDown()
