@@ -47,7 +47,10 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->write();
         $this->job->process();
 
-        Debug::dump($this->job->getMessages());
+        $messages = $this->job->getMessages();
+        foreach ($messages as $message) {
+            $this->assertContains('Can not process without valid email', $message);
+        }
     }
 
     public function testIsSend()
