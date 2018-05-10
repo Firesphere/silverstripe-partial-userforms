@@ -36,7 +36,7 @@ class PartialSubmissionJobTest extends SapphireTest
     public function testProcess()
     {
         $this->assertTrue(method_exists($this->job, 'process'));
-        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com', null, true);
         $this->job->setup();
         $this->job->process();
 
@@ -47,7 +47,7 @@ class PartialSubmissionJobTest extends SapphireTest
     public function testProcessNoMail()
     {
         $this->assertTrue(method_exists($this->job, 'process'));
-        SetupSiteConfig::setupSiteConfig('', null, true);
+        SiteConfigHelper::setupSiteConfig('', null, true);
         Security::setCurrentUser(null);
         $this->job->setup();
         $this->job->process();
@@ -60,7 +60,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testProcessNotSetup()
     {
-        SetupSiteConfig::setupSiteConfig('', null, false);
+        SiteConfigHelper::setupSiteConfig('', null, false);
         Security::setCurrentUser(null);
         $this->job->setup();
         $this->job->process();
@@ -74,7 +74,7 @@ class PartialSubmissionJobTest extends SapphireTest
     public function testIsSend()
     {
         $submission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
-        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com', null, true);
 
         $this->job->setup();
         $this->job->process();
@@ -88,7 +88,7 @@ class PartialSubmissionJobTest extends SapphireTest
     {
         $submission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
         $id = $submission->write();
-        SetupSiteConfig::setupSiteConfig('test@example.com', null, true, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com', null, true, true);
         $this->job->setup();
         $this->job->process();
         $this->job->afterComplete();
@@ -100,7 +100,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testFilesRemoved()
     {
-        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com', null, true);
         $this->job->setup();
         $this->job->process();
         $this->job->afterComplete();
@@ -110,7 +110,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testNewJobCreated()
     {
-        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com', null, true);
         $this->job->setup();
         $this->job->process();
         $this->job->afterComplete();
@@ -126,7 +126,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testInvalidEmail()
     {
-        SetupSiteConfig::setupSiteConfig('test@example.com, error, non-existing, tester@example.com', null, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com, error, non-existing, tester@example.com', null, true);
 
         /** @var PartialSubmissionJob $job */
         $job = new PartialSubmissionJob();
@@ -142,7 +142,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testCommaSeparatedUsers()
     {
-        SetupSiteConfig::setupSiteConfig('test@example.com, tester@example.com , another@example.com', null, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com, tester@example.com , another@example.com', null, true);
 
         $this->job->setup();
         $this->job->process();
@@ -154,7 +154,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testFromAddressSet()
     {
-        SetupSiteConfig::setupSiteConfig('test@example.com', 'site@example.com', true);
+        SiteConfigHelper::setupSiteConfig('test@example.com', 'site@example.com', true);
 
         $this->job->setup();
         $this->job->process();
@@ -163,7 +163,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testFromAddressNotSet()
     {
-        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com', null, true);
 
         $this->job->setup();
         $this->job->process();

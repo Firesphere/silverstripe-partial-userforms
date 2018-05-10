@@ -22,7 +22,7 @@ class PartialSubmissionTaskTest extends SapphireTest
 
     public function testRun()
     {
-        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com', null, true);
         $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
 
         /** @var PartialSubmissionTask $task */
@@ -35,7 +35,7 @@ class PartialSubmissionTaskTest extends SapphireTest
 
     public function testExtraUser()
     {
-        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
+        SiteConfigHelper::setupSiteConfig('test@example.com', null, true);
         $user = Member::create(['FirstName' => 'Test', 'Email' => 'userextrauser@example.com']);
         $user->write();
         Security::setCurrentUser($user);
@@ -54,7 +54,7 @@ class PartialSubmissionTaskTest extends SapphireTest
         $user = Member::create(['FirstName' => 'Test', 'Email' => 'usernoconfig@example.com']);
         $user->write();
         Security::setCurrentUser($user);
-        SetupSiteConfig::setupSiteConfig(null, null, true);
+        SiteConfigHelper::setupSiteConfig(null, null, true);
         $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
 
         $task = new PartialSubmissionTask();

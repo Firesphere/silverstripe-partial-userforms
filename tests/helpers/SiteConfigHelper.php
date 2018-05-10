@@ -9,9 +9,9 @@ use SilverStripe\SiteConfig\SiteConfig;
  * To avoid having to re-type the siteconfig creation/setup every time
  * @package Firesphere\PartialUserforms\Tests
  */
-class SetupSiteConfig
+class SiteConfigHelper
 {
-    public static function setupSiteConfig($addresses = null, $from = null, $send = true, $cleanup = true)
+    public static function createSiteConfig($addresses = null, $from = null, $send = true, $cleanup = true)
     {
         $config = SiteConfig::current_site_config();
         $config->SendMailTo = $addresses;
