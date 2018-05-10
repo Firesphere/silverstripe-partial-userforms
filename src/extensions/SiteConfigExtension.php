@@ -90,5 +90,4 @@ class SiteConfigExtension extends DataExtension
             }
         }
     }
-
 }

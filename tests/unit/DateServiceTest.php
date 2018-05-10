@@ -7,7 +7,6 @@ use SilverStripe\Dev\SapphireTest;
 
 class DateServiceTest extends SapphireTest
 {
-
     public function testGetTomorrow()
     {
         $tomorrow = DateService::getTomorrow();
