@@ -6,10 +6,10 @@ use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\SiteConfig\SiteConfig;
+use Symbiote\QueuedJobs\DataObjects\QueuedJobDescriptor;
 use Symbiote\QueuedJobs\Services\QueuedJobService;
 
 class PartialSubmissionJobTest extends SapphireTest
@@ -69,7 +69,6 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testIsDeleted()
     {
-//        Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
         $submission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
         $id = $submission->write();
         $config = SiteConfig::current_site_config();
@@ -84,18 +83,68 @@ class PartialSubmissionJobTest extends SapphireTest
 
         $this->assertNull($processedSubmission);
     }
-//
-//    public function testNewJobCreated()
-//    {
-//        Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
-//        $config = SiteConfig::current_site_config();
-//        $config->SendDailyEmail = true;
-//        $config->CleanupAfterSend = true;
-//        $config->SendMailTo = 'test@example.com';
-//        $config->write();
-//        $this->job->process();
-//        $this->job->afterComplete();
-//    }
+
+    public function testFilesRemoved()
+    {
+        $config = SiteConfig::current_site_config();
+        $config->SendDailyEmail = true;
+        $config->SendMailTo = 'test@example.com';
+        $config->write();
+        $this->job->process();
+        $this->job->afterComplete();
+
+        $this->assertFileNotExists('/tmp/Export of TestForm - 2018-01-01 12:00:00.csv');
+    }
+
+    public function testNewJobCreated()
+    {
+        $config = SiteConfig::current_site_config();
+        $config->SendDailyEmail = true;
+        $config->SendMailTo = 'test@example.com';
+        $config->write();
+
+        $this->job->process();
+        $this->job->afterComplete();
+
+        $jobs = QueuedJobDescriptor::get()->filter([
+            'Implementation'         => PartialSubmissionJob::class,
+            'StartAfter:GreaterThan' => DBDatetime::now()->Format(DBDatetime::ISO_DATETIME)
+        ]);
+
+        $this->assertEquals(1, $jobs->count());
+        $this->assertEquals('2018-01-02 00:00:00', $jobs->first()->StartAfter);
+    }
+
+    public function testInvalidEmail()
+    {
+        $config = SiteConfig::current_site_config();
+        $config->SendDailyEmail = true;
+        $config->SendMailTo = 'test@example.com, error, non-existing, tester@example.com';
+        $config->write();
+
+        /** @var PartialSubmissionJob $job */
+        $job = Injector::inst()->get(PartialSubmissionJob::class);
+
+        $emails = $job->getAddresses();
+
+        $this->assertArrayNotHasKey('error', $emails);
+        $this->assertArrayNotHasKey('non-existing', $emails);
+        $this->assertArrayNotHasKey(' test@example.com', $emails);
+        $this->assertArrayHasKey('test@example.com', $emails);
+        $this->assertArrayHasKey('tester@example.com', $emails);
+    }
+
+    public function testCommaSeparatedUsers()
+    {
+        $config = SiteConfig::current_site_config();
+        $config->SendDailyEmail = true;
+        $config->SendMailTo = 'test@example.com, tester@example.com , another@example.com';
+        $config->write();
+
+        $this->job->process();
+        $this->job->afterComplete();
+
+    }
 
     protected function setUp()
     {

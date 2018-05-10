@@ -7,6 +7,7 @@ use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
 
@@ -34,7 +35,7 @@ class PartialSubmissionTask extends BuildTask
         $originalEmail = $config->SendEmailTo;
         $currentUser = Security::getCurrentUser();
         if ($currentUser && Email::is_valid_address($currentUser->Email)) {
-            $config->SendEmailTo .= ',' . $currentUser->Email;
+            $config->SendMailTo .= ',' . $currentUser->Email;
             $config->write();
         }
         Injector::inst()->get(PartialSubmissionJob::class)->process();

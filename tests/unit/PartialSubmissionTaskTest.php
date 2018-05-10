@@ -13,6 +13,9 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
 use Symbiote\QueuedJobs\Services\QueuedJobService;
 
@@ -39,10 +42,48 @@ class PartialSubmissionTaskTest extends SapphireTest
         $this->assertEmailSent('test@example.com');
     }
 
+    public function testExtraUser()
+    {
+        $config = SiteConfig::current_site_config();
+        $config->SendDailyEmail = true;
+        $config->SendMailTo = 'test@example.com';
+        $config->write();
+        $rand = uniqid('', false);
+        $user = Member::create(['FirstName' => 'Test', 'Email' => $rand . '@example.com']);
+        $user->write();
+        Security::setCurrentUser($user);
+        $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
+
+        $task = Injector::inst()->get(PartialSubmissionTask::class);
+
+        $task->run($request);
+
+        $this->assertEmailSent($rand . '@example.com');
+        $this->assertEmailSent('test@example.com');
+    }
+
+    public function testNoConfigButUser()
+    {
+        $rand = uniqid('', false);
+        $user = Member::create(['FirstName' => 'Test', 'Email' => $rand . '@example.com']);
+        $user->write();
+        Security::setCurrentUser($user);
+        $config = SiteConfig::current_site_config();
+        $config->SendDailyEmail = true;
+        $config->write();
+        $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
+
+        $task = Injector::inst()->get(PartialSubmissionTask::class);
+
+        $task->run($request);
+
+        $this->assertEmailSent($rand . '@example.com');
+
+    }
+
     protected function setUp()
     {
         parent::setUp();
         Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
     }
-
 }

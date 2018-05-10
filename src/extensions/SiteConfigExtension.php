@@ -51,11 +51,13 @@ class SiteConfigExtension extends DataExtension
                 'CleanupAfterSend',
                 _t(__CLASS__ . 'CleanupAfterSend', 'Remove partial submissions after sending')
             ),
-            EmailField::create(
+            $emailField = TextField::create(
                 'SendMailTo',
                 _t(__CLASS__ . 'SendMailTo', 'Email address the partial submissions should be send to')
             )
         ]);
+
+        $emailField->setDescription(_t(__CLASS__ . '.EmailDescription', 'Can be a comma separated set of addresses'));
     }
 
     /**
