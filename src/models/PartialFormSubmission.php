@@ -8,6 +8,7 @@ use SilverStripe\UserForms\Model\Submission\SubmittedForm;
 /**
  * Class \Firesphere\PartialUserforms\Models\PartialFormSubmission
  *
+ * @property boolean $IsSend
  * @property int $UserDefinedFormID
  * @method \SilverStripe\ORM\DataObject UserDefinedForm()
  * @method \SilverStripe\ORM\DataList|\Firesphere\PartialUserforms\Models\PartialFieldSubmission[] PartialFields()

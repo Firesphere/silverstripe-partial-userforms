@@ -82,17 +82,17 @@ class PartialSubmissionJobTest extends SapphireTest
 
         $this->assertNull($processedSubmission);
     }
-
-    public function testNewJobCreated()
-    {
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->CleanupAfterSend = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->write();
-        $this->job->process();
-        $this->job->afterComplete();
-    }
+//
+//    public function testNewJobCreated()
+//    {
+//        $config = SiteConfig::current_site_config();
+//        $config->SendDailyEmail = true;
+//        $config->CleanupAfterSend = true;
+//        $config->SendMailTo = 'test@example.com';
+//        $config->write();
+//        $this->job->process();
+//        $this->job->afterComplete();
+//    }
 
     protected function setUp()
     {
