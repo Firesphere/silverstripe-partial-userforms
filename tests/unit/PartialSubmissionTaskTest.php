@@ -22,10 +22,7 @@ class PartialSubmissionTaskTest extends SapphireTest
 
     public function testRun()
     {
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
         $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
 
         /** @var PartialSubmissionTask $task */
