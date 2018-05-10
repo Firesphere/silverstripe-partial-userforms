@@ -47,7 +47,7 @@ class PartialSubmissionTaskTest extends SapphireTest
         $config->SendDailyEmail = true;
         $config->SendMailTo = 'test@example.com';
         $config->write();
-        $user = Member::create(['FirstName' => 'Test', 'Email' => 'user1@example.com']);
+        $user = Member::create(['FirstName' => 'Test', 'Email' => 'userextrauser@example.com']);
         $user->write();
         Security::setCurrentUser($user);
         $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
@@ -56,13 +56,13 @@ class PartialSubmissionTaskTest extends SapphireTest
 
         $task->run($request);
 
-        $this->assertEmailSent( 'user1@example.com');
+        $this->assertEmailSent( 'userextrauser@example.com');
         $this->assertEmailSent('test@example.com');
     }
 
     public function testNoConfigButUser()
     {
-        $user = Member::create(['FirstName' => 'Test', 'Email' => 'user1@example.com']);
+        $user = Member::create(['FirstName' => 'Test', 'Email' => 'usernoconfig@example.com']);
         $user->write();
         Security::setCurrentUser($user);
         $config = SiteConfig::current_site_config();
@@ -74,11 +74,12 @@ class PartialSubmissionTaskTest extends SapphireTest
 
         $task->run($request);
 
-        $this->assertEmailSent('user1@example.com');
+        $this->assertEmailSent('usernoconfig@example.com');
     }
 
     protected function setUp()
     {
+        $this->usesDatabase = true;
         parent::setUp();
         Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
     }
