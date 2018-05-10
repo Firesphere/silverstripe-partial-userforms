@@ -5,10 +5,7 @@ namespace Firesphere\PartialUserforms\Tasks;
 use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\Dev\Debug;
-use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 
 class PartialSubmissionTask extends BuildTask

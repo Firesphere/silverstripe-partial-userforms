@@ -6,8 +6,6 @@ use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Security;
@@ -38,10 +36,7 @@ class PartialSubmissionJobTest extends SapphireTest
     public function testProcess()
     {
         $this->assertTrue(method_exists($this->job, 'process'));
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
         $this->job->setup();
         $this->job->process();
 
@@ -52,11 +47,8 @@ class PartialSubmissionJobTest extends SapphireTest
     public function testProcessNoMail()
     {
         $this->assertTrue(method_exists($this->job, 'process'));
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = '';
+        SetupSiteConfig::setupSiteConfig('', null, true);
         Security::setCurrentUser(null);
-        $config->write();
         $this->job->setup();
         $this->job->process();
 
@@ -66,13 +58,24 @@ class PartialSubmissionJobTest extends SapphireTest
         }
     }
 
+    public function testProcessNotSetup()
+    {
+        SetupSiteConfig::setupSiteConfig('', null, false);
+        Security::setCurrentUser(null);
+        $this->job->setup();
+        $this->job->process();
+
+        $messages = $this->job->getMessages();
+        foreach ($messages as $message) {
+            $this->assertContains('Daily exports are not enabled', $message);
+        }
+    }
+
     public function testIsSend()
     {
         $submission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
+
         $this->job->setup();
         $this->job->process();
 
@@ -85,11 +88,7 @@ class PartialSubmissionJobTest extends SapphireTest
     {
         $submission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
         $id = $submission->write();
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->CleanupAfterSend = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com', null, true, true);
         $this->job->setup();
         $this->job->process();
         $this->job->afterComplete();
@@ -101,10 +100,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testFilesRemoved()
     {
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
         $this->job->setup();
         $this->job->process();
         $this->job->afterComplete();
@@ -114,10 +110,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testNewJobCreated()
     {
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
         $this->job->setup();
         $this->job->process();
         $this->job->afterComplete();
@@ -133,10 +126,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testInvalidEmail()
     {
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com, error, non-existing, tester@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com, error, non-existing, tester@example.com', null, true);
 
         /** @var PartialSubmissionJob $job */
         $job = new PartialSubmissionJob();
@@ -152,10 +142,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testCommaSeparatedUsers()
     {
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com, tester@example.com , another@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com, tester@example.com , another@example.com', null, true);
 
         $this->job->setup();
         $this->job->process();
@@ -167,11 +154,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testFromAddressSet()
     {
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->SendMailFrom = 'site@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com', 'site@example.com', true);
 
         $this->job->setup();
         $this->job->process();
@@ -180,10 +163,7 @@ class PartialSubmissionJobTest extends SapphireTest
 
     public function testFromAddressNotSet()
     {
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
 
         $this->job->setup();
         $this->job->process();

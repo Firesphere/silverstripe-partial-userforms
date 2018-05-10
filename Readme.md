@@ -31,6 +31,17 @@ and setting the configuration in the Settings
 - Immediate exception printer
 - PHP CodeSniffer
 
+# Usage with Elemental UserForms
+
+Add the following to your config yml:
+```yml
+
+DNADesign\ElementalUserForms\Model\ElementForm:
+  extensions:
+    - Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension
+    
+```
+
 # Benefits
 
 With Partial forms, partial submissions are available to CMS users, to see how far a visitor got through the form
@@ -39,6 +50,7 @@ and optionally make a call to the user, asking why they gave up.
 # Further improvements
 
 - Save the partial form to LocalStorage, to enable pre-filling of forms
+- Retrieve the partial form from the server to enable pre-filling of the forms
 - JS test coverage
 
 # Actual license

@@ -27,6 +27,7 @@ class PartialFormSubmissionTest extends SapphireTest
     {
         $this->submission = Injector::inst()->get(PartialFormSubmission::class);
         $this->usesDatabase = true;
+
         return parent::setUp();
     }
 }

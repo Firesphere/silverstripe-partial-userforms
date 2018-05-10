@@ -4,13 +4,11 @@ namespace Firesphere\PartialUserforms\Jobs;
 
 use DateInterval;
 use DateTime;
-use DNADesign\ElementalUserForms\Model\ElementForm;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -51,6 +49,29 @@ class PartialSubmissionJob extends AbstractQueuedJob
         parent::setup();
         $this->config = SiteConfig::current_site_config();
         $this->validateEmails();
+    }
+
+    /**
+     * Only add valid email addresses
+     */
+    protected function validateEmails()
+    {
+        $email = $this->config->SendMailTo;
+        $result = Email::is_valid_address($email);
+        if ($result) {
+            $this->addresses[] = $email;
+        }
+        if (strpos($email, ',') !== false) {
+            $emails = explode(',', $email);
+            foreach ($emails as $address) {
+                $result = Email::is_valid_address(trim($address));
+                if ($result) {
+                    $this->addresses[] = trim($address);
+                } else {
+                    $this->addMessage($address . _t(__CLASS__ . '.invalidMail', ' is not a valid email address'));
+                }
+            }
+        }
     }
 
     /**
@@ -97,36 +118,13 @@ class PartialSubmissionJob extends AbstractQueuedJob
     }
 
     /**
-     * Only add valid email addresses
-     */
-    protected function validateEmails()
-    {
-        $email = $this->config->SendMailTo;
-        $result = Email::is_valid_address($email);
-        if ($result) {
-            $this->addresses[] = $email;
-        }
-        if (strpos($email, ',') !== false) {
-            $emails = explode(',', $email);
-            foreach ($emails as $address) {
-                $result = Email::is_valid_address(trim($address));
-                if ($result) {
-                    $this->addresses[] = trim($address);
-                } else {
-                    $this->addMessage($address . _t(__CLASS__ . '.invalidMail', ' is not a valid email address'));
-                }
-            }
-        }
-    }
-
-    /**
      * @return ArrayList
      */
     protected function getParents()
     {
         /** @var DataList|PartialFormSubmission[] $exportForms */
         $allSubmissions = PartialFormSubmission::get()->filter(['IsSend' => false]);
-        /** @var ArrayList|UserDefinedForm[]|ElementForm[] $parents */
+        /** @var ArrayList|UserDefinedForm[] $parents */
         $userDefinedForms = ArrayList::create();
 
         /** @var PartialFormSubmission $submission */
@@ -155,7 +153,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
     protected function buildCSV($file, $form)
     {
         $resource = fopen($file, 'w+');
-        /** @var PartialFormSubmission $submissions */
+        /** @var DataList|PartialFormSubmission[] $submissions */
         $submissions = PartialFormSubmission::get()->filter(['UserDefinedFormID' => $form->ID]);
         $headerFields = $form
             ->Fields()
@@ -191,6 +189,24 @@ class PartialSubmissionJob extends AbstractQueuedJob
             fputcsv($resource, $submitted);
             $submission->IsSend = true;
             $submission->write();
+        }
+    }
+
+    protected function sendEmail()
+    {
+        /** @var Email $mail */
+        $mail = Email::create();
+        $mail->setSubject('Partial form submissions of ' . DBDatetime::now()->Format(DBDatetime::ISO_DATETIME));
+        foreach ($this->files as $file) {
+            $mail->addAttachment($file);
+        }
+        $from = $this->config->SendMailFrom ?: 'site@' . Director::host();
+
+        $mail->setFrom($from);
+        foreach ($this->addresses as $address) {
+            $mail->setTo($address);
+            $mail->setBody('Please see attached CSV files');
+            $mail->send();
         }
     }
 
@@ -286,23 +302,5 @@ class PartialSubmissionJob extends AbstractQueuedJob
     public function getConfig()
     {
         return $this->config;
-    }
-
-    protected function sendEmail()
-    {
-        /** @var Email $mail */
-        $mail = Email::create();
-        $mail->setSubject('Partial form submissions of ' . DBDatetime::now()->Format(DBDatetime::ISO_DATETIME));
-        foreach ($this->files as $file) {
-            $mail->addAttachment($file);
-        }
-        $from = $this->config->SendMailFrom ?: 'site@' . Director::host();
-
-        $mail->setFrom($from);
-        foreach ($this->addresses as $address) {
-            $mail->setTo($address);
-            $mail->setBody('Please see attached CSV files');
-            $mail->send();
-        }
     }
 }

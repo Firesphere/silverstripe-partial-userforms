@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: simon
- * Date: 10-May-18
- * Time: 10:02
- */
 
 namespace Firesphere\PartialUserforms\Tests;
 
@@ -12,9 +6,7 @@ use Firesphere\PartialUserforms\Tasks\PartialSubmissionTask;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
@@ -46,10 +38,7 @@ class PartialSubmissionTaskTest extends SapphireTest
 
     public function testExtraUser()
     {
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->SendMailTo = 'test@example.com';
-        $config->write();
+        SetupSiteConfig::setupSiteConfig('test@example.com', null, true);
         $user = Member::create(['FirstName' => 'Test', 'Email' => 'userextrauser@example.com']);
         $user->write();
         Security::setCurrentUser($user);
@@ -68,9 +57,7 @@ class PartialSubmissionTaskTest extends SapphireTest
         $user = Member::create(['FirstName' => 'Test', 'Email' => 'usernoconfig@example.com']);
         $user->write();
         Security::setCurrentUser($user);
-        $config = SiteConfig::current_site_config();
-        $config->SendDailyEmail = true;
-        $config->write();
+        SetupSiteConfig::setupSiteConfig(null, null, true);
         $request = new HTTPRequest('GET', 'dev/tasks/partialsubmissiontask');
 
         $task = new PartialSubmissionTask();
