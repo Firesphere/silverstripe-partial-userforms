@@ -6,14 +6,10 @@ use DNADesign\ElementalUserForms\Model\ElementForm;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\UserForms\Model\Submission\SubmittedForm;
 use SilverStripe\UserForms\Model\UserDefinedForm;
 use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
 
@@ -25,8 +21,8 @@ class PartialSubmissionJob extends AbstractQueuedJob
      * @var array
      */
     protected $files = [];
-    
-    protected $this->config;
+
+    protected $config;
 
     /**
      * @return string
@@ -53,7 +49,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
             $fileName = _t(__CLASS__ . '.Export', 'Export of ') .
                 $form->Title . ' - ' .
                 DBDatetime::now()->Format(DBDatetime::ISO_DATETIME);
-            $file = '/tmp/'.$fileName . '.csv';
+            $file = '/tmp/' . $fileName . '.csv';
             $this->files[] = $file;
             $this->buildCSV($file, $form);
         }
