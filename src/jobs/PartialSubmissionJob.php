@@ -41,16 +41,6 @@ class PartialSubmissionJob extends AbstractQueuedJob
      */
     protected $addresses;
 
-    /**
-     * PartialSubmissionJob constructor.
-     * @param array $params
-     */
-    public function __construct(array $params = array())
-    {
-        $this->isValidEmail();
-        parent::__construct($params);
-
-    }
 
     /**
      * @return string
@@ -66,6 +56,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
     public function process()
     {
         $this->config = SiteConfig::current_site_config();
+        $this->validateEmails();
 
         if (!$this->config->SendDailyEmail ||
             !count($this->addresses)
@@ -97,15 +88,16 @@ class PartialSubmissionJob extends AbstractQueuedJob
     /**
      * Only add valid email addresses
      */
-    protected function isValidEmail()
+    protected function validateEmails()
     {
-        $email = SiteConfig::current_site_config()->SendMailTo;
+        $email = $this->config->SendMailTo;
         $result = Email::is_valid_address($email);
         if ($result) {
             $this->addresses[] = $email;
         }
         if (strpos(',', $email) !== false) {
             $emails = explode(',', $email);
+            Debug::dump($emails);
             foreach ($emails as $address) {
                 $result = Email::is_valid_address(trim($address));
                 if ($result) {
@@ -270,6 +262,13 @@ class PartialSubmissionJob extends AbstractQueuedJob
         return $this->addresses;
     }
 
+    public function addAddress($address)
+    {
+        if (Email::is_valid_address($address)) {
+            $this->addresses[] = $address;
+        }
+    }
+
     protected function sendEmail()
     {
         /** @var Email $mail */
@@ -281,6 +280,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
         }
 
         Debug::dump($this->addresses);
+        // @todo make the from correct
         $mail->setFrom('test@example.com');
         $mail->setTo($this->addresses);
         $mail->send();

@@ -142,8 +142,9 @@ class PartialSubmissionJobTest extends SapphireTest
         $config->write();
 
         $this->job->process();
-        $this->job->afterComplete();
-
+        $this->assertEmailSent('test@example.com');
+        $this->assertEmailSent('tester@example.com');
+        $this->assertEmailSent('another@example.com');
     }
 
     protected function setUp()

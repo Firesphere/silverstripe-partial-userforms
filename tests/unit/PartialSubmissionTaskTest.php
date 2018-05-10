@@ -13,7 +13,6 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\SiteConfig\SiteConfig;
@@ -78,7 +77,6 @@ class PartialSubmissionTaskTest extends SapphireTest
         $task->run($request);
 
         $this->assertEmailSent($rand . '@example.com');
-
     }
 
     protected function setUp()
