@@ -95,8 +95,10 @@ class PartialUserFormController extends ContentController
         $exists = PartialFieldSubmission::get()->filter($filter)->first();
         // Set the title
         $editableField = EditableFormField::get()->filter(['Name' => $formData['Name']])->first();
-        $formData['Title'] = $editableField->Title;
-        $formData['ParentClass'] = $editableField->Parent()->ClassName;
+        if ($editableField) {
+            $formData['Title'] = $editableField->Title;
+            $formData['ParentClass'] = $editableField->Parent()->ClassName;
+        }
         if (!$exists) {
             $exists = PartialFieldSubmission::create($formData);
             $exists->write();
