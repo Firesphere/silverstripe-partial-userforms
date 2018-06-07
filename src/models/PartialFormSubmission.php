@@ -9,6 +9,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
+
 /**
  * Class \Firesphere\PartialUserforms\Models\PartialFormSubmission
  *
@@ -97,17 +98,7 @@ class PartialFormSubmission extends SubmittedForm
      */
     public function canEdit($member = null)
     {
-        $extended = $this->extendedCan(__FUNCTION__, $member);
-
-        if ($extended !== null) {
-            return $extended;
-        }
-
-        if ($this->UserDefinedForm()) {
-            return $this->UserDefinedForm()->canEdit($member);
-        }
-
-        return parent::canEdit($member);
+        return false;
     }
 
     /**
@@ -129,5 +120,4 @@ class PartialFormSubmission extends SubmittedForm
 
         return parent::canDelete($member);
     }
-
 }

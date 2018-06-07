@@ -20,7 +20,7 @@ class PartialFormSubmissionTest extends SapphireTest
 
     public function testCanDelete()
     {
-        $this->assertFalse($this->submission->canDelete());
+        $this->assertTrue($this->submission->canDelete());
     }
 
     protected function setUp()

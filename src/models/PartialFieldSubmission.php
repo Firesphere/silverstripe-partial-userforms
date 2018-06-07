@@ -57,5 +57,4 @@ class PartialFieldSubmission extends SubmittedFormField
     {
         return $this->SubmittedForm()->canDelete();
     }
-
 }
