@@ -2,9 +2,13 @@
 
 namespace Firesphere\PartialUserforms\Models;
 
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\UserForms\Model\Submission\SubmittedForm;
-
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldPrintButton;
 /**
  * Class \Firesphere\PartialUserforms\Models\PartialFormSubmission
  *
@@ -29,13 +33,101 @@ class PartialFormSubmission extends SubmittedForm
         'PartialFields' => PartialFieldSubmission::class
     ];
 
-    public function canEdit($member = null)
+    public function getCMSFields()
     {
-        return false;
+        /** @var FieldList $fields */
+        $fields = parent::getCMSFields();
+        $fields->removeByName(['Values', 'IsSend']);
+        $config = new GridFieldConfig();
+        $config->addComponent(new GridFieldDataColumns());
+        $config->addComponent(new GridFieldPrintButton());
+
+        $fields->dataFieldByName('PartialFields')->setConfig($config);
+
+        return $fields;
     }
 
+    /**
+     * @param Member
+     *
+     * @return boolean
+     */
+    public function canCreate($member = null, $context = [])
+    {
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if ($extended !== null) {
+            return $extended;
+        }
+
+        if ($this->UserDefinedForm()) {
+            return $this->UserDefinedForm()->canCreate($member, $context);
+        }
+
+        if (!$this->Parent()) {
+            $this->ParentID = $this->UserDefinedFormID;
+        }
+
+        return parent::canCreate($member);
+    }
+
+    /**
+     * @param Member
+     *
+     * @return boolean
+     */
+    public function canView($member = null)
+    {
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+
+        if ($extended !== null) {
+            return $extended;
+        }
+
+        if ($this->UserDefinedForm()) {
+            return $this->UserDefinedForm()->canView($member);
+        }
+
+        return parent::canView($member);
+    }
+
+    /**
+     * @param Member
+     *
+     * @return boolean
+     */
+    public function canEdit($member = null)
+    {
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+
+        if ($extended !== null) {
+            return $extended;
+        }
+
+        if ($this->UserDefinedForm()) {
+            return $this->UserDefinedForm()->canEdit($member);
+        }
+
+        return parent::canEdit($member);
+    }
+
+    /**
+     * @param Member
+     *
+     * @return boolean
+     */
     public function canDelete($member = null)
     {
-        return false;
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+
+        if ($extended !== null) {
+            return $extended;
+        }
+
+        if ($this->UserDefinedForm()) {
+            return $this->UserDefinedForm()->canDelete($member);
+        }
+
+        return parent::canDelete($member);
     }
+
 }

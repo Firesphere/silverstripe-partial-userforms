@@ -17,4 +17,45 @@ class PartialFieldSubmission extends SubmittedFormField
     private static $has_one = [
         'SubmittedForm' => PartialFormSubmission::class,
     ];
+
+    /**
+     * @param Member $member
+     * @param array $context
+     * @return boolean
+     */
+    public function canCreate($member = null, $context = [])
+    {
+        return $this->SubmittedForm()->canCreate();
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return boolean
+     */
+    public function canView($member = null)
+    {
+        return $this->SubmittedForm()->canView();
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return boolean
+     */
+    public function canEdit($member = null)
+    {
+        return $this->SubmittedForm()->canEdit();
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return boolean
+     */
+    public function canDelete($member = null)
+    {
+        return $this->SubmittedForm()->canDelete();
+    }
+
 }

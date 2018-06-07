@@ -68,9 +68,12 @@ class PartialUserFormController extends ContentController
 
         if ($editableField instanceof EditableFormField && !$partialSubmission->UserDefinedFormID) {
             $partialSubmission->update([
-                'UserDefinedFormID' => $editableField->Parent()->ID,
-                'ParentClass'       => $editableField->Parent()->ClassName
-            ])->write();
+                'UserDefinedFormID'    => $editableField->Parent()->ID,
+                'ParentID'             => $editableField->Parent()->ID,
+                'ParentClass'          => $editableField->Parent()->ClassName,
+                'UserDefinedFormClass' => $editableField->Parent()->ClassName
+            ]);
+            $partialSubmission->write();
         }
 
         return $submissionID;
