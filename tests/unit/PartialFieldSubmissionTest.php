@@ -36,7 +36,6 @@ class PartialFieldSubmissionTest extends SapphireTest
         Security::setCurrentUser($member);
 
         $this->assertTrue($this->field->canCreate($member));
-
     }
 
     public function testCanEdit()
@@ -48,7 +47,6 @@ class PartialFieldSubmissionTest extends SapphireTest
         Security::setCurrentUser($member);
 
         $this->assertTrue($this->field->canEdit($member));
-
     }
 
     public function testCanDelete()
@@ -60,7 +58,6 @@ class PartialFieldSubmissionTest extends SapphireTest
         Security::setCurrentUser($member);
 
         $this->assertTrue($this->field->canDelete($member));
-
     }
 
     protected function setUp()
