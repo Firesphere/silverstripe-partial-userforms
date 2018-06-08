@@ -36,9 +36,6 @@ class PartialFormSubmissionTest extends SapphireTest
 
     public function testGetParent()
     {
-        $formID = UserDefinedForm::create(['Title' => 'Test'])->write();
-        $this->submission->UserDefinedFormID = $formID;
-
         $parent = $this->submission->getParent();
 
         $this->assertInstanceOf(UserDefinedForm::class, $parent);
@@ -47,6 +44,10 @@ class PartialFormSubmissionTest extends SapphireTest
     protected function setUp()
     {
         $this->submission = Injector::inst()->get(PartialFormSubmission::class);
+        $form = UserDefinedForm::create(['Title' => 'Test']);
+        $formID = $form->write();
+        $this->submission->UserDefinedFormID = $formID;
+        $this->submission->UserDefinedFormClass = UserDefinedForm::class;
         $this->submission->write();
         $this->usesDatabase = true;
 

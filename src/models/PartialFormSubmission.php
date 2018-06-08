@@ -3,13 +3,13 @@
 namespace Firesphere\PartialUserforms\Models;
 
 use SilverStripe\Forms\FieldList;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\UserForms\Model\Submission\SubmittedForm;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\UserForms\Model\Submission\SubmittedForm;
 
 /**
  * Class \Firesphere\PartialUserforms\Models\PartialFormSubmission
@@ -48,7 +48,7 @@ class PartialFormSubmission extends SubmittedForm
         );
 
         $exportColumns = array(
-            'Title' => 'Title',
+            'Title'       => 'Title',
             'ExportValue' => 'Value'
         );
 

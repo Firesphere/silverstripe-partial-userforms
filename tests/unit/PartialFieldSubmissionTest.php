@@ -19,9 +19,8 @@ class PartialFieldSubmissionTest extends SapphireTest
 
     public function testCanView()
     {
-        Security::setCurrentUser(null);
-        $this->assertFalse($this->field->canView());
-        
+        $this->assertTrue($this->field->canView());
+
         $member = DefaultAdminService::singleton()->findOrCreateAdmin('admin@example.com');
         Security::setCurrentUser($member);
 

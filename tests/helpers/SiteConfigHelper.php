@@ -15,7 +15,7 @@ class SiteConfigHelper
     {
         $config = SiteConfig::current_site_config();
         $config->SendMailTo = $addresses;
-        $config->SendDailyEmail= $send;
+        $config->SendDailyEmail = $send;
         $config->CleanupAfterSend = $cleanup;
         $config->SendMailFrom = $from;
         $config->write();
