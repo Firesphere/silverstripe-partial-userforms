@@ -24,13 +24,43 @@ class PartialFormSubmissionTest extends SapphireTest
         $this->assertInstanceOf(GridField::class, $fields->dataFieldByName('PartialFields'));
     }
 
+    public function testCanCreate()
+    {
+        $this->assertTrue($this->submission->canCreate());
+
+        $this->submission->ParentID = $this->submission->UserDefinedFormID;
+        $this->submission->UserDefinedFormID = 0;
+
+        $this->assertTrue($this->submission->canCreate());
+    }
+
+    public function testCanView()
+    {
+        $this->assertTrue($this->submission->canView());
+
+        $this->submission->ParentID = $this->submission->UserDefinedFormID;
+        $this->submission->UserDefinedFormID = 0;
+
+        $this->assertTrue($this->submission->canView());
+    }
+
     public function testCanEdit()
     {
+        $this->assertTrue($this->submission->canEdit());
+
+        $this->submission->ParentID = $this->submission->UserDefinedFormID;
+        $this->submission->UserDefinedFormID = 0;
+
         $this->assertTrue($this->submission->canEdit());
     }
 
     public function testCanDelete()
     {
+        $this->assertTrue($this->submission->canDelete());
+
+        $this->submission->ParentID = $this->submission->UserDefinedFormID;
+        $this->submission->UserDefinedFormID = 0;
+
         $this->assertTrue($this->submission->canDelete());
     }
 
