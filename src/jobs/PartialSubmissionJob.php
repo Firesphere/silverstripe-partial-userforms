@@ -175,15 +175,21 @@ class PartialSubmissionJob extends AbstractQueuedJob
      */
     protected function processSubmissions($form, $submissions, $resource)
     {
-        $editableFields = $form->Fields()->map('Name', 'Title')->toArray();
+        $editableFields = $form
+            ->Fields()
+            ->exclude(['Name:PartialMatch' => 'EditableFormStep'])
+            ->map('Name', 'Title')
+            ->toArray();
         $submitted = [];
         foreach ($submissions as $submission) {
+            $submitted = [];
             $values = $submission->PartialFields()->map('Name', 'Value')->toArray();
             $i = 0;
             foreach ($editableFields as $field => $title) {
-                $submitted[] = '';
                 if (isset($values[$field])) {
                     $submitted[] = $values[$field];
+                } else {
+                    $submitted[] = '';
                 }
                 $i++;
             }
