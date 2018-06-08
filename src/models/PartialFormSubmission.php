@@ -72,7 +72,7 @@ class PartialFormSubmission extends SubmittedForm
     /**
      * @param Member
      *
-     * @return boolean
+     * @return boolean|string
      */
     public function canCreate($member = null, $context = [])
     {
@@ -86,7 +86,7 @@ class PartialFormSubmission extends SubmittedForm
     /**
      * @param Member
      *
-     * @return boolean
+     * @return boolean|string
      */
     public function canView($member = null)
     {
@@ -100,7 +100,7 @@ class PartialFormSubmission extends SubmittedForm
     /**
      * @param Member
      *
-     * @return boolean
+     * @return boolean|string
      */
     public function canEdit($member = null)
     {
@@ -114,7 +114,7 @@ class PartialFormSubmission extends SubmittedForm
     /**
      * @param Member
      *
-     * @return boolean
+     * @return boolean|string
      */
     public function canDelete($member = null)
     {

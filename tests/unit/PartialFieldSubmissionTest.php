@@ -19,7 +19,9 @@ class PartialFieldSubmissionTest extends SapphireTest
 
     public function testCanView()
     {
+        Security::setCurrentUser(null);
         $this->assertFalse($this->field->canView());
+        
         $member = DefaultAdminService::singleton()->findOrCreateAdmin('admin@example.com');
         Security::setCurrentUser($member);
 
@@ -28,6 +30,7 @@ class PartialFieldSubmissionTest extends SapphireTest
 
     public function testCanCreate()
     {
+        Security::setCurrentUser(null);
         $this->assertFalse($this->field->canCreate());
 
         $member = DefaultAdminService::singleton()->findOrCreateAdmin('admin@example.com');
@@ -39,6 +42,7 @@ class PartialFieldSubmissionTest extends SapphireTest
 
     public function testCanEdit()
     {
+        Security::setCurrentUser(null);
         $this->assertFalse($this->field->canEdit());
 
         $member = DefaultAdminService::singleton()->findOrCreateAdmin('admin@example.com');
@@ -50,6 +54,7 @@ class PartialFieldSubmissionTest extends SapphireTest
 
     public function testCanDelete()
     {
+        Security::setCurrentUser(null);
         $this->assertFalse($this->field->canDelete());
 
         $member = DefaultAdminService::singleton()->findOrCreateAdmin('admin@example.com');

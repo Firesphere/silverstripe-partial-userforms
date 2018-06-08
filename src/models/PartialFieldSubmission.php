@@ -21,7 +21,7 @@ class PartialFieldSubmission extends SubmittedFormField
     /**
      * @param Member $member
      * @param array $context
-     * @return boolean
+     * @return boolean|string
      */
     public function canCreate($member = null, $context = [])
     {
@@ -31,7 +31,7 @@ class PartialFieldSubmission extends SubmittedFormField
     /**
      * @param Member $member
      *
-     * @return boolean
+     * @return boolean|string
      */
     public function canView($member = null)
     {
@@ -41,7 +41,7 @@ class PartialFieldSubmission extends SubmittedFormField
     /**
      * @param Member $member
      *
-     * @return boolean
+     * @return boolean|string
      */
     public function canEdit($member = null)
     {
@@ -51,7 +51,7 @@ class PartialFieldSubmission extends SubmittedFormField
     /**
      * @param Member $member
      *
-     * @return boolean
+     * @return boolean|string
      */
     public function canDelete($member = null)
     {
