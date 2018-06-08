@@ -180,7 +180,6 @@ class PartialSubmissionJob extends AbstractQueuedJob
             ->exclude(['Name:PartialMatch' => 'EditableFormStep'])
             ->map('Name', 'Title')
             ->toArray();
-        $submitted = [];
         foreach ($submissions as $submission) {
             $submitted = [];
             $values = $submission->PartialFields()->map('Name', 'Value')->toArray();
