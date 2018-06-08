@@ -5,6 +5,7 @@ namespace Firesphere\PartialUserforms\Models;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\UserForms\Model\Submission\SubmittedForm;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
@@ -38,14 +39,34 @@ class PartialFormSubmission extends SubmittedForm
     {
         /** @var FieldList $fields */
         $fields = parent::getCMSFields();
-        $fields->removeByName(['Values', 'IsSend']);
+        $fields->removeByName(['Values', 'IsSend', 'PartialFields']);
+
+        $values = GridField::create(
+            'PartialFields',
+            _t(static::class . '.PARTIALFIELDS', 'Partial fields'),
+            $this->PartialFields()->sort('Created', 'ASC')
+        );
+
+        $exportColumns = array(
+            'Title' => 'Title',
+            'ExportValue' => 'Value'
+        );
+
         $config = new GridFieldConfig();
         $config->addComponent(new GridFieldDataColumns());
+        $config->addComponent(new GridFieldExportButton('after', $exportColumns));
         $config->addComponent(new GridFieldPrintButton());
 
-        $fields->dataFieldByName('PartialFields')->setConfig($config);
+        $values->setConfig($config);
+
+        $fields->addFieldToTab('Root.Main', $values);
 
         return $fields;
+    }
+
+    public function getParent()
+    {
+        return $this->UserDefinedForm();
     }
 
     /**
@@ -55,17 +76,8 @@ class PartialFormSubmission extends SubmittedForm
      */
     public function canCreate($member = null, $context = [])
     {
-        $extended = $this->extendedCan(__FUNCTION__, $member);
-        if ($extended !== null) {
-            return $extended;
-        }
-
         if ($this->UserDefinedForm()) {
             return $this->UserDefinedForm()->canCreate($member, $context);
-        }
-
-        if (!$this->Parent()) {
-            $this->ParentID = $this->UserDefinedFormID;
         }
 
         return parent::canCreate($member);
@@ -78,12 +90,6 @@ class PartialFormSubmission extends SubmittedForm
      */
     public function canView($member = null)
     {
-        $extended = $this->extendedCan(__FUNCTION__, $member);
-
-        if ($extended !== null) {
-            return $extended;
-        }
-
         if ($this->UserDefinedForm()) {
             return $this->UserDefinedForm()->canView($member);
         }
@@ -98,7 +104,11 @@ class PartialFormSubmission extends SubmittedForm
      */
     public function canEdit($member = null)
     {
-        return false;
+        if ($this->UserDefinedForm()) {
+            return $this->UserDefinedForm()->canEdit($member);
+        }
+
+        return parent::canEdit($member);
     }
 
     /**
@@ -108,12 +118,6 @@ class PartialFormSubmission extends SubmittedForm
      */
     public function canDelete($member = null)
     {
-        $extended = $this->extendedCan(__FUNCTION__, $member);
-
-        if ($extended !== null) {
-            return $extended;
-        }
-
         if ($this->UserDefinedForm()) {
             return $this->UserDefinedForm()->canDelete($member);
         }
