@@ -30,12 +30,14 @@ class SubmittedFormExtension extends DataExtension
         $partialID = Controller::curr()->getRequest()->getSession()->get(PartialUserFormController::SESSION_KEY);
         /** @var PartialFormSubmission $partialForm */
         $partialForm = PartialFormSubmission::get()->byID($partialID);
-        foreach ($partialForm->PartialFields() as $field) {
-            $field->delete();
-            $field->destroy();
+        if ($partialForm) {
+            foreach ($partialForm->PartialFields() as $field) {
+                $field->delete();
+                $field->destroy();
+            }
+            $partialForm->delete();
+            $partialForm->destroy();
         }
-        $partialForm->delete();
-        $partialForm->destroy();
         Controller::curr()->getRequest()->getSession()->clear(PartialUserFormController::SESSION_KEY);
     }
 
