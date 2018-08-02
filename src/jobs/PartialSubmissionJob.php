@@ -200,13 +200,13 @@ class PartialSubmissionJob extends AbstractQueuedJob
                 }
             }
             $i++;
+            $submission->IsSend = true;
+            $submission->write();
         }
         $this->extend('updateCSVRecords', $submitted, $editableFields);
         foreach ($submitted as $submitItem) {
             fputcsv($resource, $submitItem);
         }
-        $submission->IsSend = true;
-        $submission->write();
     }
 
     /**
