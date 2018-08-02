@@ -42,6 +42,35 @@ DNADesign\ElementalUserForms\Model\ElementForm:
     
 ```
 
+# Extensions
+
+To manage the CSV's that are send out, e.g. to filter certain values or remove records from the CSV,
+the export job has an extension point calld `updateCSVRecords`, in which you can filter records, e.g.
+```php
+
+class PartialSubmissionJobExtension extends Extension
+{
+
+    /**
+     * Remove records that do not have an email address
+     * to reduce the amount of useless records
+     * @param $csvArray
+     * @param $editableFields
+     */
+    public function updateCSVRecords(&$csvArray, $editableFields)
+    {
+        $emailAddress = array_search('email_address', array_keys($editableFields));
+        foreach ($csvArray as $key => $value)
+        {
+            if (empty($value[$emailAddress])) {
+                unset($csvArray[$key]);
+            }
+        }
+    }
+}
+
+```
+
 # Benefits
 
 With Partial forms, partial submissions are available to CMS users, to see how far a visitor got through the form

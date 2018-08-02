@@ -7,6 +7,7 @@ use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use Firesphere\PartialUserforms\Services\DateService;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
@@ -22,6 +23,7 @@ use Symbiote\QueuedJobs\Services\QueuedJobService;
  */
 class PartialSubmissionJob extends AbstractQueuedJob
 {
+    use Extensible;
 
     /**
      * The generated CSV files
@@ -152,12 +154,18 @@ class PartialSubmissionJob extends AbstractQueuedJob
      */
     protected function buildCSV($file, $form)
     {
+        $excludeFields = [
+            'Name:PartialMatch' => 'EditableFormStep'
+        ];
+        $filter = [
+            'UserDefinedFormID' => $form->ID
+        ];
         $resource = fopen($file, 'w+');
         /** @var DataList|PartialFormSubmission[] $submissions */
-        $submissions = PartialFormSubmission::get()->filter(['UserDefinedFormID' => $form->ID]);
+        $submissions = PartialFormSubmission::get()->filter($filter);
         $headerFields = $form
             ->Fields()
-            ->exclude(['Name:PartialMatch' => 'EditableFormStep'])
+            ->exclude($excludeFields)
             ->column('Title');
         fputcsv($resource, $headerFields);
 
@@ -180,22 +188,25 @@ class PartialSubmissionJob extends AbstractQueuedJob
             ->exclude(['Name:PartialMatch' => 'EditableFormStep'])
             ->map('Name', 'Title')
             ->toArray();
+        $i = 0;
+        $submitted = [];
         foreach ($submissions as $submission) {
-            $submitted = [];
             $values = $submission->PartialFields()->map('Name', 'Value')->toArray();
-            $i = 0;
             foreach ($editableFields as $field => $title) {
                 if (isset($values[$field])) {
-                    $submitted[] = $values[$field];
+                    $submitted[$i][] = $values[$field];
                 } else {
-                    $submitted[] = '';
+                    $submitted[$i][] = '';
                 }
-                $i++;
             }
-            fputcsv($resource, $submitted);
-            $submission->IsSend = true;
-            $submission->write();
+            $i++;
         }
+        $this->extend('updateCSVRecords', $submitted, $editableFields);
+        foreach ($submitted as $submitItem) {
+            fputcsv($resource, $submitItem);
+        }
+        $submission->IsSend = true;
+        $submission->write();
     }
 
     /**
