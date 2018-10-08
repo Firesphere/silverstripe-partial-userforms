@@ -169,6 +169,15 @@ class PartialSubmissionJobTest extends SapphireTest
         $this->job->process();
         $this->assertEmailSent('test@example.com', 'site@' . Director::host());
     }
+    
+    public function testCleanupSubmissions()
+    {
+        SiteConfigHelper::setupSiteConfig('test@example.com', null, true);
+
+        $this->job->setup();
+        $this->job->process();
+        $this->assertEmailSent('test@example.com', 'site@' . Director::host());
+    }
 
     protected function setUp()
     {
