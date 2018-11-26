@@ -17,7 +17,7 @@
         }
     ],
     "require": {
-        "silverstripe/recipe-cms": "^1.0",
+        "silverstripe/recipe-cms": "4.2.2",
         "silverstripe/userforms": "^5.1.1",
         "symbiote/silverstripe-queuedjobs": "^4.2"
     },
@@ -42,7 +42,26 @@
                 "Firesphere\\PartialUserForms\\Models": "src/models",
                 "Firesphere\\PartialUserForms\\Jobs": "src/jobs"
             }
-        }
+        },
+        "project-files-installed": [
+            "app/.htaccess",
+            "app/_config.php",
+            "app/_config/mysite.yml",
+            "app/src/Page.php",
+            "app/src/PageController.php",
+            "mysite/.htaccess",
+            "mysite/_config.php",
+            "mysite/_config/mysite.yml",
+            "mysite/code/Page.php",
+            "mysite/code/PageController.php"
+        ],
+        "public-files-installed": [
+            ".htaccess",
+            "index.php",
+            "install-frameworkmissing.html",
+            "install.php",
+            "web.config"
+        ]
     },
     "prefer-stable": true,
     "minimum-stability": "dev"
