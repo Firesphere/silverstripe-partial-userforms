@@ -258,8 +258,10 @@ class PartialSubmissionJob extends AbstractQueuedJob
         $forms = PartialFormSubmission::get()->filter(['IsSend' => true]);
         foreach ($forms as $form) {
             /** @var DataList|PartialFieldSubmission[] $fields */
-            $fields = PartialFieldSubmission::get()->filter(['ID' => $form->PartialFields()->column('ID')]);
-            $fields->removeAll();
+            if ($form->PartialFields()->column('ID')) {
+                $fields = PartialFieldSubmission::get()->filter(['ID' => $form->PartialFields()->column('ID')]);
+                $fields->removeAll();
+            }
             $form->delete();
             $form->destroy();
         }
