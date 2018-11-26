@@ -17,7 +17,7 @@
         }
     ],
     "require": {
-        "silverstripe/recipe-cms": "4.2.2",
+        "silverstripe/recipe-cms": "^4.2",
         "silverstripe/userforms": "^5.1.1",
         "symbiote/silverstripe-queuedjobs": "^4.2"
     },
