@@ -41,7 +41,6 @@
                 "Firesphere\\PartialUserForms\\Extensions": "src/extensions",
                 "Firesphere\\PartialUserForms\\Models": "src/models",
                 "Firesphere\\PartialUserForms\\Jobs": "src/jobs",
-                "Firesphere\\PartialUserForms\\": "src/"
             }
         },
         "project-files-installed": [
@@ -57,7 +56,12 @@
             "install-frameworkmissing.html",
             "install.php",
             "web.config"
-        ]
+        ],
+        "autoload": {
+            "psr-4": {
+                "Firesphere\\PartialUserForms\\Test\\": "src/"
+            }
+        }
     },
     "prefer-stable": true,
     "minimum-stability": "dev"
