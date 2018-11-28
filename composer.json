@@ -40,7 +40,7 @@
                 "Firesphere\\PartialUserForms\\Controllers": "src/controllers",
                 "Firesphere\\PartialUserForms\\Extensions": "src/extensions",
                 "Firesphere\\PartialUserForms\\Models": "src/models",
-                "Firesphere\\PartialUserForms\\Jobs": "src/jobs",
+                "Firesphere\\PartialUserForms\\Jobs": "src/jobs"
             }
         },
         "project-files-installed": [
