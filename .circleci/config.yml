@@ -49,7 +49,6 @@ jobs:
       - save_cache:
           key: v2-cache-{{ checksum "composer.lock" }}-{{ checksum "yarn.lock" }}
           paths:
-            - mysite
             - vendor
             - resource
             - node_modules
