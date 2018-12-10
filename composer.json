@@ -54,7 +54,14 @@
             "psr-4": {
                 "Firesphere\\PartialUserForms\\Test\\": "src/"
             }
-        }
+        },
+        "project-files-installed": [
+            "app/.htaccess",
+            "app/_config.php",
+            "app/_config/mysite.yml",
+            "app/src/Page.php",
+            "app/src/PageController.php"
+        ]
     },
     "prefer-stable": true,
     "minimum-stability": "dev"

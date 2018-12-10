@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="tests/unit" tests="52" assertions="79" failures="0" errors="0" time="110.410864">
+    <testsuite name="Firesphere\PartialUserforms\Tests\DateServiceTest" file="/var/www/mysite/www/tests/unit/DateServiceTest.php" tests="1" assertions="1" failures="0" errors="0" time="0.030983">
+      <testcase name="testGetTomorrow" class="Firesphere\PartialUserforms\Tests\DateServiceTest" file="/var/www/mysite/www/tests/unit/DateServiceTest.php" line="10" assertions="1" time="0.030983"/>
+    </testsuite>
+    <testsuite name="Firesphere\PartialUserforms\Tests\PartialFieldSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFieldSubmissionTest.php" tests="4" assertions="8" failures="0" errors="0" time="7.503139">
+      <testcase name="testCanView" class="Firesphere\PartialUserforms\Tests\PartialFieldSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFieldSubmissionTest.php" line="20" assertions="2" time="3.294990"/>
+      <testcase name="testCanCreate" class="Firesphere\PartialUserforms\Tests\PartialFieldSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFieldSubmissionTest.php" line="30" assertions="2" time="1.373624"/>
+      <testcase name="testCanEdit" class="Firesphere\PartialUserforms\Tests\PartialFieldSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFieldSubmissionTest.php" line="41" assertions="2" time="1.369623"/>
+      <testcase name="testCanDelete" class="Firesphere\PartialUserforms\Tests\PartialFieldSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFieldSubmissionTest.php" line="52" assertions="2" time="1.464902"/>
+    </testsuite>
+    <testsuite name="Firesphere\PartialUserforms\Tests\PartialFormSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFormSubmissionTest.php" tests="6" assertions="12" failures="0" errors="0" time="12.247467">
+      <testcase name="testGetCMSFields" class="Firesphere\PartialUserforms\Tests\PartialFormSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFormSubmissionTest.php" line="18" assertions="3" time="5.193456"/>
+      <testcase name="testCanCreate" class="Firesphere\PartialUserforms\Tests\PartialFormSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFormSubmissionTest.php" line="27" assertions="2" time="1.387591"/>
+      <testcase name="testCanView" class="Firesphere\PartialUserforms\Tests\PartialFormSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFormSubmissionTest.php" line="37" assertions="2" time="1.437143"/>
+      <testcase name="testCanEdit" class="Firesphere\PartialUserforms\Tests\PartialFormSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFormSubmissionTest.php" line="47" assertions="2" time="1.554862"/>
+      <testcase name="testCanDelete" class="Firesphere\PartialUserforms\Tests\PartialFormSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFormSubmissionTest.php" line="57" assertions="2" time="1.395846"/>
+      <testcase name="testGetParent" class="Firesphere\PartialUserforms\Tests\PartialFormSubmissionTest" file="/var/www/mysite/www/tests/unit/PartialFormSubmissionTest.php" line="67" assertions="1" time="1.278569"/>
+    </testsuite>
+    <testsuite name="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" tests="14" assertions="20" failures="0" errors="0" time="50.605190">
+      <testcase name="testGetTitle" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="24" assertions="1" time="25.790979"/>
+      <testcase name="testSetup" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="29" assertions="1" time="1.057757"/>
+      <testcase name="testProcess" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="36" assertions="3" time="1.875376"/>
+      <testcase name="testProcessNoMail" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="47" assertions="2" time="1.125029"/>
+      <testcase name="testProcessNotSetup" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="61" assertions="1" time="1.388570"/>
+      <testcase name="testIsSend" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="74" assertions="1" time="1.585574"/>
+      <testcase name="testIsDeleted" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="87" assertions="1" time="3.487393"/>
+      <testcase name="testFilesRemoved" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="101" assertions="1" time="3.239566"/>
+      <testcase name="testNewJobCreated" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="111" assertions="2" time="3.399354"/>
+      <testcase name="testInvalidEmail" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="127" assertions="1" time="1.395304"/>
+      <testcase name="testCommaSeparatedUsers" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="143" assertions="3" time="1.568527"/>
+      <testcase name="testFromAddressSet" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="155" assertions="1" time="1.629677"/>
+      <testcase name="testFromAddressNotSet" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="164" assertions="1" time="1.560937"/>
+      <testcase name="testCleanupSubmissions" class="Firesphere\PartialUserforms\Tests\PartialSubmissionJobTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionJobTest.php" line="173" assertions="1" time="1.501147"/>
+    </testsuite>
+    <testsuite name="Firesphere\PartialUserforms\Tests\PartialSubmissionTaskTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionTaskTest.php" tests="4" assertions="5" failures="0" errors="0" time="5.237952">
+      <testcase name="testTitle" class="Firesphere\PartialUserforms\Tests\PartialSubmissionTaskTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionTaskTest.php" line="16" assertions="1" time="1.039979"/>
+      <testcase name="testRun" class="Firesphere\PartialUserforms\Tests\PartialSubmissionTaskTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionTaskTest.php" line="22" assertions="1" time="1.336282"/>
+      <testcase name="testExtraUser" class="Firesphere\PartialUserforms\Tests\PartialSubmissionTaskTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionTaskTest.php" line="35" assertions="2" time="1.469512"/>
+      <testcase name="testNoConfigButUser" class="Firesphere\PartialUserforms\Tests\PartialSubmissionTaskTest" file="/var/www/mysite/www/tests/unit/PartialSubmissionTaskTest.php" line="51" assertions="1" time="1.392179"/>
+    </testsuite>
+    <testsuite name="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" tests="10" assertions="15" failures="0" errors="0" time="17.627450">
+      <testcase name="testClassExists" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="29" assertions="1" time="4.373068"/>
+      <testcase name="testSavePartialSubmissionExists" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="34" assertions="1" time="0.940030"/>
+      <testcase name="testSavePartialSubmissionFormCreated" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="39" assertions="2" time="1.282335"/>
+      <testcase name="testSavePartialSubmissionFieldCreated" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="54" assertions="1" time="1.289404"/>
+      <testcase name="testPartialFormSubmissionExists" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="67" assertions="1" time="1.558788"/>
+      <testcase name="testPartialFormSubmissionExistingField" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="84" assertions="2" time="2.082988"/>
+      <testcase name="testSubmittedFieldTitle" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="121" assertions="3" time="1.583346"/>
+      <testcase name="testParent" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="142" assertions="1" time="1.456242"/>
+      <testcase name="testUnwantedFields" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="161" assertions="2" time="1.465750"/>
+      <testcase name="testArrayData" class="Firesphere\PartialUserforms\Tests\PartialUserFormControllerTest" file="/var/www/mysite/www/tests/unit/PartialUserFormControllerTest.php" line="184" assertions="1" time="1.595499"/>
+    </testsuite>
+    <testsuite name="Firesphere\PartialUserforms\Tests\SiteConfigExtensionTest" file="/var/www/mysite/www/tests/unit/SiteConfigExtensionTest.php" tests="5" assertions="8" failures="0" errors="0" time="5.920852">
+      <testcase name="testUpdateCMSFields" class="Firesphere\PartialUserforms\Tests\SiteConfigExtensionTest" file="/var/www/mysite/www/tests/unit/SiteConfigExtensionTest.php" line="28" assertions="4" time="1.110173"/>
+      <testcase name="testOnAfterWriteNoSetting" class="Firesphere\PartialUserforms\Tests\SiteConfigExtensionTest" file="/var/www/mysite/www/tests/unit/SiteConfigExtensionTest.php" line="41" assertions="1" time="1.166490"/>
+      <testcase name="testOnAfterWriteSettingNoEmail" class="Firesphere\PartialUserforms\Tests\SiteConfigExtensionTest" file="/var/www/mysite/www/tests/unit/SiteConfigExtensionTest.php" line="53" assertions="1" time="1.047503"/>
+      <testcase name="testOnAfterWriteCreateJob" class="Firesphere\PartialUserforms\Tests\SiteConfigExtensionTest" file="/var/www/mysite/www/tests/unit/SiteConfigExtensionTest.php" line="68" assertions="1" time="1.327470"/>
+      <testcase name="testOnAfterWriteNoDuplicateJob" class="Firesphere\PartialUserforms\Tests\SiteConfigExtensionTest" file="/var/www/mysite/www/tests/unit/SiteConfigExtensionTest.php" line="86" assertions="1" time="1.269216"/>
+    </testsuite>
+    <testsuite name="Firesphere\PartialUserforms\Tests\SubmittedFormExtensionTest" file="/var/www/mysite/www/tests/unit/SubmittedFormExtensionTest.php" tests="6" assertions="7" failures="0" errors="0" time="10.340547">
+      <testcase name="testClassExists" class="Firesphere\PartialUserforms\Tests\SubmittedFormExtensionTest" file="/var/www/mysite/www/tests/unit/SubmittedFormExtensionTest.php" line="18" assertions="1" time="4.411548"/>
+      <testcase name="testUpdateAfterProcessForm" class="Firesphere\PartialUserforms\Tests\SubmittedFormExtensionTest" file="/var/www/mysite/www/tests/unit/SubmittedFormExtensionTest.php" line="25" assertions="1" time="1.445265"/>
+      <testcase name="testUpdateAfterProcessFields" class="Firesphere\PartialUserforms\Tests\SubmittedFormExtensionTest" file="/var/www/mysite/www/tests/unit/SubmittedFormExtensionTest.php" line="42" assertions="2" time="1.284390"/>
+      <testcase name="testUpdateAfterProcessSession" class="Firesphere\PartialUserforms\Tests\SubmittedFormExtensionTest" file="/var/www/mysite/www/tests/unit/SubmittedFormExtensionTest.php" line="63" assertions="1" time="1.328526"/>
+      <testcase name="testIsPartial" class="Firesphere\PartialUserforms\Tests\SubmittedFormExtensionTest" file="/var/www/mysite/www/tests/unit/SubmittedFormExtensionTest.php" line="79" assertions="1" time="0.924504"/>
+      <testcase name="testIsNotPartial" class="Firesphere\PartialUserforms\Tests\SubmittedFormExtensionTest" file="/var/www/mysite/www/tests/unit/SubmittedFormExtensionTest.php" line="89" assertions="1" time="0.946314"/>
+    </testsuite>
+    <testsuite name="Firesphere\PartialUserforms\Tests\UserDefinedFormControllerExtensionTest" file="/var/www/mysite/www/tests/unit/UserDefinedFormControllerExtensionTest.php" tests="1" assertions="1" failures="0" errors="0" time="0.036179">
+      <testcase name="testInit" class="Firesphere\PartialUserforms\Tests\UserDefinedFormControllerExtensionTest" file="/var/www/mysite/www/tests/unit/UserDefinedFormControllerExtensionTest.php" line="12" assertions="1" time="0.036179"/>
+    </testsuite>
+    <testsuite name="Firesphere\PartialUserforms\Tests\UserDefinedFormExtensionTest" file="/var/www/mysite/www/tests/unit/UserDefinedFormExtensionTest.php" tests="1" assertions="2" failures="0" errors="0" time="0.861106">
+      <testcase name="testCMSFields" class="Firesphere\PartialUserforms\Tests\UserDefinedFormExtensionTest" file="/var/www/mysite/www/tests/unit/UserDefinedFormExtensionTest.php" line="12" assertions="2" time="0.861106"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

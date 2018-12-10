@@ -1,6 +1,6 @@
 <?php
 
-namespace {
+namespace Firesphere {
 
     use SilverStripe\CMS\Controllers\ContentController;
 
