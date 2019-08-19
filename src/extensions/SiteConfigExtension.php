@@ -19,7 +19,7 @@ use Symbiote\QueuedJobs\Services\QueuedJobService;
  * Class SiteConfigExtension
  *
  * @package Firesphere\PartialUserforms\Extensions
- * @property \SilverStripe\SiteConfig\SiteConfig|\Firesphere\PartialUserforms\Extensions\SiteConfigExtension $owner
+ * @property SiteConfig|SiteConfigExtension $owner
  * @property boolean $SendDailyEmail
  * @property boolean $CleanupAfterSend
  * @property string $SendMailTo

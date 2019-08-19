@@ -8,6 +8,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\UserForms\Model\Submission\SubmittedForm;
 
@@ -16,8 +17,8 @@ use SilverStripe\UserForms\Model\Submission\SubmittedForm;
  *
  * @property boolean $IsSend
  * @property int $UserDefinedFormID
- * @method \SilverStripe\ORM\DataObject UserDefinedForm()
- * @method \SilverStripe\ORM\DataList|\Firesphere\PartialUserforms\Models\PartialFieldSubmission[] PartialFields()
+ * @method DataObject UserDefinedForm()
+ * @method DataList|PartialFieldSubmission[] PartialFields()
  */
 class PartialFormSubmission extends SubmittedForm
 {

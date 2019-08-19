@@ -8,7 +8,7 @@ use SilverStripe\UserForms\Model\Submission\SubmittedFormField;
  * Class \Firesphere\PartialUserforms\Models\PartialFieldSubmission
  *
  * @property int $SubmittedFormID
- * @method \Firesphere\PartialUserforms\Models\PartialFormSubmission SubmittedForm()
+ * @method PartialFormSubmission SubmittedForm()
  */
 class PartialFieldSubmission extends SubmittedFormField
 {

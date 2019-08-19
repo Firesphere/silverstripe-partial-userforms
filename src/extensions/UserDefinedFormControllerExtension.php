@@ -8,7 +8,7 @@ use SilverStripe\View\Requirements;
 /**
  * Class \Firesphere\PartialUserforms\Extensions\UserDefinedFormControllerExtension
  *
- * @property \SilverStripe\UserForms\Control\UserDefinedFormController|\Firesphere\PartialUserforms\Extensions\UserDefinedFormControllerExtension $owner
+ * @property UserDefinedFormController|UserDefinedFormControllerExtension $owner
  */
 class UserDefinedFormControllerExtension extends Extension
 {

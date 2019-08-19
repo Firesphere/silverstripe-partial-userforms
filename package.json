@@ -5,13 +5,13 @@
   "private": false,
   "license": "BSD-3-Clause",
   "devDependencies": {
-    "cross-env": "^5.1.1",
-    "laravel-mix": "^2.0.0",
-    "webpack-bundle-analyzer": "^2.10.0"
+    "laravel-mix": "^4.1.2",
+    "vue-template-compiler": "^2.6.10",
+    "webpack-bundle-analyzer": "^3.4.1"
   },
   "scripts": {
-    "build": "node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "build": "NODE_ENV=development ./node_modules/.bin/webpack-cli --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "watch": "yarn build --watch",
-    "package": "node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "package": "NODE_ENV=production ./node_modules/.bin/webpack-cli --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   }
 }
