@@ -3,11 +3,12 @@
 namespace Firesphere\PartialUserforms\Extensions;
 
 use SilverStripe\Core\Extension;
+use SilverStripe\UserForms\Control\UserDefinedFormController;
 use SilverStripe\View\Requirements;
 
 /**
- * Class \Firesphere\PartialUserforms\Extensions\UserDefinedFormControllerExtension
- *
+ * Class UserDefinedFormControllerExtension
+ * @package Firesphere\PartialUserforms\Extensions
  * @property UserDefinedFormController|UserDefinedFormControllerExtension $owner
  */
 class UserDefinedFormControllerExtension extends Extension

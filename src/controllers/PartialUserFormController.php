@@ -5,10 +5,15 @@ namespace Firesphere\PartialUserforms\Controllers;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\UserForms\Control\UserDefinedFormController;
+use SilverStripe\UserForms\Form\UserForm;
 use SilverStripe\UserForms\Model\EditableFormField;
+use SilverStripe\UserForms\Model\UserDefinedForm;
 
 /**
  * Class \Firesphere\PartialUserforms\Controllers\PartialUserFormController
@@ -25,14 +30,16 @@ class PartialUserFormController extends ContentController
      * @var array
      */
     private static $url_handlers = [
-        '' => 'savePartialSubmission'
+        '' => 'savePartialSubmission',
+        '$Key/$Token' => 'partial',
     ];
 
     /**
      * @var array
      */
     private static $allowed_actions = [
-        'savePartialSubmission'
+        'savePartialSubmission',
+        'partial',
     ];
 
     /**
@@ -112,5 +119,46 @@ class PartialUserFormController extends ContentController
 
         // Return the ParentID to link the PartialSubmission to it's proper thingy
         return $editableField;
+    }
+
+    /**
+     * Partial form
+     *
+     * @param HTTPRequest $request
+     * @return \SilverStripe\ORM\FieldType\DBHTMLText|void
+     * @throws \SilverStripe\Control\HTTPResponse_Exception
+     */
+    public function partial(HTTPRequest $request)
+    {
+        // Ensure this URL doesn't get picked up by HTTP caches
+        HTTPCacheControlMiddleware::singleton()->disableCache();
+
+        $key = $request->param('Key');
+        $token = $request->param('Token');
+
+        $partial = PartialFormSubmission::get()->find('Token', $token);
+        if (!$partial || !$partial->UserDefinedFormID) {
+            return $this->httpError(404);
+        }
+
+        if ($partial->generateKey($token) === $key) {
+
+            // TODO: Recognize visitor with the password
+            // TODO: Populate form values
+
+            $record = UserDefinedForm::get()->byID($partial->UserDefinedFormID);
+            $controller = new UserDefinedFormController($record);
+            $controller->init();
+
+            return $this->customise([
+                'Title' => $record->Title,
+                'Breadcrumbs' => $record->Breadcrumbs(),
+                'Content' => $this->obj('Content'),
+                'Form' => $controller->Form(),
+                'Link' => $partial->getPartialLink()
+            ])->renderWith(['PartialUserform', 'Page']);
+        } else {
+            return $this->httpError(404);
+        }
     }
 }

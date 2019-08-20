@@ -7,22 +7,29 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\Tab;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\DataList;
+use SilverStripe\UserForms\Model\UserDefinedForm;
 
 /**
- * Class \Firesphere\PartialUserforms\Extensions\UserDefinedFormExtension
+ * Class UserDefinedFormExtension
  *
+ * @package Firesphere\PartialUserforms\Extensions
  * @property UserDefinedForm|UserDefinedFormExtension $owner
  * @property boolean $ExportPartialSubmissions
  * @method DataList|PartialFormSubmission[] PartialSubmissions()
  */
 class UserDefinedFormExtension extends DataExtension
 {
+    /**
+     * @var array
+     */
     private static $db = [
         'ExportPartialSubmissions' => 'Boolean(true)',
     ];
+
     /**
      * @var array
      */
@@ -39,9 +46,10 @@ class UserDefinedFormExtension extends DataExtension
         $submissionField = $fields->dataFieldByName('Submissions');
         $list = $submissionField->getList()->exclude(['ClassName' => PartialFormSubmission::class]);
         $submissionField->setList($list);
+
         $fields->removeByName('PartialSubmissions');
-        /** @var GridFieldConfig_RelationEditor $gridfieldConfig */
-        $gridfieldConfig = GridFieldConfig_RelationEditor::create();
+        /** @var GridFieldConfig_RecordEditor $gridfieldConfig */
+        $gridfieldConfig = GridFieldConfig_RecordEditor::create();
         $gridfieldConfig->removeComponentsByType(GridFieldAddNewButton::class);
 
         // We need to manually add the tab
