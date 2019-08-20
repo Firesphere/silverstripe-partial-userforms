@@ -19,6 +19,7 @@ use SilverStripe\UserForms\Model\UserDefinedForm;
  * @package Firesphere\PartialUserforms\Extensions
  * @property UserDefinedForm|UserDefinedFormExtension $owner
  * @property boolean $ExportPartialSubmissions
+ * @property boolean $PasswordProtected
  * @method DataList|PartialFormSubmission[] PartialSubmissions()
  */
 class UserDefinedFormExtension extends DataExtension
@@ -28,6 +29,7 @@ class UserDefinedFormExtension extends DataExtension
      */
     private static $db = [
         'ExportPartialSubmissions' => 'Boolean(true)',
+        'PasswordProtected'        => 'Boolean(false)'
     ];
 
     /**
@@ -67,6 +69,19 @@ class UserDefinedFormExtension extends DataExtension
                 $gridfieldConfig
             )
         );
+
+        $fields->insertBefore(
+            'DisableSaveSubmissions',
+            $pwdCheckbox = CheckboxField::create(
+                'PasswordProtected',
+                _t(__CLASS__ . 'PasswordProtected', 'Password protect resuming partial submissions')
+            )
+        );
+        $pwdDescription = _t(
+            __CLASS__ . '.PasswordProtectDescription',
+            'When resuming a partial submission, require the user to enter a password'
+        );
+        $pwdCheckbox->setDescription($pwdDescription);
 
         $fields->insertAfter(
             'DisableSaveSubmissions',

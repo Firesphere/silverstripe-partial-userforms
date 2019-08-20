@@ -75,6 +75,7 @@ class PartialFieldSubmissionTest extends SapphireTest
         $partialForm->UserDefinedFormID = $udf;
         $partialForm->UserDefinedFormClass = UserDefinedForm::class;
         $partialFormID = $partialForm->write();
+        $partialForm->publishRecursive();
         $this->field->SubmittedFormID = $partialFormID;
         // testCanCreate() will most likely be an error due to SubmittedForm returning a parent's permission
         // without checking if Parent exists, so have to set the SubmittedForm parent

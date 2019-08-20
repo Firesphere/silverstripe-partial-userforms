@@ -6,4 +6,5 @@ After:
 SilverStripe\Control\Director:
   rules:
     'partialuserform//$Action/$ID/$OtherID': Firesphere\PartialUserForms\Controllers\PartialSubmissionController
-    'partial': Firesphere\PartialUserForms\Controllers\PartialUserFormController
+    'partial/$Key/$Token': Firesphere\PartialUserForms\Controllers\PartialUserFormController
+    'verify': Firesphere\PartialUserForms\Controllers\PartialUserFormVerifyController

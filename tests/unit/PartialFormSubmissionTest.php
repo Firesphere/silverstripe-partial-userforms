@@ -139,6 +139,16 @@ class PartialFormSubmissionTest extends SapphireTest
         $this->assertEquals(16, strlen($key));
     }
 
+    public function testOnBeforeWrite()
+    {
+        $this->assertNotNull($this->submission->Password);
+        $pwd = $this->submission->Password;
+        $this->submission->getParent()->PasswordProtected = true;
+        $this->submission->onBeforeWrite();
+        $this->assertNotNull($this->submission->Password);
+        $this->assertEquals($pwd, $this->submission->Password);
+    }
+
     protected function setUp()
     {
         parent::setUp();
@@ -146,6 +156,7 @@ class PartialFormSubmissionTest extends SapphireTest
         $this->submission = Injector::inst()->get(PartialFormSubmission::class);
         $form = UserDefinedForm::create(['Title' => 'Test']);
         $formID = $form->write();
+        $form->publishRecursive();
         $this->submission->UserDefinedFormID = $formID;
         $this->submission->UserDefinedFormClass = UserDefinedForm::class;
         $this->submission->write();

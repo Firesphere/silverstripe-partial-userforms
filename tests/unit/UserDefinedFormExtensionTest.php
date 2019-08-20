@@ -24,5 +24,6 @@ class UserDefinedFormExtensionTest extends SapphireTest
 
         $this->assertNotNull($fields->dataFieldByName('PartialSubmissions'));
         $this->assertNotNull($fields->dataFieldByName('ExportPartialSubmissions'));
+        $this->assertNotNull($fields->dataFieldByName('PasswordProtected'));
     }
 }
