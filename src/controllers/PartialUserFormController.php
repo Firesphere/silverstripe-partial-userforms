@@ -6,7 +6,6 @@ use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\UserForms\Control\UserDefinedFormController;
@@ -14,8 +13,8 @@ use SilverStripe\UserForms\Model\EditableFormField;
 use SilverStripe\View\Requirements;
 
 /**
- * Class \Firesphere\PartialUserforms\Controllers\PartialUserFormController
- *
+ * Class PartialUserFormController
+ * @package Firesphere\PartialUserforms\Controllers
  */
 class PartialUserFormController extends ContentController
 {
@@ -28,7 +27,7 @@ class PartialUserFormController extends ContentController
      * @var array
      */
     private static $url_handlers = [
-        '' => 'savePartialSubmission',
+        'save' => 'savePartialSubmission',
         '$Key/$Token' => 'partial',
     ];
 
@@ -42,11 +41,16 @@ class PartialUserFormController extends ContentController
 
     /**
      * @param HTTPRequest $request
-     * @return int
+     * @return int|mixed|void
      * @throws ValidationException
+     * @throws \SilverStripe\Control\HTTPResponse_Exception
      */
     public function savePartialSubmission(HTTPRequest $request)
     {
+        if (!$request->isPOST()) {
+            return $this->httpError(404);
+        }
+
         $postVars = $request->postVars();
         $editableField = null;
 
@@ -128,18 +132,19 @@ class PartialUserFormController extends ContentController
      */
     public function partial(HTTPRequest $request)
     {
-        // Ensure this URL doesn't get picked up by HTTP caches
-        HTTPCacheControlMiddleware::singleton()->disableCache();
-
         $key = $request->param('Key');
         $token = $request->param('Token');
 
         $partial = PartialFormSubmission::get()->find('Token', $token);
-        if (!$partial || !$partial->UserDefinedFormID) {
+        if (!$token || !$partial || !$partial->UserDefinedFormID) {
             return $this->httpError(404);
         }
 
         if ($partial->generateKey($token) === $key) {
+            // Set the session if the last session has expired
+            if (!$request->getSession()->get(self::SESSION_KEY)) {
+                $request->getSession()->set(self::SESSION_KEY, $partial->ID);
+            }
 
             // TODO: Recognize visitor with the password
             // TODO: Populate form values
@@ -156,7 +161,7 @@ class PartialUserFormController extends ContentController
                 'Content' => $this->obj('Content'),
                 'Form' => $controller->Form(),
                 'Link' => $partial->getPartialLink()
-            ])->renderWith(['PartialUserform', 'Page']);
+            ])->renderWith(['PartialUserForm', 'Page']);
         } else {
             return $this->httpError(404);
         }

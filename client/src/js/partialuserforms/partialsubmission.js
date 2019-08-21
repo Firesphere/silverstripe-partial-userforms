@@ -1,5 +1,5 @@
 const baseDomain = document.baseURI;
-const submitURL = 'partialuserform';
+const submitURL = 'partialuserform/save';
 const buttons = () => Array.from(document.body.querySelectorAll('form.userform ul li.step-button-wrapper button'));
 const formElements = () => Array.from(document.body.querySelectorAll('form.userform [name]:not([type=hidden]):not([type=submit])'));
 

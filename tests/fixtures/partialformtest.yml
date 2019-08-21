@@ -1,3 +1,6 @@
+SilverStripe\UserForms\Model\UserDefinedForm:
+  form1:
+    Title: Form 1
 Firesphere\PartialUserForms\Models\PartialFieldSubmission:
   field1:
     Name: 'fullname'
@@ -13,11 +16,11 @@ Firesphere\PartialUserForms\Models\PartialFieldSubmission:
     Title: 'Question'
 Firesphere\PartialUserforms\Models\PartialFormSubmission:
   submission1:
-    ParentID: 1
+    UserDefinedForm: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
     PartialFields: =>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field1,=>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field2,=>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field3
-SilverStripe\UserForms\Model\UserDefinedForm:
-  form1:
-    Title: Form 1
+    TokenSalt: aa11ss22dd33ff44
+    Token: q1w2e3r4t5y6u7i8
 SilverStripe\UserForms\Model\EditableFormField\EditableTextField:
   textfield1:
     Name: 'Field1'

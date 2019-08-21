@@ -2,13 +2,15 @@
 
 namespace Firesphere\PartialUserforms\Models;
 
+use SilverStripe\Security\Member;
 use SilverStripe\UserForms\Model\Submission\SubmittedFormField;
 
 /**
- * Class \Firesphere\PartialUserforms\Models\PartialFieldSubmission
+ * Class PartialFieldSubmission
  *
  * @property int $SubmittedFormID
  * @method PartialFormSubmission SubmittedForm()
+ * @package Firesphere\PartialUserforms\Models
  */
 class PartialFieldSubmission extends SubmittedFormField
 {
@@ -25,7 +27,11 @@ class PartialFieldSubmission extends SubmittedFormField
      */
     public function canCreate($member = null, $context = [])
     {
-        return $this->SubmittedForm()->canCreate();
+        if ($this->SubmittedFormID) {
+            return $this->SubmittedForm()->canCreate($member, $context);
+        }
+
+        return parent::canCreate($member);
     }
 
     /**
@@ -35,7 +41,11 @@ class PartialFieldSubmission extends SubmittedFormField
      */
     public function canView($member = null)
     {
-        return $this->SubmittedForm()->canView();
+        if ($this->SubmittedFormID) {
+            return $this->SubmittedForm()->canView($member);
+        }
+
+        return parent::canView($member);
     }
 
     /**
@@ -45,7 +55,11 @@ class PartialFieldSubmission extends SubmittedFormField
      */
     public function canEdit($member = null)
     {
-        return $this->SubmittedForm()->canEdit();
+        if ($this->SubmittedFormID) {
+            return $this->SubmittedForm()->canEdit($member);
+        }
+
+        return parent::canEdit($member);
     }
 
     /**
@@ -55,6 +69,10 @@ class PartialFieldSubmission extends SubmittedFormField
      */
     public function canDelete($member = null)
     {
-        return $this->SubmittedForm()->canDelete();
+        if ($this->SubmittedFormID) {
+            return $this->SubmittedForm()->canDelete($member);
+        }
+
+        return parent::canDelete($member);
     }
 }

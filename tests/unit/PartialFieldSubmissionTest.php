@@ -6,7 +6,7 @@ use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\DefaultAdminService;
-use SilverStripe\Security\Security;
+use SilverStripe\Security\Member;
 use SilverStripe\UserForms\Model\UserDefinedForm;
 
 class PartialFieldSubmissionTest extends SapphireTest
@@ -26,40 +26,40 @@ class PartialFieldSubmissionTest extends SapphireTest
         $this->assertTrue($this->field->canView());
 
         $member = DefaultAdminService::singleton()->findOrCreateAdmin('admin@example.com');
-        Security::setCurrentUser($member);
+        $this->logInAs($member);
 
         $this->assertTrue($this->field->canView($member));
     }
 
     public function testCanCreate()
     {
-        Security::setCurrentUser(null);
+        Member::currentUser()->logOut();
         $this->assertFalse($this->field->canCreate());
 
         $member = DefaultAdminService::singleton()->findOrCreateAdmin('admin@example.com');
-        Security::setCurrentUser($member);
+        $this->logInAs($member);
 
         $this->assertTrue($this->field->canCreate($member));
     }
 
     public function testCanEdit()
     {
-        Security::setCurrentUser(null);
+        Member::currentUser()->logOut();
         $this->assertFalse($this->field->canEdit());
 
         $member = DefaultAdminService::singleton()->findOrCreateAdmin('admin@example.com');
-        Security::setCurrentUser($member);
+        $this->logInAs($member);
 
         $this->assertTrue($this->field->canEdit($member));
     }
 
     public function testCanDelete()
     {
-        Security::setCurrentUser(null);
+        Member::currentUser()->logOut();
         $this->assertFalse($this->field->canDelete());
 
         $member = DefaultAdminService::singleton()->findOrCreateAdmin('admin@example.com');
-        Security::setCurrentUser($member);
+        $this->logInAs($member);
 
         $this->assertTrue($this->field->canDelete($member));
     }
@@ -70,8 +70,12 @@ class PartialFieldSubmissionTest extends SapphireTest
         $partialForm = PartialFormSubmission::create();
         $udf = UserDefinedForm::create(['Title' => 'Test'])->write();
         $partialForm->UserDefinedFormID = $udf;
+        $partialForm->UserDefinedFormClass = UserDefinedForm::class;
         $partialFormID = $partialForm->write();
         $this->field->SubmittedFormID = $partialFormID;
+        // testCanCreate() will most likely be an error due to SubmittedForm returning a parent's permission
+        // without checking if Parent exists, so have to set the SubmittedForm parent
+        $this->field->SubmittedForm()->ParentID = $udf;
 
         return parent::setUp();
     }

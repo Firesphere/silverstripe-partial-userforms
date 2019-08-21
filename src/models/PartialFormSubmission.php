@@ -214,6 +214,6 @@ class PartialFormSubmission extends SubmittedForm
      */
     public function generateKey($token)
     {
-        return hash_pbkdf2('sha256', $token, $this->PartialTokenSalt, 1000, 16);
+        return hash_pbkdf2('sha256', $token, $this->TokenSalt, 1000, 16);
     }
 }
