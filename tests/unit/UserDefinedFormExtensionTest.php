@@ -9,6 +9,9 @@ use SilverStripe\UserForms\Model\UserDefinedForm;
 
 class UserDefinedFormExtensionTest extends SapphireTest
 {
+    /** @var bool  */
+    protected $usesDatabase = true;
+
     public function testCMSFields()
     {
         $extension = Injector::inst()->get(UserDefinedFormExtension::class);

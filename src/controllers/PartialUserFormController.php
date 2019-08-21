@@ -5,15 +5,13 @@ namespace Firesphere\PartialUserforms\Controllers;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\CMS\Controllers\ContentController;
-use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\UserForms\Control\UserDefinedFormController;
-use SilverStripe\UserForms\Form\UserForm;
 use SilverStripe\UserForms\Model\EditableFormField;
-use SilverStripe\UserForms\Model\UserDefinedForm;
+use SilverStripe\View\Requirements;
 
 /**
  * Class \Firesphere\PartialUserforms\Controllers\PartialUserFormController
@@ -146,9 +144,11 @@ class PartialUserFormController extends ContentController
             // TODO: Recognize visitor with the password
             // TODO: Populate form values
 
-            $record = UserDefinedForm::get()->byID($partial->UserDefinedFormID);
+            $record = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
             $controller = new UserDefinedFormController($record);
             $controller->init();
+
+            Requirements::javascript('firesphere/partialuserforms:client/dist/main.js');
 
             return $this->customise([
                 'Title' => $record->Title,

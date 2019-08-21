@@ -11,6 +11,11 @@ use SilverStripe\UserForms\Model\UserDefinedForm;
 class PartialFormSubmissionTest extends SapphireTest
 {
     /**
+     * @var bool
+     */
+    protected $usesDatabase = true;
+
+    /**
      * @var PartialFormSubmission
      */
     protected $submission;
@@ -79,7 +84,6 @@ class PartialFormSubmissionTest extends SapphireTest
         $this->submission->UserDefinedFormID = $formID;
         $this->submission->UserDefinedFormClass = UserDefinedForm::class;
         $this->submission->write();
-        $this->usesDatabase = true;
 
         return parent::setUp();
     }

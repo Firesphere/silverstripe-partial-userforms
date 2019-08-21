@@ -12,6 +12,6 @@
         </p>
     <% end_if %>
 
-    $Content.RichLinks
+    $Content
     $Form
 </div>

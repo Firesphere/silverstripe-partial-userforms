@@ -169,7 +169,7 @@ class PartialSubmissionJobTest extends SapphireTest
         $this->job->process();
         $this->assertEmailSent('test@example.com', 'site@' . Director::host());
     }
-    
+
     public function testCleanupSubmissions()
     {
         SiteConfigHelper::setupSiteConfig('test@example.com', null, true);
@@ -182,7 +182,6 @@ class PartialSubmissionJobTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
-        $this->usesDatabase = true;
         DBDatetime::set_mock_now('2018-01-01 12:00:00');
         /** @var PartialSubmissionJob $job */
         $this->job = new PartialSubmissionJob();

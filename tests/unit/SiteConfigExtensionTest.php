@@ -19,6 +19,10 @@ use Symbiote\QueuedJobs\Services\QueuedJobService;
 
 class SiteConfigExtensionTest extends SapphireTest
 {
+    /**
+     * @var bool
+     */
+    protected $usesDatabase = true;
 
     /**
      * @var SiteConfigExtension
@@ -109,7 +113,6 @@ class SiteConfigExtensionTest extends SapphireTest
 
     protected function setUp()
     {
-        $this->usesDatabase = true;
         Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
         /** @var SiteConfigExtension $extension */
         $extension = Injector::inst()->get(SiteConfigExtension::class);

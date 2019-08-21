@@ -17,7 +17,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\UserForms\Model\Submission\SubmittedForm;
-use SilverStripe\UserForms\Model\UserDefinedForm;
 
 /**
  * Class \Firesphere\PartialUserforms\Models\PartialFormSubmission
@@ -32,13 +31,13 @@ class PartialFormSubmission extends SubmittedForm
     private static $table_name = 'PartialFormSubmission';
 
     private static $db = [
-        'IsSend' => 'Boolean(false)',
+        'IsSend'    => 'Boolean(false)',
         'TokenSalt' => 'Varchar(16)',
-        'Token' => 'Varchar(16)',
+        'Token'     => 'Varchar(16)',
     ];
 
     private static $has_one = [
-        'UserDefinedForm' => UserDefinedForm::class
+        'UserDefinedForm' => DataObject::class
     ];
 
     private static $has_many = [
@@ -53,10 +52,10 @@ class PartialFormSubmission extends SubmittedForm
      * @var array
      */
     private static $summary_fields = [
-        'ID' => 'ID',
-        'PartialLink' => 'Link',
-        'Created' => 'Created',
-        'LastEdited' => 'Last Edited',
+        'ID'            => 'ID',
+        'PartialLink'   => 'Link',
+        'Created'       => 'Created',
+        'LastEdited'    => 'Last Edited',
     ];
 
     public function getCMSFields()

@@ -11,6 +11,10 @@ use SilverStripe\UserForms\Model\UserDefinedForm;
 
 class PartialFieldSubmissionTest extends SapphireTest
 {
+    /**
+     * @var bool
+     */
+    protected $usesDatabase = true;
 
     /**
      * @var PartialFieldSubmission
