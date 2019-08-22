@@ -13,6 +13,11 @@ use Symbiote\QueuedJobs\Services\QueuedJobService;
 
 class PartialSubmissionTaskTest extends SapphireTest
 {
+    /**
+     * @var bool
+     */
+    protected $usesDatabase = true;
+
     public function testTitle()
     {
         $task = Injector::inst()->get(PartialSubmissionTask::class);
@@ -65,7 +70,6 @@ class PartialSubmissionTaskTest extends SapphireTest
 
     protected function setUp()
     {
-        $this->usesDatabase = true;
         parent::setUp();
         Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
     }
