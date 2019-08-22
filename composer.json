@@ -17,6 +17,7 @@
         }
     ],
     "require": {
+        "php": ">=7.0",
         "silverstripe/recipe-cms": "^4",
         "silverstripe/userforms": "^5.4",
         "symbiote/silverstripe-queuedjobs": "^4.2"

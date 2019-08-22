@@ -2,6 +2,7 @@
 
 namespace Firesphere\PartialUserforms\Jobs;
 
+use Exception;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use Firesphere\PartialUserforms\Services\DateService;
@@ -12,6 +13,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\UserForms\Model\UserDefinedForm;
 use Symbiote\QueuedJobs\Services\AbstractQueuedJob;
@@ -150,7 +152,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
     /**
      * @param string $file
      * @param UserDefinedForm $form
-     * @throws \SilverStripe\ORM\ValidationException
+     * @throws ValidationException
      */
     protected function buildCSV($file, $form)
     {
@@ -179,7 +181,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
      * @param UserDefinedForm $form
      * @param DataList|PartialFormSubmission[] $submissions
      * @param resource $resource
-     * @throws \SilverStripe\ORM\ValidationException
+     * @throws ValidationException
      */
     protected function processSubmissions($form, $submissions, $resource)
     {
@@ -231,7 +233,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function afterComplete()
     {
@@ -269,7 +271,7 @@ class PartialSubmissionJob extends AbstractQueuedJob
 
     /**
      * Create a new queued job for tomorrow
-     * @throws \Exception
+     * @throws Exception
      */
     protected function createNewJob()
     {

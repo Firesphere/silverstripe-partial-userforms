@@ -9,7 +9,7 @@ use SilverStripe\UserForms\Model\UserDefinedForm;
 
 class UserDefinedFormExtensionTest extends SapphireTest
 {
-    /** @var bool  */
+    /** @var bool */
     protected $usesDatabase = true;
 
     public function testCMSFields()

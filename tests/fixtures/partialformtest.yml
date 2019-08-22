@@ -37,3 +37,9 @@ SilverStripe\UserForms\Model\EditableFormField\EditableTextField:
     Title: 'Field 3'
     ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
     Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+SilverStripe\UserForms\Model\EditableFormField\EditableFileField:
+  filefield1:
+    Name: 'File'
+    Title: 'File 1'
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1

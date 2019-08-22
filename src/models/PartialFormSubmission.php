@@ -2,6 +2,7 @@
 
 namespace Firesphere\PartialUserforms\Models;
 
+use Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\FieldList;
@@ -12,6 +13,7 @@ use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
@@ -22,9 +24,12 @@ use SilverStripe\UserForms\Model\Submission\SubmittedForm;
  * Class \Firesphere\PartialUserforms\Models\PartialFormSubmission
  *
  * @property boolean $IsSend
+ * @property string $TokenSalt
+ * @property string $Token
  * @property int $UserDefinedFormID
  * @method DataObject UserDefinedForm()
  * @method DataList|PartialFieldSubmission[] PartialFields()
+ * @method DataList|PartialFileFieldSubmission[] PartialUploads()
  */
 class PartialFormSubmission extends SubmittedForm
 {
@@ -41,7 +46,8 @@ class PartialFormSubmission extends SubmittedForm
     ];
 
     private static $has_many = [
-        'PartialFields' => PartialFieldSubmission::class
+        'PartialFields'  => PartialFieldSubmission::class,
+        'PartialUploads' => PartialFileFieldSubmission::class
     ];
 
     private static $cascade_deletes = [
@@ -52,25 +58,40 @@ class PartialFormSubmission extends SubmittedForm
      * @var array
      */
     private static $summary_fields = [
-        'ID'            => 'ID',
-        'PartialLink'   => 'Link',
-        'Created'       => 'Created',
-        'LastEdited'    => 'Last Edited',
+        'ID'          => 'ID',
+        'PartialLink' => 'Link',
+        'Created'     => 'Created',
+        'LastEdited'  => 'Last Edited',
     ];
 
     public function getCMSFields()
     {
         /** @var FieldList $fields */
         $fields = parent::getCMSFields();
-        $fields->removeByName(['Values', 'IsSend', 'PartialFields', 'TokenSalt', 'Token', 'UserDefinedFormID', 'Submitter']);
+        $fields->removeByName([
+            'Values',
+            'IsSend',
+            'PartialFields',
+            'TokenSalt',
+            'Token',
+            'UserDefinedFormID',
+            'Submitter',
+            'PartialUploads'
+        ]);
+
+        $partialFields = $this->PartialFields();
+        $fileFields = $this->PartialUploads();
+        $list = ArrayList::create();
+        $list->merge($partialFields);
+        $list->merge($fileFields);
 
         $partialFields = GridField::create(
             'PartialFields',
             _t(static::class . '.PARTIALFIELDS', 'Partial fields'),
-            $this->PartialFields()->sort('Created', 'ASC')
+            $list->sort('Created', 'ASC')
         );
 
-        $exportColumns =[
+        $exportColumns = [
             'Title'       => 'Title',
             'ExportValue' => 'Value'
         ];
@@ -154,7 +175,7 @@ class PartialFormSubmission extends SubmittedForm
      * Get the share link of the form
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getPartialLink()
     {
@@ -176,7 +197,7 @@ class PartialFormSubmission extends SubmittedForm
      * Get the unique token for the share link
      *
      * @return bool|string|null
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getPartialToken()
     {
@@ -193,7 +214,7 @@ class PartialFormSubmission extends SubmittedForm
      * Generate a new token
      *
      * @return bool|string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function generateToken()
     {
@@ -206,7 +227,7 @@ class PartialFormSubmission extends SubmittedForm
      * Generate a key based on the share token salt
      *
      * @param string $token
-     * @return mixed
+     * @return string|bool
      */
     public function generateKey($token)
     {

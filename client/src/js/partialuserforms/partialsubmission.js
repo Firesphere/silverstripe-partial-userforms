@@ -27,6 +27,10 @@ const getElementValue = (element, fieldName) => {
     }
     return "";
   }
+  if (element.getAttribute('type') === 'file') {
+    return element.files[0];
+  }
+
   return value;
 };
 
@@ -36,8 +40,11 @@ const submitPartial = () => {
     const fieldName = element.getAttribute('name');
     const value = getElementValue(element, fieldName);
     if (!data.has(fieldName)) {
-      if (typeof value === 'object') {
-        value.forEach(arrayValue => {
+      if (typeof value === 'object' && element.getAttribute('type') === 'file') {
+        data.append(fieldName, value);
+      }
+      else if (typeof value === 'object') {
+        value.forEach((arrayValue) => {
           data.append(fieldName, arrayValue);
         });
       } else {

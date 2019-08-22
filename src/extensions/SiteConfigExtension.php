@@ -2,6 +2,7 @@
 
 namespace Firesphere\PartialUserforms\Extensions;
 
+use Exception;
 use Firesphere\PartialUserforms\Jobs\PartialSubmissionJob;
 use Firesphere\PartialUserforms\Services\DateService;
 use SilverStripe\Core\Injector\Injector;
@@ -67,7 +68,7 @@ class SiteConfigExtension extends DataExtension
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function onAfterWrite()
     {

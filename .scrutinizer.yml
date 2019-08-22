@@ -7,4 +7,7 @@ checks:
   javascript: true
 
 filter:
-  paths: [src/*, tests/*, client/src/js/*]
+  paths: [src/*, client/src/js/*]
+
+tools:
+  external_code_coverage: true

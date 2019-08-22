@@ -4,10 +4,13 @@ namespace Firesphere\PartialUserforms\Tests;
 
 use Firesphere\PartialUserforms\Controllers\PartialSubmissionController;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
+use Firesphere\PartialUserforms\Models\PartialFileFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
+use SilverStripe\Assets\Upload_Validator;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\ORM\DataList;
+use SilverStripe\UserForms\Model\EditableFormField\EditableFileField;
 use SilverStripe\UserForms\Model\UserDefinedForm;
 
 /**
@@ -51,6 +54,25 @@ class PartialSubmissionControllerTest extends FunctionalTest
 
         $fields = PartialFieldSubmission::get()->filter(['SubmittedFormID' => $id]);
         $this->assertCount(1, $fields);
+    }
+
+    public function testSavePartialSubmissionFileField()
+    {
+        $field = $this->objFromFixture(EditableFileField::class, 'filefield1');
+        $field->write();
+        copy(__DIR__ . '/../fixtures/Hans-fullsize-sqr.png', TEMP_FOLDER . '/tmpfile');
+        $multipart = [
+            'name'     => 'file1',
+            'tmp_name' => TEMP_FOLDER . '/tmpfile',
+            'filename' => 'Hans-fullsize-sqr.png',
+            'type'     => 'image/png',
+            'error'    => null,
+            'size'     => filesize(TEMP_FOLDER . '/tmpfile')
+        ];
+        // Disable checking if the file is uploaded through a POST
+        Upload_Validator::config()->set('use_is_uploaded_file', false);
+        $this->savePartial(['File' => $multipart]);
+        $this->assertNotNull(PartialFileFieldSubmission::get()->filter(['Name' => 'File']));
     }
 
     public function testPartialFormSubmissionExists()
@@ -122,7 +144,7 @@ class PartialSubmissionControllerTest extends FunctionalTest
         $partialForm = PartialFormSubmission::get()->byID($id);
 
         // No parent class
-        $this->assertNotEquals(UserDefinedForm::class, $partialForm->ParentClass);
+        $this->assertEquals(UserDefinedForm::class, $partialForm->ParentClass);
 
         $form = UserDefinedForm::create(['Title' => 'Test']);
         $formID = $form->write();
@@ -203,7 +225,7 @@ class PartialSubmissionControllerTest extends FunctionalTest
     private function savePartial($values)
     {
         $response = $this->post('/partialuserform/save', $values);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201, $response->getStatusCode());
 
         return $this->session()->get(PartialSubmissionController::SESSION_KEY);
     }
@@ -211,6 +233,7 @@ class PartialSubmissionControllerTest extends FunctionalTest
     public function setUp()
     {
         parent::setUp();
+        $this->objFromFixture(UserDefinedForm::class, 'form1')->publishRecursive();
         $this->controller = Injector::inst()->get(PartialSubmissionController::class);
     }
 }

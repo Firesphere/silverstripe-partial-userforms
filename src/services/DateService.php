@@ -4,6 +4,7 @@ namespace Firesphere\PartialUserforms\Services;
 
 use DateInterval;
 use DateTime;
+use Exception;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 class DateService
@@ -11,7 +12,7 @@ class DateService
 
     /**
      * @return DBDatetime
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getTomorrow()
     {

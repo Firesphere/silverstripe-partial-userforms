@@ -26,15 +26,16 @@ jobs:
     working_directory: ~/var/www
 
     steps:
-      - run: apt-get update && apt-get install -y apt-transport-https lsb-release
+      - run: apt-get update && apt-get install -y apt-transport-https lsb-release wget
+      # No javascript tests implemented yet
       ## Add keys for Yarn and Node
-      - run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-      - run: curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
-      ## Add the required repositories
-      - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-      - run: echo 'deb https://deb.nodesource.com/node_9.x jessie main' > /etc/apt/sources.list.d/nodesource.list
-      - run: echo 'deb-src https://deb.nodesource.com/node_9.x jessie main' >> /etc/apt/sources.list.d/nodesource.list
-      - run: apt-get update && apt-get install -y yarn
+#      - run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+#      - run: curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+#      ## Add the required repositories
+#      - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+#      - run: echo 'deb https://deb.nodesource.com/node_9.x jessie main' > /etc/apt/sources.list.d/nodesource.list
+#      - run: echo 'deb-src https://deb.nodesource.com/node_9.x jessie main' >> /etc/apt/sources.list.d/nodesource.list
+#      - run: apt-get update && apt-get install -y yarn
       # Install additional requirements
       - run: composer self-update
       - checkout
@@ -59,6 +60,19 @@ jobs:
       - run: vendor/bin/sake dev/build
       - run: vendor/bin/phpunit --coverage-clover=./coverage/coverage.xml --log-junit=./coverage/junit.xml -d memory_limit=512M tests/unit
       - run: bash <(curl -s https://codecov.io/bash) -f ./coverage/coverage.xml
+      - run:
+          name: Code coverage reports
+          command: |
+            echo "---"
+            echo "Scrutinizer:"
+            echo "---"
+            wget https://scrutinizer-ci.com/ocular.phar
+            php ocular.phar code-coverage:upload --format=php-clover ./coverage/coverage.xml
+            echo "---"
+            echo "CodeCov:"
+            echo "---"
+            bash <(curl -s https://codecov.io/bash) -f ./coverage/coverage.xml
       - run: vendor/bin/phpcs --standard=phpcs.xml.dist src tests/unit
+
       - store_test_results:
           path: ~/var/www/coverage

@@ -3,28 +3,22 @@
 namespace Firesphere\PartialUserforms\Models;
 
 use SilverStripe\Security\Member;
-use SilverStripe\UserForms\Model\Submission\SubmittedFormField;
+use SilverStripe\UserForms\Model\Submission\SubmittedFileField;
 
 /**
- * Class PartialFieldSubmission
+ * Class \Firesphere\PartialUserforms\Models\PartialFileFieldSubmission
  *
- * @package Firesphere\PartialUserforms\Models
  * @property int $SubmittedFormID
  * @method PartialFormSubmission SubmittedForm()
  */
-class PartialFieldSubmission extends SubmittedFormField
+class PartialFileFieldSubmission extends SubmittedFileField
 {
-    /**
-     * @var string
-     */
-    private static $table_name = 'PartialFieldSubmission';
+    private static $table_name = 'PartialFileFieldSubmission';
 
-    /**
-     * @var array
-     */
     private static $has_one = [
         'SubmittedForm' => PartialFormSubmission::class,
     ];
+
 
     /**
      * @param Member $member
@@ -39,7 +33,7 @@ class PartialFieldSubmission extends SubmittedFormField
     /**
      * @param Member $member
      *
-     * @return boolean|string
+     * @return bool
      */
     public function canView($member = null)
     {
@@ -53,7 +47,7 @@ class PartialFieldSubmission extends SubmittedFormField
     /**
      * @param Member $member
      *
-     * @return boolean|string
+     * @return bool
      */
     public function canEdit($member = null)
     {
@@ -67,7 +61,7 @@ class PartialFieldSubmission extends SubmittedFormField
     /**
      * @param Member $member
      *
-     * @return boolean|string
+     * @return bool
      */
     public function canDelete($member = null)
     {
