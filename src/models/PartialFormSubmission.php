@@ -99,17 +99,13 @@ class PartialFormSubmission extends SubmittedForm
     }
 
     /**
-     * @param Member
-     *
-     * @return boolean|string
+     * @param Member $member
+     * @param array $context
+     * @return bool
      */
     public function canCreate($member = null, $context = [])
     {
-        if ($this->UserDefinedForm()) {
-            return $this->UserDefinedForm()->canCreate($member, $context);
-        }
-
-        return parent::canCreate($member);
+        return false;
     }
 
     /**
@@ -215,5 +211,22 @@ class PartialFormSubmission extends SubmittedForm
     public function generateKey($token)
     {
         return hash_pbkdf2('sha256', $token, $this->TokenSalt, 1000, 16);
+    }
+
+    /**
+     * Get the partial fields in array
+     *
+     * @return array
+     */
+    public function getFieldList()
+    {
+        $list = [];
+        if ($this->PartialFields()->exists()) {
+            foreach ($this->PartialFields() as $field) {
+                $list[$field->Name] = $field->Value;
+            }
+        }
+
+        return $list;
     }
 }

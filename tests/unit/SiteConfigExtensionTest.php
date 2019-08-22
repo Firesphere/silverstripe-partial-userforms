@@ -113,13 +113,13 @@ class SiteConfigExtensionTest extends SapphireTest
 
     protected function setUp()
     {
+        parent::setUp();
+
         Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
         /** @var SiteConfigExtension $extension */
         $extension = Injector::inst()->get(SiteConfigExtension::class);
         $extension->setOwner(SiteConfig::current_site_config());
         $this->extension = $extension;
-
-        return parent::setUp();
     }
 
     protected function tearDown()

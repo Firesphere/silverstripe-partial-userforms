@@ -2,32 +2,24 @@
 
 namespace Firesphere\PartialUserforms\Controllers;
 
-use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
-use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\UserForms\Control\UserDefinedFormController;
-use SilverStripe\UserForms\Model\EditableFormField;
-use SilverStripe\View\Requirements;
 
 /**
  * Class PartialUserFormController
  * @package Firesphere\PartialUserforms\Controllers
  */
-class PartialUserFormController extends ContentController
+class PartialUserFormController extends UserDefinedFormController
 {
-    /**
-     * Session key name
-     */
-    const SESSION_KEY = 'PartialSubmissionID';
 
     /**
      * @var array
      */
     private static $url_handlers = [
-        'save' => 'savePartialSubmission',
         '$Key/$Token' => 'partial',
     ];
 
@@ -35,93 +27,8 @@ class PartialUserFormController extends ContentController
      * @var array
      */
     private static $allowed_actions = [
-        'savePartialSubmission',
         'partial',
     ];
-
-    /**
-     * @param HTTPRequest $request
-     * @return int|mixed|void
-     * @throws ValidationException
-     * @throws \SilverStripe\Control\HTTPResponse_Exception
-     */
-    public function savePartialSubmission(HTTPRequest $request)
-    {
-        if (!$request->isPOST()) {
-            return $this->httpError(404);
-        }
-
-        $postVars = $request->postVars();
-        $editableField = null;
-
-        // We don't want SecurityID and/or the process Action stored as a thing
-        unset($postVars['SecurityID'], $postVars['action_process']);
-        $submissionID = $request->getSession()->get(self::SESSION_KEY);
-
-        /** @var PartialFormSubmission $partialSubmission */
-        $partialSubmission = PartialFormSubmission::get()->byID($submissionID);
-
-        if (!$submissionID || !$partialSubmission) {
-            $partialSubmission = PartialFormSubmission::create();
-            $submissionID = $partialSubmission->write();
-        }
-        $request->getSession()->set(self::SESSION_KEY, $submissionID);
-        foreach ($postVars as $field => $value) {
-            /** @var EditableFormField $editableField */
-            $editableField = $this->createOrUpdateSubmission([
-                'Name'            => $field,
-                'Value'           => $value,
-                'SubmittedFormID' => $submissionID
-            ]);
-        }
-
-        if ($editableField instanceof EditableFormField && !$partialSubmission->UserDefinedFormID) {
-            $partialSubmission->update([
-                'UserDefinedFormID'    => $editableField->Parent()->ID,
-                'ParentID'             => $editableField->Parent()->ID,
-                'ParentClass'          => $editableField->Parent()->ClassName,
-                'UserDefinedFormClass' => $editableField->Parent()->ClassName
-            ]);
-            $partialSubmission->write();
-        }
-
-        return $submissionID;
-    }
-
-    /**
-     * @param $formData
-     * @return DataObject|EditableFormField
-     * @throws ValidationException
-     */
-    protected function createOrUpdateSubmission($formData)
-    {
-        if (is_array($formData['Value'])) {
-            $formData['Value'] = implode(', ', $formData['Value']);
-        }
-
-        $filter = [
-            'Name'            => $formData['Name'],
-            'SubmittedFormID' => $formData['SubmittedFormID'],
-        ];
-
-        $exists = PartialFieldSubmission::get()->filter($filter)->first();
-        // Set the title
-        $editableField = EditableFormField::get()->filter(['Name' => $formData['Name']])->first();
-        if ($editableField) {
-            $formData['Title'] = $editableField->Title;
-            $formData['ParentClass'] = $editableField->Parent()->ClassName;
-        }
-        if (!$exists) {
-            $exists = PartialFieldSubmission::create($formData);
-            $exists->write();
-        } else {
-            $exists->update($formData);
-            $exists->write();
-        }
-
-        // Return the ParentID to link the PartialSubmission to it's proper thingy
-        return $editableField;
-    }
 
     /**
      * Partial form
@@ -132,6 +39,9 @@ class PartialUserFormController extends ContentController
      */
     public function partial(HTTPRequest $request)
     {
+        // Ensure this URL doesn't get picked up by HTTP caches
+        HTTPCacheControlMiddleware::singleton()->disableCache();
+
         $key = $request->param('Key');
         $token = $request->param('Token');
 
@@ -140,28 +50,44 @@ class PartialUserFormController extends ContentController
             return $this->httpError(404);
         }
 
+        // TODO: Recognize visitor with the password
         if ($partial->generateKey($token) === $key) {
             // Set the session if the last session has expired
-            if (!$request->getSession()->get(self::SESSION_KEY)) {
-                $request->getSession()->set(self::SESSION_KEY, $partial->ID);
+            if (!$request->getSession()->get(PartialSubmissionController::SESSION_KEY)) {
+                $request->getSession()->set(PartialSubmissionController::SESSION_KEY, $partial->ID);
             }
 
-            // TODO: Recognize visitor with the password
-            // TODO: Populate form values
+            // Set data record and load the form
+            $this->dataRecord = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
+            $this->setFailover($this->dataRecord);
 
-            $record = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
-            $controller = new UserDefinedFormController($record);
-            $controller->init();
+            $form = $this->Form();
+            $form->loadDataFrom($partial->getFieldList());
 
-            Requirements::javascript('firesphere/partialuserforms:client/dist/main.js');
+            // Copied from {@link UserDefinedFormController}
+            if ($this->Content && $form && !$this->config()->disable_form_content_shortcode) {
+                $hasLocation = stristr($this->Content, '$UserDefinedForm');
+                if ($hasLocation) {
+                    /** @see Requirements_Backend::escapeReplacement */
+                    $formEscapedForRegex = addcslashes($form->forTemplate(), '\\$');
+                    $content = preg_replace(
+                        '/(<p[^>]*>)?\\$UserDefinedForm(<\\/p>)?/i',
+                        $formEscapedForRegex,
+                        $this->Content
+                    );
+                    return $this->customise([
+                        'Content' => DBField::create_field('HTMLText', $content),
+                        'Form' => '',
+                        'PartialLink' => $partial->getPartialLink()
+                    ])->renderWith(['Firesphere\PartialUserforms\PartialUserForm', 'Page']);
+                }
+            }
 
             return $this->customise([
-                'Title' => $record->Title,
-                'Breadcrumbs' => $record->Breadcrumbs(),
-                'Content' => $this->obj('Content'),
-                'Form' => $controller->Form(),
-                'Link' => $partial->getPartialLink()
-            ])->renderWith(['PartialUserForm', 'Page']);
+                'Content' => DBField::create_field('HTMLText', $this->Content),
+                'Form' => $form,
+                'PartialLink' => $partial->getPartialLink()
+            ])->renderWith(['Firesphere\PartialUserforms\PartialUserForm', 'Page']);
         } else {
             return $this->httpError(404);
         }

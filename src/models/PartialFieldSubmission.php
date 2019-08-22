@@ -23,15 +23,11 @@ class PartialFieldSubmission extends SubmittedFormField
     /**
      * @param Member $member
      * @param array $context
-     * @return boolean|string
+     * @return boolean
      */
     public function canCreate($member = null, $context = [])
     {
-        if ($this->SubmittedFormID) {
-            return $this->SubmittedForm()->canCreate($member, $context);
-        }
-
-        return parent::canCreate($member);
+        return false;
     }
 
     /**

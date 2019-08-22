@@ -2,7 +2,7 @@
 
 namespace Firesphere\PartialUserforms\Extensions;
 
-use Firesphere\PartialUserforms\Controllers\PartialUserFormController;
+use Firesphere\PartialUserforms\Controllers\PartialSubmissionController;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataExtension;
@@ -22,13 +22,13 @@ class SubmittedFormExtension extends DataExtension
     public function updateAfterProcess()
     {
         // cleanup partial submissions
-        $partialID = Controller::curr()->getRequest()->getSession()->get(PartialUserFormController::SESSION_KEY);
+        $partialID = Controller::curr()->getRequest()->getSession()->get(PartialSubmissionController::SESSION_KEY);
         /** @var PartialFormSubmission $partialForm */
         $partialForm = PartialFormSubmission::get()->byID($partialID);
         if ($partialForm) {
             $partialForm->delete();
             $partialForm->destroy();
         }
-        Controller::curr()->getRequest()->getSession()->clear(PartialUserFormController::SESSION_KEY);
+        Controller::curr()->getRequest()->getSession()->clear(PartialSubmissionController::SESSION_KEY);
     }
 }

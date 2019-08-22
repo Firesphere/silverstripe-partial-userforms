@@ -5,5 +5,5 @@ After:
 ---
 SilverStripe\Control\Director:
   rules:
-    'partialuserform//$Action/$ID/$OtherID': Firesphere\PartialUserForms\Controllers\PartialUserFormController
+    'partialuserform//$Action/$ID/$OtherID': Firesphere\PartialUserForms\Controllers\PartialSubmissionController
     'partial': Firesphere\PartialUserForms\Controllers\PartialUserFormController
