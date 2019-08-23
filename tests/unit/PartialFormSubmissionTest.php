@@ -139,12 +139,6 @@ class PartialFormSubmissionTest extends SapphireTest
         $this->assertEquals(16, strlen($key));
     }
 
-    public function testGetFieldList()
-    {
-        $partial = PartialFormSubmission::create();
-        $this->assertEmpty($partial->getFieldList());
-    }
-
     protected function setUp()
     {
         parent::setUp();

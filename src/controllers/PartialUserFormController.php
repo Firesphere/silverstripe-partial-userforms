@@ -2,6 +2,7 @@
 
 namespace Firesphere\PartialUserforms\Controllers;
 
+use Page;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
@@ -62,7 +63,8 @@ class PartialUserFormController extends UserDefinedFormController
             $this->setFailover($this->dataRecord);
 
             $form = $this->Form();
-            $form->loadDataFrom($partial->getFieldList());
+            $fields = $partial->PartialFields()->map('Name', 'Value')->toArray();
+            $form->loadDataFrom($fields);
 
             // Copied from {@link UserDefinedFormController}
             if ($this->Content && $form && !$this->config()->disable_form_content_shortcode) {
@@ -75,11 +77,12 @@ class PartialUserFormController extends UserDefinedFormController
                         $formEscapedForRegex,
                         $this->Content
                     );
+
                     return $this->customise([
                         'Content' => DBField::create_field('HTMLText', $content),
                         'Form' => '',
                         'PartialLink' => $partial->getPartialLink()
-                    ])->renderWith(['Firesphere\PartialUserforms\PartialUserForm', 'Page']);
+                    ])->renderWith([static::class, Page::class]);
                 }
             }
 
@@ -87,7 +90,7 @@ class PartialUserFormController extends UserDefinedFormController
                 'Content' => DBField::create_field('HTMLText', $this->Content),
                 'Form' => $form,
                 'PartialLink' => $partial->getPartialLink()
-            ])->renderWith(['Firesphere\PartialUserforms\PartialUserForm', 'Page']);
+            ])->renderWith([static::class, Page::class]);
         } else {
             return $this->httpError(404);
         }

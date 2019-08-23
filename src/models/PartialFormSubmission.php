@@ -212,21 +212,4 @@ class PartialFormSubmission extends SubmittedForm
     {
         return hash_pbkdf2('sha256', $token, $this->TokenSalt, 1000, 16);
     }
-
-    /**
-     * Get the partial fields in array
-     *
-     * @return array
-     */
-    public function getFieldList()
-    {
-        $list = [];
-        if ($this->PartialFields()->exists()) {
-            foreach ($this->PartialFields() as $field) {
-                $list[$field->Name] = $field->Value;
-            }
-        }
-
-        return $list;
-    }
 }
