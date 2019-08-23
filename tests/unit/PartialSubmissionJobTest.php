@@ -182,14 +182,10 @@ class PartialSubmissionJobTest extends SapphireTest
     protected function setUp()
     {
         parent::setUp();
+
         DBDatetime::set_mock_now('2018-01-01 12:00:00');
         /** @var PartialSubmissionJob $job */
         $this->job = new PartialSubmissionJob();
         Config::modify()->set(QueuedJobService::class, 'use_shutdown_function', false);
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
     }
 }

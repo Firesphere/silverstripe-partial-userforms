@@ -2,7 +2,7 @@
 
 namespace Firesphere\PartialUserforms\Tests;
 
-use Firesphere\PartialUserforms\Controllers\PartialUserFormController;
+use Firesphere\PartialUserforms\Controllers\PartialSubmissionController;
 use Firesphere\PartialUserforms\Extensions\SubmittedFormExtension;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
@@ -25,7 +25,7 @@ class SubmittedFormExtensionTest extends SapphireTest
     {
         $partialSubmission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
         Controller::curr()->getRequest()->getSession()->set(
-            PartialUserFormController::SESSION_KEY,
+            PartialSubmissionController::SESSION_KEY,
             $partialSubmission->ID
         );
 
@@ -42,7 +42,7 @@ class SubmittedFormExtensionTest extends SapphireTest
     {
         $partialSubmission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
         Controller::curr()->getRequest()->getSession()->set(
-            PartialUserFormController::SESSION_KEY,
+            PartialSubmissionController::SESSION_KEY,
             $partialSubmission->ID
         );
 
@@ -63,7 +63,7 @@ class SubmittedFormExtensionTest extends SapphireTest
     {
         $partialSubmission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
         Controller::curr()->getRequest()->getSession()->set(
-            PartialUserFormController::SESSION_KEY,
+            PartialSubmissionController::SESSION_KEY,
             $partialSubmission->ID
         );
 
@@ -71,12 +71,7 @@ class SubmittedFormExtensionTest extends SapphireTest
 
         $extension->updateAfterProcess();
 
-        $session = Controller::curr()->getRequest()->getSession()->get(PartialUserFormController::SESSION_KEY);
+        $session = Controller::curr()->getRequest()->getSession()->get(PartialSubmissionController::SESSION_KEY);
         $this->assertNull($session);
-    }
-
-    protected function setUp()
-    {
-        parent::setUp();
     }
 }

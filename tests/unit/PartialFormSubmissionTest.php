@@ -36,12 +36,12 @@ class PartialFormSubmissionTest extends SapphireTest
 
     public function testCanCreate()
     {
-        $this->assertTrue($this->submission->canCreate());
+        $this->assertFalse($this->submission->canCreate());
 
         $this->submission->ParentID = $this->submission->UserDefinedFormID;
         $this->submission->UserDefinedFormID = 0;
 
-        $this->assertTrue($this->submission->canCreate());
+        $this->assertFalse($this->submission->canCreate());
     }
 
     public function testCanView()
@@ -141,13 +141,13 @@ class PartialFormSubmissionTest extends SapphireTest
 
     protected function setUp()
     {
+        parent::setUp();
+
         $this->submission = Injector::inst()->get(PartialFormSubmission::class);
         $form = UserDefinedForm::create(['Title' => 'Test']);
         $formID = $form->write();
         $this->submission->UserDefinedFormID = $formID;
         $this->submission->UserDefinedFormClass = UserDefinedForm::class;
         $this->submission->write();
-
-        return parent::setUp();
     }
 }

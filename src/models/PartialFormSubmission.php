@@ -99,17 +99,13 @@ class PartialFormSubmission extends SubmittedForm
     }
 
     /**
-     * @param Member
-     *
-     * @return boolean|string
+     * @param Member $member
+     * @param array $context
+     * @return bool
      */
     public function canCreate($member = null, $context = [])
     {
-        if ($this->UserDefinedForm()) {
-            return $this->UserDefinedForm()->canCreate($member, $context);
-        }
-
-        return parent::canCreate($member);
+        return false;
     }
 
     /**

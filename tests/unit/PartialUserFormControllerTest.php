@@ -2,204 +2,74 @@
 
 namespace Firesphere\PartialUserforms\Tests;
 
-use Firesphere\PartialUserforms\Controllers\PartialUserFormController;
-use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\DataList;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\UserForms\Model\UserDefinedForm;
 
-class PartialUserFormControllerTest extends SapphireTest
+/**
+ * Class PartialUserFormControllerTest
+ * @package Firesphere\PartialUserforms\Tests
+ */
+class PartialUserFormControllerTest extends FunctionalTest
 {
+    /**
+     * @var string
+     */
     protected static $fixture_file = '../fixtures/partialformtest.yml';
 
+    public function testPartialPage()
+    {
+        $result = $this->get("partial");
+        $this->assertEquals(404, $result->getStatusCode());
+    }
+
     /**
-     * @var PartialUserFormController
+     * @todo
      */
-    protected $controller;
+    public function testPartialValidKeyToken()
+    {
+        $this->markTestSkipped('Revisit and set up themes for testing');
+
+        $token = 'q1w2e3r4t5y6u7i8';
+        // No Parent
+        $key = singleton(PartialFormSubmission::class)->generateKey($token);
+        $result = $this->get("partial/{$key}/{$token}");
+        $this->assertEquals(404, $result->getStatusCode());
+
+        // Partial with UserDefinedForm
+        $key = $this->objFromFixture(PartialFormSubmission::class, 'submission1')->generateKey($token);
+        $result = $this->get("partial/{$key}/{$token}");
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertContains('Field 1', $result->getBody());
+    }
+
+    public function testPartialInvalidToken()
+    {
+        $token = 'abcdef';
+        $key = singleton(PartialFormSubmission::class)->generateKey($token);
+
+        $result = $this->get("partial/{$key}/{$token}");
+        $this->assertEquals(404, $result->getStatusCode());
+    }
+
+    public function testPartialInvalidKey()
+    {
+        $token = 'e6b27462211e1711';
+        $key = 'abcdef';
+
+        $result = $this->get("partial/{$key}/{$token}");
+        $this->assertEquals(404, $result->getStatusCode());
+
+        $token = 'qwerty';
+        $key = 'abcdef';
+
+        $result = $this->get("partial/{$key}/{$token}");
+        $this->assertEquals(404, $result->getStatusCode());
+    }
 
     public function setUp()
     {
-        $this->controller = Injector::inst()->get(PartialUserFormController::class);
         parent::setUp();
-    }
-
-    public function testClassExists()
-    {
-        $this->assertInstanceOf(PartialUserFormController::class, $this->controller);
-    }
-
-    public function testSavePartialSubmissionExists()
-    {
-        $this->assertTrue(method_exists($this->controller, 'savePartialSubmission'));
-    }
-
-    public function testSavePartialSubmissionFormCreated()
-    {
-        $request = new HTTPRequest('POST', '/partialuserform', [], ['Field1' => 'Value1']);
-        $session = new Session(['hi' => 'bye']);
-        $request->setSession($session);
-
-        $id = $this->controller->savePartialSubmission($request);
-
-        $this->assertInternalType('numeric', $id);
-
-        $form = PartialFormSubmission::get()->byID($id);
-
-        $this->assertInstanceOf(PartialFormSubmission::class, $form);
-    }
-
-    public function testSavePartialSubmissionFieldCreated()
-    {
-        $request = new HTTPRequest('POST', '/partialuserform', [], ['Field1' => 'Value1']);
-        $session = new Session(['hi' => 'bye']);
-        $request->setSession($session);
-
-        $id = $this->controller->savePartialSubmission($request);
-
-        $fields = PartialFieldSubmission::get()->filter(['SubmittedFormID' => $id]);
-
-        $this->assertEquals(1, $fields->count());
-    }
-
-    public function testPartialFormSubmissionExists()
-    {
-        $request = new HTTPRequest('POST', '/partialuserform', [], ['Field1' => 'Value1', 'Field2' => 'Value2']);
-        $session = new Session(['hi' => 'bye']);
-        $request->setSession($session);
-
-        $id = $this->controller->savePartialSubmission($request);
-
-        $session = $request->getSession();
-        $request = new HTTPRequest('POST', '/partialuserform', [], ['Field2' => 'Value2']);
-        $request->setSession($session);
-
-        $secondId = $this->controller->savePartialSubmission($request);
-
-        $this->assertEquals($id, $secondId);
-    }
-
-    public function testPartialFormSubmissionExistingField()
-    {
-        $values = [
-            'Field1' => 'Value1',
-            'Field2' => 'Value2',
-            'Field3' => 'null'
-        ];
-        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
-        $session = new Session(['hi' => 'bye']);
-        $request->setSession($session);
-
-        $this->controller->savePartialSubmission($request);
-        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
-        $field3 = PartialFieldSubmission::get()
-            ->filter([
-                'Name'            => 'Field3',
-                'SubmittedFormID' => $sessionKey
-            ])
-            ->first();
-
-        $this->assertEquals('null', $field3->Value);
-        // Update the values
-        $values['Field3'] = 'Value3';
-        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
-        $request->setSession($session);
-        $this->controller->savePartialSubmission($request);
-        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
-
-        $field3 = PartialFieldSubmission::get()
-            ->filter([
-                'Name'            => 'Field3',
-                'SubmittedFormID' => $sessionKey
-            ])
-            ->first();
-        $this->assertEquals('Value3', $field3->Value);
-    }
-
-    public function testSubmittedFieldTitle()
-    {
-        $values = [
-            'Field1' => 'Value1',
-            'Field2' => 'Value2',
-            'Field3' => 'null'
-        ];
-        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
-        $session = new Session(['hi' => 'bye']);
-        $request->setSession($session);
-
-        $this->controller->savePartialSubmission($request);
-        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
-        /** @var DataList|PartialFieldSubmission[] $fields */
-        $fields = PartialFieldSubmission::get()->filter(['SubmittedFormID' => $sessionKey]);
-
-        foreach ($fields as $key => $field) {
-            $this->assertEquals('Field ' . ($key + 1), $field->Title, 'Test field ' . $key);
-        }
-    }
-
-    public function testParent()
-    {
-        $values = [
-            'Field1' => 'Value1',
-            'Field2' => 'Value2',
-            'Field3' => 'null'
-        ];
-        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
-        $session = new Session(['hi' => 'bye']);
-        $request->setSession($session);
-
-        $this->controller->savePartialSubmission($request);
-        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
-        /** @var DataList|PartialFieldSubmission[] $fields */
-        $partialForm = PartialFormSubmission::get()->byID($sessionKey);
-
-        $this->assertEquals('SilverStripe\UserForms\Model\UserDefinedForm', $partialForm->ParentClass);
-    }
-
-    public function testUnwantedFields()
-    {
-        $values = [
-            'Field1'         => 'Value1',
-            'Field2'         => 'Value2',
-            'Field3'         => 'null',
-            'SecurityID'     => '123456789aoeu',
-            'action_process' => 'Submit'
-        ];
-        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
-        $session = new Session(['hi' => 'bye']);
-        $request->setSession($session);
-
-        $this->controller->savePartialSubmission($request);
-        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
-        /** @var DataList|PartialFieldSubmission[] $fields */
-        $fields = PartialFieldSubmission::get()->filter(['SubmittedFormID' => $sessionKey]);
-
-        $items = $fields->column('Name');
-        $this->assertFalse(in_array('SecurityID', $items, true));
-        $this->assertFalse(in_array('action_process', $items, true));
-    }
-
-    public function testArrayData()
-    {
-        $values = [
-            'Field1' => 'Value1',
-            'Field2' => 'Value2',
-            'Field3' => ['Value1', 'Value2']
-        ];
-        $request = new HTTPRequest('POST', '/partialuserform', [], $values);
-        $session = new Session(['hi' => 'bye']);
-        $request->setSession($session);
-
-        $this->controller->savePartialSubmission($request);
-        $sessionKey = $session->get(PartialUserFormController::SESSION_KEY);
-        $field3 = PartialFieldSubmission::get()
-            ->filter([
-                'Name'            => 'Field3',
-                'SubmittedFormID' => $sessionKey
-            ])
-            ->first();
-        $this->assertEquals('Value1, Value2', $field3->Value);
+        $this->objFromFixture(UserDefinedForm::class, 'form1')->publishRecursive();
     }
 }

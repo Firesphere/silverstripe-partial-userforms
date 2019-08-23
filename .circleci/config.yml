@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: brettt89/silverstripe-web
+      - image: brettt89/silverstripe-web:7.1-platform
         environment:
           - SS_DATABASE_CLASS=MySQLPDODatabase
           - SS_DATABASE_SERVER=127.0.0.1
@@ -45,12 +45,12 @@ jobs:
             - v2-cache-
 
       - run: composer install
-      - run: cp -r vendor/silverstripe/recipe-cms/mysite .
+      - run: cp -r vendor/silverstripe/recipe-cms/app .
       # Save all dependencies to cache
       - save_cache:
           key: v2-cache-{{ checksum "composer.lock" }}-{{ checksum "yarn.lock" }}
           paths:
-            - mysite
+            - app
             - vendor
             - resource
             - node_modules
