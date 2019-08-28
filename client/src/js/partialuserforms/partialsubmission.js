@@ -2,6 +2,7 @@ const baseDomain = document.baseURI;
 const submitURL = 'partialuserform/save';
 const buttons = () => Array.from(document.body.querySelectorAll('form.userform ul li.step-button-wrapper button'));
 const formElements = () => Array.from(document.body.querySelectorAll('form.userform [name]:not([type=hidden]):not([type=submit])'));
+const form = document.body.querySelector('form.userform');
 const requests = [];
 
 const getElementValue = (element, fieldName) => {
@@ -56,11 +57,8 @@ const attachSubmitPartial = (button) => {
   button.addEventListener('click', submitPartial);
 };
 
-export default function () {
-  buttons().forEach(attachSubmitPartial);
-
+const abortPendingSubmissions = () => {
   // Clear all pending partial submissions on submit
-  const form = document.body.querySelector('form.userform');
   if (form !== null) {
     form._submit = form.submit; // Save reference
     form.submit = () => {
@@ -77,4 +75,9 @@ export default function () {
       form._submit();
     };
   }
+};
+
+export default function() {
+  buttons().forEach(attachSubmitPartial);
+  abortPendingSubmissions();
 }
