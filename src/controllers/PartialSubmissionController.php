@@ -155,10 +155,13 @@ class PartialSubmissionController extends ContentController
     protected function savePartialFile($formData, array $filter, EditableFormField\EditableFileField $editableField)
     {
         $partialFileSubmission = PartialFileFieldSubmission::get()->filter($filter)->first();
-        $partialData = [];
         if (!$partialFileSubmission && $editableField) {
-            $partialData['Title'] = $editableField->Title;
-            $partialData['ParentClass'] = $editableField->Parent()->ClassName;
+            $partialData = [
+                'Name'            => $formData['Name'],
+                'SubmittedFormID' => $formData['SubmittedFormID'],
+                'Title'           => $editableField->Title,
+                'ParentClass'     => $editableField->Parent()->ClassName
+            ];
             $partialFileSubmission = PartialFileFieldSubmission::create($partialData);
             $partialFileSubmission->write();
         }
