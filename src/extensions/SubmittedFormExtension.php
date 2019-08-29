@@ -23,12 +23,18 @@ class SubmittedFormExtension extends DataExtension
     {
         // cleanup partial submissions
         $partialID = Controller::curr()->getRequest()->getSession()->get(PartialSubmissionController::SESSION_KEY);
+        if ($partialID === null) {
+            return;
+        }
+
         /** @var PartialFormSubmission $partialForm */
         $partialForm = PartialFormSubmission::get()->byID($partialID);
-        if ($partialForm) {
-            $partialForm->delete();
-            $partialForm->destroy();
+        if ($partialForm === null) {
+            return;
         }
+
+        $partialForm->delete();
+        $partialForm->destroy();
         Controller::curr()->getRequest()->getSession()->clear(PartialSubmissionController::SESSION_KEY);
     }
 }
