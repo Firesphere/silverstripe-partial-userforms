@@ -45,9 +45,8 @@ class PartialUserFormController extends UserDefinedFormController
      * Partial form
      *
      * @param HTTPRequest $request
-     * @return DBHTMLText|void
-     * @throws HTTPResponse_Exception
      * @return HTTPResponse|DBHTMLText|void
+     * @throws HTTPResponse_Exception
      * @throws Exception
      */
     public function partial(HTTPRequest $request)
@@ -135,35 +134,7 @@ class PartialUserFormController extends UserDefinedFormController
         $this->dataRecord = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
         $this->setFailover($this->dataRecord);
 
-        $form = $this->Form();
-        $fields = $partial->PartialFields()->map('Name', 'Value')->toArray();
-        $form->loadDataFrom($fields);
-
-        // Copied from {@link UserDefinedFormController}
-        if ($this->Content && $form && !$this->config()->disable_form_content_shortcode) {
-            $hasLocation = stristr($this->Content, '$UserDefinedForm');
-            if ($hasLocation) {
-                /** @see Requirements_Backend::escapeReplacement */
-                $formEscapedForRegex = addcslashes($form->forTemplate(), '\\$');
-                $content = preg_replace(
-                    '/(<p[^>]*>)?\\$UserDefinedForm(<\\/p>)?/i',
-                    $formEscapedForRegex,
-                    $this->Content
-                );
-
-                return $this->customise([
-                    'Content'     => DBField::create_field('HTMLText', $content),
-                    'Form'        => '',
-                    'PartialLink' => $partial->getPartialLink()
-                ])->renderWith([static::class, Page::class]);
-            }
-        }
-
-        return $this->customise([
-            'Content'     => DBField::create_field('HTMLText', $this->Content),
-            'Form'        => $form,
-            'PartialLink' => $partial->getPartialLink()
-        ])->renderWith([static::class, Page::class]);
+        return $partial;
     }
 
     /**
