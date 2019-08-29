@@ -2,16 +2,22 @@
 
 namespace Firesphere\PartialUserforms\Controllers;
 
+use Exception;
 use Firesphere\PartialUserforms\Models\PartialFieldSubmission;
+use Firesphere\PartialUserforms\Models\PartialFileFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Upload;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\UserForms\Model\EditableFormField;
 
 /**
  * Class PartialSubmissionController
+ *
  * @package Firesphere\PartialUserforms\Controllers
  */
 class PartialSubmissionController extends ContentController
@@ -19,7 +25,7 @@ class PartialSubmissionController extends ContentController
     /**
      * Session key name
      */
-    const SESSION_KEY = 'PartialSubmissionID';
+    public const SESSION_KEY = 'PartialSubmissionID';
 
     /**
      * @var array
@@ -37,7 +43,7 @@ class PartialSubmissionController extends ContentController
 
     /**
      * @param HTTPRequest $request
-     * @return bool|void
+     * @return HTTPResponse
      * @throws ValidationException
      * @throws \SilverStripe\Control\HTTPResponse_Exception
      */
@@ -61,7 +67,8 @@ class PartialSubmissionController extends ContentController
             $partialSubmission = PartialFormSubmission::create();
             // TODO: Set the Parent ID and Parent Class before write, this issue will create new submissions
             // every time the session expires when the user proceeds to the next step.
-            // Also, saving a new submission without a parent creates an "AccordionItems" as parent class (first DataObject found)
+            // Also, saving a new submission without a parent creates an
+            // "AccordionItems" as parent class (first DataObject found)
             $submissionID = $partialSubmission->write();
         }
         $request->getSession()->set(self::SESSION_KEY, $submissionID);
@@ -85,7 +92,9 @@ class PartialSubmissionController extends ContentController
             $partialSubmission->write();
         }
 
-        return $partialSubmission->exists();
+        $return = $partialSubmission->exists();
+
+        return new HTTPResponse($return, ($return ? 201 : 400));
     }
 
     /**
@@ -95,31 +104,95 @@ class PartialSubmissionController extends ContentController
      */
     protected function createOrUpdateSubmission($formData)
     {
-        if (is_array($formData['Value'])) {
-            $formData['Value'] = implode(', ', $formData['Value']);
-        }
-
         $filter = [
             'Name'            => $formData['Name'],
             'SubmittedFormID' => $formData['SubmittedFormID'],
         ];
 
-        $exists = PartialFieldSubmission::get()->filter($filter)->first();
-        // Set the title
+        /** @var EditableFormField $editableField */
         $editableField = EditableFormField::get()->filter(['Name' => $formData['Name']])->first();
-        if ($editableField) {
-            $formData['Title'] = $editableField->Title;
-            $formData['ParentClass'] = $editableField->Parent()->ClassName;
-        }
-        if (!$exists) {
-            $exists = PartialFieldSubmission::create($formData);
-            $exists->write();
-        } else {
-            $exists->update($formData);
-            $exists->write();
+        if ($editableField instanceof EditableFormField\EditableFileField) {
+            $this->savePartialFile($formData, $filter, $editableField);
+        } elseif ($editableField instanceof EditableFormField) {
+            $this->savePartialField($formData, $filter, $editableField);
         }
 
         // Return the ParentID to link the PartialSubmission to it's proper thingy
         return $editableField;
+    }
+
+    /**
+     * @param $formData
+     * @param array $filter
+     * @param EditableFormField $editableField
+     * @throws ValidationException
+     */
+    protected function savePartialField($formData, array $filter, EditableFormField $editableField)
+    {
+        $partialSubmission = PartialFieldSubmission::get()->filter($filter)->first();
+        if (is_array($formData['Value'])) {
+            $formData['Value'] = implode(', ', $formData['Value']);
+        }
+        if ($editableField) {
+            $formData['Title'] = $editableField->Title;
+            $formData['ParentClass'] = $editableField->Parent()->ClassName;
+        }
+        if (!$partialSubmission) {
+            $partialSubmission = PartialFieldSubmission::create($formData);
+        } else {
+            $partialSubmission->update($formData);
+        }
+        $partialSubmission->write();
+    }
+
+    /**
+     * @param $formData
+     * @param array $filter
+     * @param EditableFormField\EditableFileField $editableField
+     * @throws ValidationException
+     * @throws Exception
+     */
+    protected function savePartialFile($formData, array $filter, EditableFormField\EditableFileField $editableField)
+    {
+        $partialFileSubmission = PartialFileFieldSubmission::get()->filter($filter)->first();
+        if (!$partialFileSubmission && $editableField) {
+            $partialData = [
+                'Name'            => $formData['Name'],
+                'SubmittedFormID' => $formData['SubmittedFormID'],
+                'Title'           => $editableField->Title,
+                'ParentClass'     => $editableField->Parent()->ClassName
+            ];
+            $partialFileSubmission = PartialFileFieldSubmission::create($partialData);
+            $partialFileSubmission->write();
+        }
+        // Don't overwrite existing uploads
+        if (!$partialFileSubmission->UploadedFileID && is_array($formData['Value'])) {
+            $file = $this->uploadFile($formData, $editableField);
+            $partialFileSubmission->UploadedFileID = $file->ID ?? 0;
+        }
+        $partialFileSubmission->write();
+    }
+
+    /**
+     * @param array $formData
+     * @param EditableFormField\EditableFileField $field
+     * @return bool|File
+     * @throws \Exception
+     */
+    protected function uploadFile($formData, $field)
+    {
+        if (!empty($formData['Value']['name'])) {
+            $foldername = $field->getFormField()->getFolderName();
+
+            // create the file from post data
+            $upload = Upload::create();
+            $file = File::create();
+            $file->ShowInSearch = 0;
+            if ($upload->loadIntoFile($formData['Value'], $file, $foldername)) {
+                return $file;
+            }
+        }
+
+        return false;
     }
 }

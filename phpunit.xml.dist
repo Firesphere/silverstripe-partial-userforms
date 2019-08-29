@@ -1,5 +1,6 @@
-<phpunit bootstrap="vendor/silverstripe/framework/tests/bootstrap.php"
-		 colors="true">
+<phpunit printerClass="ScriptFUSION\PHPUnitImmediateExceptionPrinter\ImmediateExceptionPrinter"
+         bootstrap="vendor/silverstripe/framework/tests/bootstrap.php"
+         colors="true">
 
 	<testsuite name="Default">
 		<directory>tests</directory>
