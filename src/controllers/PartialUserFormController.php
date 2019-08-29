@@ -58,25 +58,29 @@ class PartialUserFormController extends UserDefinedFormController
         ) {
             return $this->redirect('verify');
         }
+        $record = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
+        /** @var self $controller */
+        $controller = self::create($record);
+        $controller->doInit();
 
         /** @var Form $form */
-        $form = $this->Form();
+        $form = $controller->Form();
         $fields = $partial->PartialFields()->map('Name', 'Value')->toArray();
         $form->loadDataFrom($fields);
 
         // Copied from {@link UserDefinedFormController}
-        if ($this->Content && $form && !$this->config()->disable_form_content_shortcode) {
-            $hasLocation = stristr($this->Content, '$UserDefinedForm');
+        if ($controller->Content && $form && !$controller->config()->disable_form_content_shortcode) {
+            $hasLocation = stristr($controller->Content, '$UserDefinedForm');
             if ($hasLocation) {
                 /** @see Requirements_Backend::escapeReplacement */
                 $formEscapedForRegex = addcslashes($form->forTemplate(), '\\$');
                 $content = preg_replace(
                     '/(<p[^>]*>)?\\$UserDefinedForm(<\\/p>)?/i',
                     $formEscapedForRegex,
-                    $this->Content
+                    $controller->Content
                 );
 
-                return $this->customise([
+                return $controller->customise([
                     'Content'     => DBField::create_field('HTMLText', $content),
                     'Form'        => '',
                     'PartialLink' => $partial->getPartialLink()
@@ -84,8 +88,8 @@ class PartialUserFormController extends UserDefinedFormController
             }
         }
 
-        return $this->customise([
-            'Content'     => DBField::create_field('HTMLText', $this->Content),
+        return $controller->customise([
+            'Content'     => DBField::create_field('HTMLText', $controller->Content),
             'Form'        => $form,
             'PartialLink' => $partial->getPartialLink()
         ])->renderWith([static::class, Page::class]);
@@ -128,11 +132,6 @@ class PartialUserFormController extends UserDefinedFormController
         if (!$request->getSession()->get(PartialSubmissionController::SESSION_KEY)) {
             $request->getSession()->set(PartialSubmissionController::SESSION_KEY, $partial->ID);
         }
-
-        // TODO: Recognize visitor with the password
-        // Set data record and load the form
-        $this->dataRecord = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
-//        $this->setFailover($this->dataRecord);
 
         return $partial;
     }

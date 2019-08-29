@@ -71,6 +71,7 @@ class PartialUserFormVerifyControllerTest extends FunctionalTest
 
         $this->assertEquals($partialForm->ID, $session->get('PartialFormSession'));
         $this->assertContains('/partial/', $result->getHeader('Location'));
+        $this->assertEquals('1234567890', $session->get(PartialUserFormVerifyController::PASSWORD_KEY));
 
         $controller = new PartialUserFormVerifyController();
         $controller->setRequest($request);
