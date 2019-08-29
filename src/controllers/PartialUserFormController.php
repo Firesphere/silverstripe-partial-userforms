@@ -132,7 +132,7 @@ class PartialUserFormController extends UserDefinedFormController
         // TODO: Recognize visitor with the password
         // Set data record and load the form
         $this->dataRecord = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
-        $this->setFailover($this->dataRecord);
+//        $this->setFailover($this->dataRecord);
 
         return $partial;
     }
