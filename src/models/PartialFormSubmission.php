@@ -114,6 +114,11 @@ class PartialFormSubmission extends SubmittedForm
         return $fields;
     }
 
+    public function isStarted()
+    {
+        return ($this->PartialFields()->count() > 0 || $this->PartialUploads()->count() > 0);
+    }
+
     public function getParent()
     {
         return $this->UserDefinedForm();
