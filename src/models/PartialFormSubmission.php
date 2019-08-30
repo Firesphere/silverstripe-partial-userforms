@@ -114,11 +114,20 @@ class PartialFormSubmission extends SubmittedForm
         return $fields;
     }
 
+    /**
+     * Check if this partial form already has entries
+     * Used to check if a new form needs to start
+     * @return bool
+     */
     public function isStarted()
     {
         return ($this->PartialFields()->count() > 0 || $this->PartialUploads()->count() > 0);
     }
 
+    /**
+     * Return this related Form (Elemental or UserDefinedForm
+     * @return DataObject
+     */
     public function getParent()
     {
         return $this->UserDefinedForm();

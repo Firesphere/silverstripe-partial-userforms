@@ -29,21 +29,19 @@ class UserDefinedFormControllerExtension extends Extension
         $owner = $this->owner;
         $url = $owner->getRequest()->getURL();
         // Start a clean session if the user visits the original form
-        if (strpos($url, 'partial') !== 0) {
-            $existing = null;
-            $started = false;
+        // This should never run on the 'partial' or 'ping' URL
+        if (strpos($url, 'partial') !== 0 && !strpos($url, 'ping')) {
+            $startNew = true;
             $session = $owner->getRequest()->getSession();
             $id = $session->get(PartialSubmissionController::SESSION_KEY);
             // Check if there is an existing partial submission
-            if ($id) {
-                $existing = PartialFormSubmission::get()->byID($id);
-                if ($existing) {
-                    // Check if it has started yet
-                    $started = $existing->isStarted();
-                }
+            $existing = PartialFormSubmission::get()->byID((int)$id);
+            if ($existing) {
+                // Check if it has started yet, we need to start a new one, if it has started
+                $startNew = $existing->isStarted();
             }
-            // If there is an existing one that has not started, or if there is none, start a new submission
-            if ($started || !$existing) {
+
+            if ($startNew) {
                 $partialForm = PartialFormSubmission::create()->write();
                 $session->set(PartialSubmissionController::SESSION_KEY, $partialForm);
             }
