@@ -44,14 +44,14 @@ class PartialUserFormVerifyController extends PageController
     {
         parent::init();
         $session = $this->getRequest()->getSession();
-        $sessionKey = PartialSubmissionController::SESSION_KEY;
+        $sessionID = $session->get(PartialSubmissionController::SESSION_KEY);
         // Set the session if the last session has expired
-        if (!$session->get($sessionKey)) {
+        if (!$sessionID) {
             return $this->httpError(404);
         }
 
         /** @var PartialFormSubmission $partial */
-        $partial = PartialFormSubmission::get()->byID($session->get($sessionKey));
+        $partial = PartialFormSubmission::get()->byID($sessionID);
 
         $this->setPartialFormSubmission($partial);
         // Set data record and load the form
