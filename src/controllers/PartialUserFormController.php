@@ -122,11 +122,6 @@ class PartialUserFormController extends UserDefinedFormController
         ) {
             return $this->httpError(404);
         }
-        /** @var UserDefinedForm $dataRecord */
-        $dataRecord = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
-        // @todo look at to solve this. Also breaks on CircleCI
-//        $this->setFailover($dataRecord);
-        $this->dataRecord = $dataRecord;
 
         // Set the session if the last session has expired
         if (!$request->getSession()->get(PartialSubmissionController::SESSION_KEY)) {
