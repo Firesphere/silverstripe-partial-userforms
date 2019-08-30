@@ -51,20 +51,18 @@ class PartialUserFormController extends UserDefinedFormController
      */
     public function partial(HTTPRequest $request)
     {
-        // Ensure this URL doesn't get picked up by HTTP caches
-        HTTPCacheControlMiddleware::singleton()->disableCache();
-
         /** @var PartialFormSubmission $partial */
         $partial = $this->validateToken($request);
-        if ($this->data()->PasswordProtected &&
-            $request->getSession()->get(PasswordForm::PASSWORD_SESSION_KEY) !== $partial->ID
-        ) {
-            return $this->redirect('verify');
-        }
         $record = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
         /** @var self $controller */
         $controller = self::create($record);
         $controller->doInit();
+        $controller->dataRecord = $record;
+        if ($controller->data()->PasswordProtected &&
+            $request->getSession()->get(PasswordForm::PASSWORD_SESSION_KEY) !== $partial->ID
+        ) {
+            return $this->redirect('verify');
+        }
 
         /** @var Form $form */
         $form = $controller->Form();
@@ -107,6 +105,9 @@ class PartialUserFormController extends UserDefinedFormController
      */
     public function validateToken($request)
     {
+        // Ensure this URL doesn't get picked up by HTTP caches
+        HTTPCacheControlMiddleware::singleton()->disableCache();
+
         $key = $request->param('Key');
         $token = $request->param('Token');
         if (!$key || !$token) {
@@ -124,7 +125,6 @@ class PartialUserFormController extends UserDefinedFormController
         }
 
         $sessionKey = PartialSubmissionController::SESSION_KEY;
-
         // Set the session if the last session has expired
         if (!$request->getSession()->get($sessionKey)) {
             $request->getSession()->set($sessionKey, $partial->ID);
