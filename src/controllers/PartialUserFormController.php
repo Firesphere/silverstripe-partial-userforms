@@ -30,12 +30,14 @@ class PartialUserFormController extends UserDefinedFormController
     private static $url_handlers = [
         '$Key/$Token' => 'partial',
     ];
+
     /**
      * @var array
      */
     private static $allowed_actions = [
         'partial',
     ];
+
     /**
      * @var PartialFormSubmission
      */
@@ -64,10 +66,14 @@ class PartialUserFormController extends UserDefinedFormController
             return $this->redirect('verify');
         }
 
-        /** @var Form $form */
+        // Set data record and load the form
+        $record = DataObject::get_by_id($partial->UserDefinedFormClass, $partial->UserDefinedFormID);
+        $controller = parent::create($record);
+        $controller->doInit();
+
         $form = $controller->Form();
-        $fields = $partial->PartialFields()->map('Name', 'Value')->toArray();
-        $form->loadDataFrom($fields);
+        $form->loadDataFrom($partial->getFields());
+        $this->populateFileData($form, $partial);
 
         // Copied from {@link UserDefinedFormController}
         if ($controller->Content && $form && !$controller->config()->disable_form_content_shortcode) {
@@ -94,6 +100,34 @@ class PartialUserFormController extends UserDefinedFormController
             'Form'        => $form,
             'PartialLink' => $partial->getPartialLink()
         ])->renderWith([static::class, Page::class]);
+    }
+
+    /**
+     * Set the uploaded filenames as right title of the file fields
+     *
+     * @param Form $form
+     * @param PartialFormSubmission $partialSubmission
+     */
+    protected function populateFileData($form, $partialSubmission)
+    {
+        $uploads = $partialSubmission->PartialUploads()->filter([
+            'UploadedFileID:not'=> null
+        ]);
+
+        if (!$uploads->exists()) {
+            return;
+        }
+
+        $fields = $form->Fields();
+        foreach ($uploads as $upload) {
+            $fields->dataFieldByName($upload->Name)
+                ->setRightTitle(
+                    sprintf(
+                        'Uploaded: %s (Attach a new file to replace the uploaded file)',
+                        $upload->UploadedFile()->Name
+                    )
+                );
+        }
     }
 
     /**

@@ -311,4 +311,17 @@ class PartialFormSubmission extends SubmittedForm
 
         return parent::canDelete($member);
     }
+
+    /**
+     * Get all partial fields for loading data into the form
+     *
+     * @return array
+     */
+    public function getFields()
+    {
+        $formFields = $this->PartialFields()->map('Name', 'Value')->toArray();
+        $fileFields = $this->PartialUploads()->map('Name', 'Filename')->toArray();
+
+        return $formFields + $fileFields;
+    }
 }
