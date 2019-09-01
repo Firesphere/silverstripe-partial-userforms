@@ -233,4 +233,17 @@ class PartialFormSubmission extends SubmittedForm
     {
         return hash_pbkdf2('sha256', $token, $this->TokenSalt, 1000, 16);
     }
+
+    /**
+     * Get all partial fields for loading data into the form
+     *
+     * @return array
+     */
+    public function getFields()
+    {
+        $formFields = $this->PartialFields()->map('Name', 'Value')->toArray();
+        $fileFields = $this->PartialUploads()->map('Name', 'Filename')->toArray();
+
+        return $formFields + $fileFields;
+    }
 }

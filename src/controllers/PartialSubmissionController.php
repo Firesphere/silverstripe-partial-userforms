@@ -165,29 +165,36 @@ class PartialSubmissionController extends ContentController
             $partialFileSubmission = PartialFileFieldSubmission::create($partialData);
             $partialFileSubmission->write();
         }
-        // Don't overwrite existing uploads
-        if (!$partialFileSubmission->UploadedFileID && is_array($formData['Value'])) {
-            $file = $this->uploadFile($formData, $editableField);
+
+        if (is_array($formData['Value'])) {
+            $file = $this->uploadFile($formData, $editableField, $partialFileSubmission);
             $partialFileSubmission->UploadedFileID = $file->ID ?? 0;
+            $partialFileSubmission->write();
         }
-        $partialFileSubmission->write();
     }
 
     /**
      * @param array $formData
      * @param EditableFormField\EditableFileField $field
+     * @param PartialFileFieldSubmission $partialFileSubmission
      * @return bool|File
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function uploadFile($formData, $field)
+    protected function uploadFile($formData, $field, $partialFileSubmission)
     {
         if (!empty($formData['Value']['name'])) {
             $foldername = $field->getFormField()->getFolderName();
 
-            // create the file from post data
+            if (!$partialFileSubmission->UploadedFileID) {
+                $file = File::create();
+                $file->ShowInSearch = 0;
+            } else {
+                // Allow overwrite existing uploads
+                $file = $partialFileSubmission->UploadedFile();
+            }
+
+            // Upload the file from post data
             $upload = Upload::create();
-            $file = File::create();
-            $file->ShowInSearch = 0;
             if ($upload->loadIntoFile($formData['Value'], $file, $foldername)) {
                 return $file;
             }
