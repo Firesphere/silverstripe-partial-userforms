@@ -3,6 +3,7 @@
 namespace Firesphere\PartialUserforms\Tests;
 
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
+use SilverStripe\Assets\File;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\UserForms\Model\UserDefinedForm;
 
@@ -23,13 +24,8 @@ class PartialUserFormControllerTest extends FunctionalTest
         $this->assertEquals(404, $result->getStatusCode());
     }
 
-    /**
-     * @todo
-     */
     public function testPartialValidKeyToken()
     {
-        $this->markTestSkipped('Revisit and set up themes for testing');
-
         $token = 'q1w2e3r4t5y6u7i8';
         // No Parent
         $key = singleton(PartialFormSubmission::class)->generateKey($token);
@@ -67,6 +63,23 @@ class PartialUserFormControllerTest extends FunctionalTest
         $this->assertEquals(404, $result->getStatusCode());
     }
 
+    public function testDataPopulated()
+    {
+        $partial = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
+        $token = 'q1w2e3r4t5y6u7i8';
+        $key = $partial->generateKey($token);
+
+        $response = $this->get("/partial/{$key}/{$token}");
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertCount(1, $partial->PartialUploads());
+        $this->assertCount(3, $partial->PartialFields());
+
+        $content = $response->getBody();
+        $this->assertContains('I have a question', $content);
+        $this->assertContains('Hans-fullsize-sqr.png', $content);
+    }
+
     public function testPasswordProtectedPartial()
     {
         $token = 'q1w2e3r4t5y6u7i8';
@@ -88,5 +101,6 @@ class PartialUserFormControllerTest extends FunctionalTest
     {
         parent::setUp();
         $this->objFromFixture(UserDefinedForm::class, 'form1')->publishRecursive();
+        $this->objFromFixture(File::class, 'file1')->publishRecursive();
     }
 }

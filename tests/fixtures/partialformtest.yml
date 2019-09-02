@@ -1,26 +1,39 @@
 SilverStripe\UserForms\Model\UserDefinedForm:
   form1:
     Title: Form 1
+Firesphere\PartialUserforms\Models\PartialFormSubmission:
+  submission1:
+    UserDefinedForm: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+    TokenSalt: aa11ss22dd33ff44
+    Token: q1w2e3r4t5y6u7i8
 Firesphere\PartialUserForms\Models\PartialFieldSubmission:
   field1:
     Name: 'fullname'
     Value: 'Test'
     Title: 'Full name'
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
   field2:
     Name: 'email'
     Value: 'test@test.com'
     Title: 'Email address'
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
   field3:
     Name: 'question'
     Value: 'I have a question, what''s the ultimate question of life, the universe, and everything'
     Title: 'Question'
-Firesphere\PartialUserforms\Models\PartialFormSubmission:
-  submission1:
-    UserDefinedForm: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
-    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
-    PartialFields: =>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field1,=>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field2,=>Firesphere\PartialUserForms\Models\PartialFieldSubmission.field3
-    TokenSalt: aa11ss22dd33ff44
-    Token: q1w2e3r4t5y6u7i8
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+SilverStripe\Assets\File:
+  file1:
+    Name: 'Hans.png'
+    Title: 'Hans Image'
+    Filename: partialuserforms/tests/fixtures/Hans-fullsize-sqr.png
+Firesphere\PartialUserForms\Models\PartialFileFieldSubmission:
+  field1:
+    Name: 'File'
+    UploadedFile: =>SilverStripe\Assets\File.file1
+    SubmittedForm: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
+    Parent: =>Firesphere\PartialUserforms\Models\PartialFormSubmission.submission1
 SilverStripe\UserForms\Model\EditableFormField\EditableTextField:
   textfield1:
     Name: 'Field1'
@@ -35,6 +48,11 @@ SilverStripe\UserForms\Model\EditableFormField\EditableTextField:
   textfield3:
     Name: 'Field3'
     Title: 'Field 3'
+    ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
+    Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
+  textfield4:
+    Name: 'question'
+    Title: 'Question'
     ParentClass: SilverStripe\UserForms\Model\UserDefinedForm
     Parent: =>SilverStripe\UserForms\Model\UserDefinedForm.form1
 SilverStripe\UserForms\Model\EditableFormField\EditableFileField:

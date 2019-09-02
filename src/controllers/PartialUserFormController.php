@@ -158,10 +158,10 @@ class PartialUserFormController extends UserDefinedFormController
             return $this->httpError(404);
         }
 
-        $sessionKey = PartialSubmissionController::SESSION_KEY;
-        // Set the session if the last session has expired
-        if (!$request->getSession()->get($sessionKey)) {
-            $request->getSession()->set($sessionKey, $partial->ID);
+        // Set the session if the last session has expired or from another submission
+        $session = $request->getSession()->get(PartialSubmissionController::SESSION_KEY);
+        if (!$session || $session !==  $partial->ID) {
+            $request->getSession()->set(PartialSubmissionController::SESSION_KEY, $partial->ID);
         }
 
         return $partial;

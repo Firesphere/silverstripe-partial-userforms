@@ -320,8 +320,8 @@ class PartialFormSubmission extends SubmittedForm
     public function getFields()
     {
         $formFields = $this->PartialFields()->map('Name', 'Value')->toArray();
-        $fileFields = $this->PartialUploads()->map('Name', 'Filename')->toArray();
+        $fileFields = $this->PartialUploads()->map('Name', 'FileName')->toArray();
 
-        return $formFields + $fileFields;
+        return array_merge($formFields, $fileFields);
     }
 }
