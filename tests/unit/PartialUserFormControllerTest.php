@@ -67,6 +67,23 @@ class PartialUserFormControllerTest extends FunctionalTest
         $this->assertEquals(404, $result->getStatusCode());
     }
 
+    public function testPasswordProtectedPartial()
+    {
+        $token = 'q1w2e3r4t5y6u7i8';
+        // Partial with UserDefinedForm
+        $submission = $this->objFromFixture(PartialFormSubmission::class, 'submission1');
+        /** @var UserDefinedForm $parent */
+        $parent = $submission->Parent();
+        $parent->PasswordProtected = true;
+        $parent->write();
+        $parent->publishRecursive();
+        $key = $submission->generateKey($token);
+        $result = $this->get("partial/{$key}/{$token}");
+        // Be redirected to the Password form
+        $formOpeningTag = '<form id="PasswordForm_getForm" action="/verify/getForm" method="post" enctype="application/x-www-form-urlencoded" class="userform">';
+        $this->assertContains($formOpeningTag, $result->getBody());
+    }
+
     public function setUp()
     {
         parent::setUp();

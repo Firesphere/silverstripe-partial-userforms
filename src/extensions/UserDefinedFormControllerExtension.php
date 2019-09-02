@@ -15,10 +15,6 @@ use SilverStripe\View\Requirements;
  */
 class UserDefinedFormControllerExtension extends Extension
 {
-    private static $allowed_actions = [
-        'verify'
-    ];
-
     /**
      * Add required javascripts
      */

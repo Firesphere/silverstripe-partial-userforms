@@ -11,6 +11,7 @@ use SilverStripe\Assets\Upload;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\UserForms\Model\EditableFormField;
@@ -45,7 +46,7 @@ class PartialSubmissionController extends ContentController
      * @param HTTPRequest $request
      * @return HTTPResponse
      * @throws ValidationException
-     * @throws \SilverStripe\Control\HTTPResponse_Exception
+     * @throws HTTPResponse_Exception
      */
     public function savePartialSubmission(HTTPRequest $request)
     {

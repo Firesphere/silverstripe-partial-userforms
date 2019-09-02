@@ -3,6 +3,7 @@
 namespace Firesphere\PartialUserforms\Models;
 
 use Exception;
+use Firesphere\PartialUserforms\Controllers\PartialUserFormVerifyController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Forms\FieldList;
@@ -19,6 +20,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\UserForms\Model\Submission\SubmittedForm;
+use SilverStripe\UserForms\Model\UserDefinedForm;
 
 /**
  * Class \Firesphere\PartialUserforms\Models\PartialFormSubmission
@@ -26,6 +28,7 @@ use SilverStripe\UserForms\Model\Submission\SubmittedForm;
  * @property boolean $IsSend
  * @property string $TokenSalt
  * @property string $Token
+ * @property string $Password
  * @property int $UserDefinedFormID
  * @method DataObject UserDefinedForm()
  * @method DataList|PartialFieldSubmission[] PartialFields()
@@ -33,18 +36,32 @@ use SilverStripe\UserForms\Model\Submission\SubmittedForm;
  */
 class PartialFormSubmission extends SubmittedForm
 {
+
+    /**
+     * @var string
+     */
     private static $table_name = 'PartialFormSubmission';
 
+    /**
+     * @var array
+     */
     private static $db = [
         'IsSend'    => 'Boolean(false)',
         'TokenSalt' => 'Varchar(16)',
         'Token'     => 'Varchar(16)',
+        'Password'  => 'Varchar(64)',
     ];
 
+    /**
+     * @var array
+     */
     private static $has_one = [
         'UserDefinedForm' => DataObject::class
     ];
 
+    /**
+     * @var array
+     */
     private static $has_many = [
         'PartialFields'  => PartialFieldSubmission::class,
         'PartialUploads' => PartialFileFieldSubmission::class
@@ -64,6 +81,32 @@ class PartialFormSubmission extends SubmittedForm
         'LastEdited'  => 'Last Edited',
     ];
 
+    private static $special_characters = [
+        '!',
+        '@',
+        '#',
+        '$',
+        '%',
+        '^',
+        '&',
+        '*',
+        '(',
+        ')',
+        '_',
+        '-',
+        '=',
+        '+',
+        ';',
+        ':',
+        ',',
+        '.',
+        '?'
+    ];
+
+    /**
+     * @return FieldList
+     * @throws Exception
+     */
     public function getCMSFields()
     {
         /** @var FieldList $fields */
@@ -114,63 +157,6 @@ class PartialFormSubmission extends SubmittedForm
         return $fields;
     }
 
-    public function getParent()
-    {
-        return $this->UserDefinedForm();
-    }
-
-    /**
-     * @param Member $member
-     * @param array $context
-     * @return bool
-     */
-    public function canCreate($member = null, $context = [])
-    {
-        return false;
-    }
-
-    /**
-     * @param Member
-     *
-     * @return boolean|string
-     */
-    public function canView($member = null)
-    {
-        if ($this->UserDefinedForm()) {
-            return $this->UserDefinedForm()->canView($member);
-        }
-
-        return parent::canView($member);
-    }
-
-    /**
-     * @param Member
-     *
-     * @return boolean|string
-     */
-    public function canEdit($member = null)
-    {
-        if ($this->UserDefinedForm()) {
-            return $this->UserDefinedForm()->canEdit($member);
-        }
-
-        return parent::canEdit($member);
-    }
-
-    /**
-     * @param Member
-     *
-     * @return boolean|string
-     */
-    public function canDelete($member = null)
-    {
-        if ($this->UserDefinedForm()) {
-            return $this->UserDefinedForm()->canDelete($member);
-        }
-
-        return parent::canDelete($member);
-    }
-
     /**
      * Get the share link of the form
      *
@@ -183,7 +169,7 @@ class PartialFormSubmission extends SubmittedForm
             return '(none)';
         }
 
-        $token = $this->getPartialToken();
+        $token = $this->Token;
 
         return Controller::join_links(
             Director::absoluteBaseURL(),
@@ -191,6 +177,31 @@ class PartialFormSubmission extends SubmittedForm
             $this->generateKey($token),
             $token
         );
+    }
+
+    /**
+     * Generate a key based on the share token salt
+     *
+     * @param string $token
+     * @return mixed
+     */
+    public function generateKey($token)
+    {
+        return hash_pbkdf2('sha256', $token, $this->TokenSalt, 1000, 16);
+    }
+
+    /**
+     * Generate the partial tokens
+     * If the submission is password protected, generate a password.
+     * @throws Exception
+     */
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $this->getPartialToken();
+        if (!$this->Password) {
+            $this->Password = $this->generatePassword();
+        }
     }
 
     /**
@@ -204,7 +215,6 @@ class PartialFormSubmission extends SubmittedForm
         if (!$this->TokenSalt) {
             $this->TokenSalt = $this->generateToken();
             $this->Token = $this->generateToken();
-            $this->write();
         }
 
         return $this->Token;
@@ -224,13 +234,81 @@ class PartialFormSubmission extends SubmittedForm
     }
 
     /**
-     * Generate a key based on the share token salt
-     *
-     * @param string $token
-     * @return string|bool
+     * @return string
+     * @throws Exception
      */
-    public function generateKey($token)
+    protected function generatePassword()
     {
-        return hash_pbkdf2('sha256', $token, $this->TokenSalt, 1000, 16);
+        $chars = range('A', 'Z');
+        $chars = array_merge($chars, range('a', 'z'));
+        $chars = array_merge($chars, range(0, 9));
+        $chars = array_merge($chars, self::$special_characters);
+        shuffle($chars);
+        $pwd = implode(array_slice($chars, 0, 10));
+        Controller::curr()->getRequest()->getSession()->set(PartialUserFormVerifyController::PASSWORD_KEY, $pwd);
+
+        return hash_pbkdf2('SHA256', $pwd, $this->TokenSalt, 1000);
+    }
+
+    /**
+     * @return DataObject|UserDefinedForm
+     */
+    public function getParent()
+    {
+        return $this->UserDefinedForm();
+    }
+
+    /**
+     * @param Member
+     *
+     * @return bool|string|null
+     * @throws Exception
+     */
+    public function canCreate($member = null, $context = [])
+    {
+        return false;
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return boolean|string
+     */
+    public function canView($member = null)
+    {
+        if ($this->UserDefinedForm()) {
+            return $this->UserDefinedForm()->canView($member);
+        }
+
+        return parent::canView($member);
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @throws Exception
+     * @return boolean|string
+     */
+    public function canEdit($member = null)
+    {
+        if ($this->UserDefinedForm()) {
+            return $this->UserDefinedForm()->canEdit($member);
+        }
+
+        return parent::canEdit($member);
+    }
+
+    /**
+     * @param Member $member
+     *
+     * @return boolean|string
+     */
+    public function canDelete($member = null)
+    {
+        if ($this->UserDefinedForm()) {
+            return $this->UserDefinedForm()->canDelete($member);
+        }
+
+        return parent::canDelete($member);
     }
 }

@@ -53,7 +53,8 @@ jobs:
           paths:
             - app
             - vendor
-            - resource
+            - resources
+            - _resources
             - node_modules
 
       # run tests!
