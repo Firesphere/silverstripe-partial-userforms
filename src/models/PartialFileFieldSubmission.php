@@ -71,12 +71,4 @@ class PartialFileFieldSubmission extends SubmittedFileField
 
         return parent::canDelete($member);
     }
-
-    /**
-     * @return string
-     */
-    public function getFilename()
-    {
-        return $this->UploadedFileID ? $this->UploadedFile()->Name : '';
-    }
 }

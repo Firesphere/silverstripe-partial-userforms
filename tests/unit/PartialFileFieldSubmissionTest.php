@@ -4,6 +4,7 @@ namespace Firesphere\PartialUserforms\Tests;
 
 use Firesphere\PartialUserforms\Models\PartialFileFieldSubmission;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
+use SilverStripe\Assets\File;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\Security;

@@ -186,8 +186,9 @@ class PartialSubmissionController extends ContentController
             $foldername = $field->getFormField()->getFolderName();
 
             if (!$partialFileSubmission->UploadedFileID) {
-                $file = File::create();
-                $file->ShowInSearch = 0;
+                $file = File::create([
+                    'ShowInSearch' => 0
+                ]);
             } else {
                 // Allow overwrite existing uploads
                 $file = $partialFileSubmission->UploadedFile();
