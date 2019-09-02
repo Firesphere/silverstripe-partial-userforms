@@ -169,13 +169,11 @@ class PartialFormSubmission extends SubmittedForm
             return '(none)';
         }
 
-        $token = $this->Token;
-
         return Controller::join_links(
             Director::absoluteBaseURL(),
             'partial',
-            $this->generateKey($token),
-            $token
+            $this->generateKey($this->Token),
+            $this->Token
         );
     }
 
@@ -198,26 +196,15 @@ class PartialFormSubmission extends SubmittedForm
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $this->getPartialToken();
-        if (!$this->Password) {
-            $this->Password = $this->generatePassword();
-        }
-    }
 
-    /**
-     * Get the unique token for the share link
-     *
-     * @return bool|string|null
-     * @throws Exception
-     */
-    protected function getPartialToken()
-    {
         if (!$this->TokenSalt) {
             $this->TokenSalt = $this->generateToken();
             $this->Token = $this->generateToken();
         }
 
-        return $this->Token;
+        if (!$this->Password) {
+            $this->Password = $this->generatePassword();
+        }
     }
 
     /**
@@ -323,5 +310,26 @@ class PartialFormSubmission extends SubmittedForm
         $fileFields = $this->PartialUploads()->map('Name', 'FileName')->toArray();
 
         return array_merge($formFields, $fileFields);
+    }
+
+    /**
+     * Validate key/token combination
+     *
+     * @param string $key
+     * @param string $token
+     * @return bool|PartialFormSubmission
+     */
+    public static function validateKeyToken($key, $token)
+    {
+        /** @var PartialFormSubmission $partial */
+        $partial = PartialFormSubmission::get()->find('Token', $token);
+        if (!$partial ||
+            !$partial->UserDefinedFormID ||
+            !hash_equals($partial->generateKey($token), $key)
+        ) {
+            return false;
+        }
+
+        return $partial;
     }
 }
