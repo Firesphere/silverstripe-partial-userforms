@@ -52,6 +52,12 @@ const submitPartial = () => {
     }
   });
 
+  // Pass partial params if available
+  const partialID = document.body.querySelector('form.userform [name=PartialID]');
+  if (partialID) {
+    data.append('partialID', partialID.value);
+  }
+
   /** global: XMLHttpRequest */
   const httpRequest = new XMLHttpRequest();
   requests.push(httpRequest);

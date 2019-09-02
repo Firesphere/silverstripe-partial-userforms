@@ -58,7 +58,13 @@ class PartialSubmissionController extends ContentController
 
         // We don't want SecurityID and/or the process Action stored as a thing
         unset($postVars['SecurityID'], $postVars['action_process']);
-        $submissionID = $request->getSession()->get(self::SESSION_KEY);
+
+        // Check for partial params so the submission doesn't rely on session for partial page
+        if (!empty($postVars['partialID'])) {
+            $submissionID = $postVars['partialID'];
+        } else {
+            $submissionID = $request->getSession()->get(self::SESSION_KEY);
+        }
 
         /** @var PartialFormSubmission $partialSubmission */
         $partialSubmission = PartialFormSubmission::get()->byID($submissionID);

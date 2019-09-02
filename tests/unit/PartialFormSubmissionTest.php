@@ -105,18 +105,21 @@ class PartialFormSubmissionTest extends SapphireTest
     public function testGetPartialToken()
     {
         $partial = PartialFormSubmission::create();
+        // Set a salt without saving
         $partial->TokenSalt = 'test-salt';
-        $this->assertNull(TestHelper::invokeMethod($partial, 'getPartialToken'));
+        $this->assertNull($partial->Token);
 
+        // Set salt to null then check before and after write
         $partial->TokenSalt = null;
+        $this->assertNull($partial->Token);
         $partial->write();
-        $this->assertNotNull(TestHelper::invokeMethod($partial, 'getPartialToken'));
+        $this->assertNotNull($partial->Token);
 
         $partial->Token = 'test-token';
         $partial->TokenSalt = 'test-salt';
         $partial->write();
 
-        $this->assertEquals('test-token', TestHelper::invokeMethod($partial, 'getPartialToken'));
+        $this->assertEquals('test-token', $partial->Token);
     }
 
     public function testGenerateToken()

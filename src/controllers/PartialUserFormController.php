@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -54,19 +55,9 @@ class PartialUserFormController extends UserDefinedFormController
             return $this->httpError(404);
         }
 
-        /** @var PartialFormSubmission $partial */
-        $partial = PartialFormSubmission::get()->find('Token', $token);
-        if (!$partial ||
-            !$partial->UserDefinedFormID ||
-            !hash_equals($partial->generateKey($token), $key)
-        ) {
+        $partial = PartialFormSubmission::validateKeyToken($key, $token);
+        if ($partial === false) {
             return $this->httpError(404);
-        }
-
-        // Set the session if the last session has expired or from another submission
-        $session = $request->getSession()->get(PartialSubmissionController::SESSION_KEY);
-        if (!$session || $session !==  $partial->ID) {
-            $request->getSession()->set(PartialSubmissionController::SESSION_KEY, $partial->ID);
         }
 
         // Set data record and load the form
@@ -74,9 +65,15 @@ class PartialUserFormController extends UserDefinedFormController
         $controller = parent::create($record);
         $controller->doInit();
 
+        // Set the session if the last session has expired or another submission has started
+        $sessionID = $request->getSession()->get(PartialSubmissionController::SESSION_KEY);
+        if (!$sessionID || $sessionID !==  $partial->ID) {
+            $request->getSession()->set(PartialSubmissionController::SESSION_KEY, $partial->ID);
+        }
+
         $form = $controller->Form();
         $form->loadDataFrom($partial->getFields());
-        $this->populateFileData($form, $partial);
+        $this->populateData($form, $partial);
 
         // Copied from {@link UserDefinedFormController}
         if ($controller->Content && $form && !$controller->config()->disable_form_content_shortcode) {
@@ -106,14 +103,25 @@ class PartialUserFormController extends UserDefinedFormController
     }
 
     /**
-     * Set the uploaded filenames as right title of the file fields
+     * Add partial submission and set the uploaded filenames as right title of the file fields
      *
      * @param Form $form
-     * @param PartialFormSubmission $partialSubmission
+     * @param PartialFormSubmission $partial
      */
-    protected function populateFileData($form, $partialSubmission)
+    protected function populateData($form, $partial)
     {
-        $uploads = $partialSubmission->PartialUploads()->filter([
+        $fields = $form->Fields();
+        // Add partial submission ID
+        $fields->push(
+            HiddenField::create(
+                'PartialID',
+                null,
+                $partial->ID
+            )
+        );
+
+        // Populate files
+        $uploads = $partial->PartialUploads()->filter([
             'UploadedFileID:not'=> null
         ]);
 
@@ -121,7 +129,6 @@ class PartialUserFormController extends UserDefinedFormController
             return;
         }
 
-        $fields = $form->Fields();
         foreach ($uploads as $upload) {
             $fields->dataFieldByName($upload->Name)
                 ->setRightTitle(
