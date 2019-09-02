@@ -67,6 +67,10 @@ class PartialFormSubmission extends SubmittedForm
         'PartialUploads' => PartialFileFieldSubmission::class
     ];
 
+    /**
+     * Don't add PartialUploads to cascade delete, the parent is changed to SubmittedForm on submission
+     * @var array
+     */
     private static $cascade_deletes = [
         'PartialFields'
     ];

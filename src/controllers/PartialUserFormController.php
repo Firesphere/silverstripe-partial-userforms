@@ -127,7 +127,7 @@ class PartialUserFormController extends UserDefinedFormController
 
         // Populate files
         $uploads = $partial->PartialUploads()->filter([
-            'UploadedFileID:not'=> null
+            'UploadedFileID:not'=> 0
         ]);
 
         if (!$uploads->exists()) {
