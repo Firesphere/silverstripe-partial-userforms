@@ -2,6 +2,7 @@
 <html>
     <head></head>
     <body>
-        $Layout
+        $Content
+        $Form
     </body>
 </html>

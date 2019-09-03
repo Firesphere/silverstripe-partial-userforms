@@ -19,7 +19,6 @@ class PartialFileFieldSubmission extends SubmittedFileField
         'SubmittedForm' => PartialFormSubmission::class,
     ];
 
-
     /**
      * @param Member $member
      * @param array $context

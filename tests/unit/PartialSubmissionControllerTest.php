@@ -191,13 +191,8 @@ class PartialSubmissionControllerTest extends FunctionalTest
         $this->assertEquals('Value1, Value2', $field3->Value);
     }
 
-    /**
-     * @todo Remove skip test after implementation
-     */
     public function testSaveDataWithExpiredSession()
     {
-        $this->markTestSkipped('Remove skip test once implementation is complete');
-
         $values = [
             'Field1' => 'Value1',
             'Field2' => 'Value2',
@@ -207,14 +202,14 @@ class PartialSubmissionControllerTest extends FunctionalTest
         $id = $this->savePartial($values);
         $this->assertInternalType('int', $id);
 
-        $partial = PartialFormSubmission::get()->byID($id);
-        $this->assertNotNull($partial);
+        $sessionID = $this->session()->get(PartialSubmissionController::SESSION_KEY);
+        $this->assertEquals($id, $sessionID);
 
-        // Now clear session and save
+        // Now clear session and save, it should be 404
         $this->session()->clear(PartialSubmissionController::SESSION_KEY);
         $values['Field1'] = 'NEW VALUE';
-        $newId = $this->savePartial($values);
-        $this->assertEquals($id, $newId);
+        $response = $this->post('/partialuserform/save', $values);
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     /**
@@ -233,7 +228,17 @@ class PartialSubmissionControllerTest extends FunctionalTest
     public function setUp()
     {
         parent::setUp();
-        $this->objFromFixture(UserDefinedForm::class, 'form1')->publishRecursive();
+        $udf = $this->objFromFixture(UserDefinedForm::class, 'form1');
+        $udf->publishRecursive();
         $this->controller = Injector::inst()->get(PartialSubmissionController::class);
+
+        // Since parent is now created in UDF / Partial controllers, let's just set the parent here
+        $partialID = PartialFormSubmission::create([
+            'UserDefinedFormID'     => $udf->ID,
+            'UserDefinedFormClass'  => $udf->ClassName,
+            'ParentClass'           => $udf->ClassName,
+            'ParentID'              => $udf->ID,
+        ])->write();
+        $this->session()->set(PartialSubmissionController::SESSION_KEY, $partialID);
     }
 }

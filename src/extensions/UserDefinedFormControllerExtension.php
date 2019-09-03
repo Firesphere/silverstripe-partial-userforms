@@ -75,7 +75,6 @@ class UserDefinedFormControllerExtension extends Extension
 
         // Create partial fields
         foreach ($page->data()->Fields() as $field) {
-
             // We don't need literal fields, headers, html, etc
             if ($field::config()->literal === true || $field->ClassName == EditableFormStep::class) {
                 continue;
