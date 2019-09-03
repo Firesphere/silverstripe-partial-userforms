@@ -68,11 +68,11 @@ class PartialFormSubmission extends SubmittedForm
     ];
 
     /**
-     * Don't add PartialUploads to cascade delete, the parent is changed to SubmittedForm on submission
      * @var array
      */
     private static $cascade_deletes = [
-        'PartialFields'
+        'PartialFields',
+        'PartialUploads',
     ];
 
     /**
@@ -123,7 +123,8 @@ class PartialFormSubmission extends SubmittedForm
             'Token',
             'UserDefinedFormID',
             'Submitter',
-            'PartialUploads'
+            'PartialUploads',
+            'Password'
         ]);
 
         $partialFields = $this->PartialFields();
@@ -267,7 +268,7 @@ class PartialFormSubmission extends SubmittedForm
      */
     public function canView($member = null)
     {
-        if ($this->UserDefinedForm()) {
+        if ($this->UserDefinedFormID) {
             return $this->UserDefinedForm()->canView($member);
         }
 
@@ -282,7 +283,7 @@ class PartialFormSubmission extends SubmittedForm
      */
     public function canEdit($member = null)
     {
-        if ($this->UserDefinedForm()) {
+        if ($this->UserDefinedFormID) {
             return $this->UserDefinedForm()->canEdit($member);
         }
 
@@ -296,7 +297,7 @@ class PartialFormSubmission extends SubmittedForm
      */
     public function canDelete($member = null)
     {
-        if ($this->UserDefinedForm()) {
+        if ($this->UserDefinedFormID) {
             return $this->UserDefinedForm()->canDelete($member);
         }
 

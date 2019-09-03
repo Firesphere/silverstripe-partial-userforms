@@ -3,6 +3,8 @@
 namespace Firesphere\PartialUserforms\Extensions;
 
 use Firesphere\PartialUserforms\Controllers\PartialSubmissionController;
+use Firesphere\PartialUserforms\Controllers\PartialUserFormVerifyController;
+use Firesphere\PartialUserforms\Forms\PasswordForm;
 use Firesphere\PartialUserforms\Models\PartialFormSubmission;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataExtension;
@@ -50,5 +52,7 @@ class SubmittedFormExtension extends DataExtension
         $partialForm->delete();
         $partialForm->destroy();
         $request->getSession()->clear(PartialSubmissionController::SESSION_KEY);
+        $request->getSession()->clear(PasswordForm::PASSWORD_SESSION_KEY);
+        $request->getSession()->clear(PartialUserFormVerifyController::PASSWORD_KEY);
     }
 }

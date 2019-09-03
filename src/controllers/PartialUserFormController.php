@@ -16,7 +16,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\UserForms\Control\UserDefinedFormController;
-use SilverStripe\UserForms\Model\UserDefinedForm;
 
 /**
  * Class PartialUserFormController
@@ -40,11 +39,6 @@ class PartialUserFormController extends UserDefinedFormController
     ];
 
     /**
-     * @var PartialFormSubmission
-     */
-    protected $partialFormSubmission;
-
-    /**
      * Partial form
      *
      * @param HTTPRequest $request
@@ -62,18 +56,18 @@ class PartialUserFormController extends UserDefinedFormController
         $controller = parent::create($record);
         $controller->doInit();
 
-        if (
-            $controller->data()->PasswordProtected &&
-            $request->getSession()->get(PasswordForm::PASSWORD_SESSION_KEY) !== $partial->ID
-        ) {
-            return $this->redirect('verify');
-        }
-
         // Set the session after init and check if the last session has expired
         // or another submission has started
         $sessionID = $request->getSession()->get(PartialSubmissionController::SESSION_KEY);
         if (!$sessionID || $sessionID !==  $partial->ID) {
             $request->getSession()->set(PartialSubmissionController::SESSION_KEY, $partial->ID);
+        }
+
+        if (
+            $controller->PasswordProtected &&
+            $request->getSession()->get(PasswordForm::PASSWORD_SESSION_KEY) !== $partial->ID
+        ) {
+            return $this->redirect('verify');
         }
 
         $form = $controller->Form();
@@ -170,21 +164,5 @@ class PartialUserFormController extends UserDefinedFormController
         }
 
         return $partial;
-    }
-
-    /**
-     * @return PartialFormSubmission
-     */
-    public function getPartialFormSubmission(): PartialFormSubmission
-    {
-        return $this->partialFormSubmission;
-    }
-
-    /**
-     * @param PartialFormSubmission $partialFormSubmission
-     */
-    public function setPartialFormSubmission(PartialFormSubmission $partialFormSubmission): void
-    {
-        $this->partialFormSubmission = $partialFormSubmission;
     }
 }

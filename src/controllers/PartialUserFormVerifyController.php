@@ -78,6 +78,7 @@ class PartialUserFormVerifyController extends PageController
     {
         /** @var PartialFormSubmission $partial */
         $partial = $this->getPartialFormSubmission();
+        $request = $this->getRequest();
 
         $password = hash_pbkdf2('SHA256', $data['Password'], $partial->TokenSalt, 1000);
         if (!hash_equals($password, $partial->Password)) {
@@ -87,11 +88,12 @@ class PartialUserFormVerifyController extends PageController
                     'Password incorrect, please check your password and try again'
                 )
             );
+            $request->getSession()->clear(PasswordForm::PASSWORD_SESSION_KEY);
+            $request->getSession()->clear(self::PASSWORD_KEY);
 
             return $this->redirectBack();
         }
 
-        $request = $this->getRequest();
         $request->getSession()->set(PasswordForm::PASSWORD_SESSION_KEY, $partial->ID);
         $request->getSession()->set(self::PASSWORD_KEY, $data['Password']);
 

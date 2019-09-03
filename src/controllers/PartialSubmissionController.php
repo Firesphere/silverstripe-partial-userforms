@@ -61,8 +61,8 @@ class PartialSubmissionController extends ContentController
         unset($postVars['SecurityID'], $postVars['action_process']);
 
         // Check for partial params so the submission doesn't rely on session for partial page
-        if (!empty($postVars['partialID'])) {
-            $submissionID = $postVars['partialID'];
+        if (!empty($postVars['PartialID'])) {
+            $submissionID = $postVars['PartialID'];
         } else {
             $submissionID = $request->getSession()->get(self::SESSION_KEY);
         }
@@ -71,13 +71,15 @@ class PartialSubmissionController extends ContentController
         $partialSubmission = PartialFormSubmission::get()->byID($submissionID);
 
         if (!$submissionID || !$partialSubmission) {
-            $partialSubmission = PartialFormSubmission::create();
-            // TODO: Set the Parent ID and Parent Class before write, this issue will create new submissions
-            // every time the session expires when the user proceeds to the next step.
-            // Also, saving a new submission without a parent creates an
-            // "AccordionItems" as parent class (first DataObject found)
-            $submissionID = $partialSubmission->write();
+            // A new session has already been created in {@link UserDefinedFormControllerExtension::onAfterInit()}
+            // so this shouldn't happen. Although, when there's a pending ajax save (e.g. user clicks next/prev too fast
+            // then hit submit), after submission, the submissionID has already been deleted while save is still in
+            // progress, thus resulting to 404
+            // TODO: Find a solution dealing with race condition between ajax save and form submit
+            $this->httpError(404);
         }
+
+        // Refresh session ID
         $request->getSession()->set(self::SESSION_KEY, $submissionID);
         foreach ($postVars as $field => $value) {
             /** @var EditableFormField $editableField */
